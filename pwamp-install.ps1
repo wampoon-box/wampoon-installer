@@ -12,7 +12,7 @@ $phpVersion = "8.4.6"
 $mysqlVersion = "8.0.35"
 
 # Define ports for Apache and MySQL
-$serverPort = 8080
+$serverPort = 80 # Change to 8080 if port 80 is in use
 $mysqlPort = 3306
 
 # Set base directory to current script location 
@@ -38,7 +38,7 @@ $htdocsDir = "$installDir\htdocs"
 
 $phpIniFile = "$phpPath\php.ini"
 $mySqlIniFile = "$mysqlPath\bin\my.ini"
-$httpdConf = Join-Path $apachePath "conf\httpd.conf"
+
 
 #TODO: Remove the following variables.
 $apacheZip = "$tempDir\apache.zip"
@@ -143,7 +143,6 @@ function Remove-TempFiles {
     }
 }
 
-
 function Install-Apache {
     # Download and extract Apache
     Write-Log "Processing Apache..." -Level "INFO"
@@ -170,6 +169,7 @@ function Install-Apache {
     }
     else {
         Write-Log "Apache already installed, skipping download and extraction" -Level "WARNING"
+        return $false
     }    
 }
 
@@ -188,6 +188,7 @@ function Install-PHP {
     }
     else {
         Write-Log "PHP already installed, skipping download and extraction" -Level "WARNING"
+        return $false
     }    
 }
 
@@ -206,7 +207,59 @@ function Install-MySQL {
     }
     else {
         Write-Log "MySQL already installed, skipping download and extraction" -Level "WARNING"
+        return $false
     }    
+}
+
+
+#----------------------------
+#-- Configuration functions | 
+#----------------------------
+function Configure-Apache {
+    try {        
+        Write-Log "Configuring Apache..." -Level "INFO"    
+        
+        $httpdConf = Join-Path $apachePath "conf\httpd.conf"
+        
+        if (Test-Path $httpdConf) {
+            # Modify Apache config for portable use
+            (Get-Content $httpdConf) | ForEach-Object {
+                $_ -replace "c:/Apache24", $apachePath.replace('\', '/') `
+                    -replace "ServerRoot .*$", "ServerRoot `"$($apachePath.replace('\', '/'))`"" `
+                    -replace "Listen 80", "Listen $serverPort" `
+                    -replace "#ServerName www.example.com:80", "ServerName localhost:$serverPort" `
+                    -replace "#LoadModule rewrite_module", "LoadModule rewrite_module"
+            } | Set-Content $httpdConf
+            
+            # Add PHP configuration
+            Add-Content -Path $httpdConf -Value "`n# PHP Configuration"
+            Add-Content -Path $httpdConf -Value "LoadModule php_module `"$($phpPath.replace('\', '/'))/php8apache2_4.dll`""
+            Add-Content -Path $httpdConf -Value "AddHandler application/x-httpd-php .php"
+            Add-Content -Path $httpdConf -Value "PHPIniDir `"$($phpPath.replace('\', '/'))`""
+            
+            Write-Log "Apache configuration completed successfully" -Level "SUCCESS"
+            return $true
+        }
+        else {
+            Write-Log "Apache configuration file not found at $httpdConf" -Level "ERROR"
+            return $false
+        }
+    }
+    catch {
+        Write-Log "Failed to configure Apache. Error: $_" -Level "ERROR"
+        return $false
+    }
+}
+function Configure-PHP {
+    Write-Log "Configuring PHP..." -Level "INFO"
+    # Placeholder for PHP configuration logic
+    return $true
+}
+
+function Initialize-MySQL {
+    Write-Log "Initializing MySQL..." -Level "INFO"
+    # Placeholder for MySQL initialization logic
+    return $true
 }
 
 # Function to install all components
@@ -225,12 +278,13 @@ function Install-All {
             New-Item -ItemType Directory -Path $tempDir -Force | Out-Null
         }
         
-        Install-Apache
-        Install-PHP
-        Install-MySQL
+        # if (-not (Install-Apache)) { return $false }
+        
+        # Install-PHP
+        # Install-MySQL
                 
         # Configure components
-        # if (-not (Configure-Apache)) { return $false }
+         if (-not (Configure-Apache)) { return $false }
         # if (-not (Configure-PHP)) { return $false }
         # if (-not (Initialize-MySQL)) { return $false }
         
