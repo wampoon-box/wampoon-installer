@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.14.35906.104 d17.14
+VisualStudioVersion = 17.14.35906.104
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PWAMPPConsole", "PWAMPPConsole.csproj", "{5AAB876D-A473-4BD5-8E93-AC5C072DC2BF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PWAMPPInstaller", "PWAMPPInstaller\PWAMPPInstaller.csproj", "{5AAB876D-A473-4BD5-8E93-AC5C072DC2BF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PWamppControl", "PWamppControl\PWamppControl.csproj", "{AD115A4A-7F4D-4848-9571-988E15997F22}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{5AAB876D-A473-4BD5-8E93-AC5C072DC2BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5AAB876D-A473-4BD5-8E93-AC5C072DC2BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5AAB876D-A473-4BD5-8E93-AC5C072DC2BF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AD115A4A-7F4D-4848-9571-988E15997F22}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AD115A4A-7F4D-4848-9571-988E15997F22}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AD115A4A-7F4D-4848-9571-988E15997F22}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AD115A4A-7F4D-4848-9571-988E15997F22}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
