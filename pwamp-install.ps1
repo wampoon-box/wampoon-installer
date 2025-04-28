@@ -372,9 +372,9 @@ function Install-All {
             New-Item -ItemType Directory -Path $tempDir -Force | Out-Null
         }
         
-        # if (-not (Install-Apache)) { return $false }
+        if (-not (Install-Apache)) { return $false }
         
-        # Install-PHP
+        Install-PHP
         # Install-MySQL
                 
         # Configure components
@@ -412,7 +412,7 @@ if (-not (Test-Path $tempDir)) {
 
 
 Install-All
-Update-HttpdConf -HttpdConfPath "$apachePath\conf\httpd.conf"
+# Update-HttpdConf -HttpdConfPath "$apachePath\conf\httpd.conf"
 
 
 # $installMySql = Read-Host "Should MySql be installed? (y/n)"
