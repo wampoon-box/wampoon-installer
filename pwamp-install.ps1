@@ -2,7 +2,8 @@
 # 1. Add a function to check if the software is already installed.
 # - Use Test-Path to check if the directories exist.
 # - Use Join-Path to create paths.
-
+# This script updates Apache's httpd.conf and PHP's php.ini files to use relative paths
+# for portable deployment on USB drives or other movable media
 
 $appName = "pwampp"
 
@@ -17,6 +18,7 @@ $mysqlPort = 3306
 
 # Set base directory to current script location 
 $baseDir = Split-Path -Parent $MyInvocation.MyCommand.Path 
+
 # Set the temp directory to the system's temp directory
 Write-Output "Base Directory: $baseDir"
 
@@ -30,7 +32,7 @@ $installDir = Join-Path -Path $baseDir "pwampp"
 # $tempDir = $env:TEMP
 $tempDir = "$baseDir\temp"
 
-$logFile = "$baseDir\logs\pwampp-portable.log"
+$logFile =  "$baseDir\logs\pwampp-portable.log"
 $apachePath = "$installDir\apache"
 $phpPath = "$installDir\php"
 $mysqlPath = "$installDir\mysql"
@@ -69,7 +71,7 @@ function Write-Log {
 }
 
 # Function to download files with progress
-function Download-File {
+function Get-File {
     param (
         [string]$Url,
         [string]$Output
@@ -87,7 +89,7 @@ function Download-File {
 }
 
 # Function to extract zip files with progress
-function Extract-Zip {
+function Expand-Zip {
     param (
         [string]$ZipFile,
         [string]$Destination
@@ -143,20 +145,38 @@ function Remove-TempFiles {
     }
 }
 
+
+
+# Function to backup files before modifying them
+function Create-Backup {
+    param (
+        [string]$FilePath
+    )
+    
+    if (Test-Path $FilePath) {
+        $BackupPath = "$FilePath.bak"
+        Write-Log "Creating backup of $FilePath to $BackupPath"
+        Copy-Item -Path $FilePath -Destination $BackupPath -Force
+        return $true
+    } else {
+        Write-Log "Warning: File $FilePath not found!" -Level "WARNING"
+        return $false
+    }
+}
+
 function Install-Apache {
     # Download and extract Apache
     Write-Log "Processing Apache..." -Level "INFO"
     if (-not (Test-Path $apachePath)) {
-        if (Download-File -Url $apacheUrl -Output $apacheZip) {
+        if (Get-File -Url $apacheUrl -Output $apacheZip) {
             # Create a temporary extraction directory
             $tempExtractPath = "$tempDir\apache_extract"
-            if (Extract-Zip -ZipFile $apacheZip -Destination $tempExtractPath) {
+            if (Expand-Zip -ZipFile $apacheZip -Destination $tempExtractPath) {
                 # Find the Apache24 directory in the extracted content
                 $apacheDir = Get-ChildItem -Path $tempExtractPath -Filter "Apache24" -Directory
                 if ($apacheDir) {
                     # Move to the final destination
                     Copy-Item -Path "$tempExtractPath\Apache24" -Destination $apachePath -Recurse -Force                    
-               
                     Write-Log "Apache installed successfully." -Level "SUCCESS"
                     return $true
                 }
@@ -177,8 +197,8 @@ function Install-PHP {
     # Download and extract PHP
     Write-Log "Processing PHP..." -Level "INFO"
     if (-not (Test-Path $phpPath)) {
-        if (Download-File -Url $phpUrl -Output $phpZip) {
-            if (-not (Extract-Zip -ZipFile $phpZip -Destination $phpPath)) {
+        if (Get-File -Url $phpUrl -Output $phpZip) {
+            if (-not (Expand-Zip -ZipFile $phpZip -Destination $phpPath)) {
                 return $false
             }
         }
@@ -196,8 +216,8 @@ function Install-MySQL {
     # Download and extract MySQL
     Write-Log "Processing MySQL..." -Level "INFO"
     if (-not (Test-Path $mysqlPath)) {
-        if (Download-File -Url $mysqlUrl -Output $mysqlZip) {
-            if (-not (Extract-Zip -ZipFile $mysqlZip -Destination $installDir)) {
+        if (Get-File -Url $mysqlUrl -Output $mysqlZip) {
+            if (-not (Expand-Zip -ZipFile $mysqlZip -Destination $installDir)) {
                 return $false
             }
         }
@@ -215,41 +235,110 @@ function Install-MySQL {
 #----------------------------
 #-- Configuration functions | 
 #----------------------------
-function Configure-Apache {
-    try {        
-        Write-Log "Configuring Apache..." -Level "INFO"    
-        
-        $httpdConf = Join-Path $apachePath "conf\httpd.conf"
-        
-        if (Test-Path $httpdConf) {
-            # Modify Apache config for portable use
-            (Get-Content $httpdConf) | ForEach-Object {
-                $_ -replace "c:/Apache24", $apachePath.replace('\', '/') `
-                    -replace "ServerRoot .*$", "ServerRoot `"$($apachePath.replace('\', '/'))`"" `
-                    -replace "Listen 80", "Listen $serverPort" `
-                    -replace "#ServerName www.example.com:80", "ServerName localhost:$serverPort" `
-                    -replace "#LoadModule rewrite_module", "LoadModule rewrite_module"
-            } | Set-Content $httpdConf
-            
-            # Add PHP configuration
-            Add-Content -Path $httpdConf -Value "`n# PHP Configuration"
-            Add-Content -Path $httpdConf -Value "LoadModule php_module `"$($phpPath.replace('\', '/'))/php8apache2_4.dll`""
-            Add-Content -Path $httpdConf -Value "AddHandler application/x-httpd-php .php"
-            Add-Content -Path $httpdConf -Value "PHPIniDir `"$($phpPath.replace('\', '/'))`""
-            
-            Write-Log "Apache configuration completed successfully" -Level "SUCCESS"
-            return $true
-        }
-        else {
-            Write-Log "Apache configuration file not found at $httpdConf" -Level "ERROR"
-            return $false
-        }
+
+# Function to update Apache httpd.conf file
+function Update-HttpdConf {
+    param (
+        [string]$HttpdConfPath
+    )
+    
+    if (-not (Create-Backup -FilePath $HttpdConfPath)) {
+        return
     }
-    catch {
-        Write-Log "Failed to configure Apache. Error: $_" -Level "ERROR"
-        return $false
+    $phpDir = "../php"
+    Write-Log "Updating httpd.conf to use relative paths..." -Level "INFO"
+    
+    $content = Get-Content -Path $HttpdConfPath -Raw
+    
+    # Replace ServerRoot with relative path
+    $content = $content -replace '(?m)^ServerRoot\s+"[^"]*"', 'ServerRoot "../"'
+    # Update DocumentRoot path
+    $content = $content -replace '(?m)^DocumentRoot\s+"[^"]*"', 'DocumentRoot "../htdocs"'
+    # Update Directory paths
+    $content = $content -replace '<Directory\s+"[^"]*htdocs">', '<Directory "../htdocs">'
+    # Update ErrorLog paths
+    $content = $content -replace '(?m)^ErrorLog\s+"[^"]*"', 'ErrorLog "./logs/error.log"'
+    # Update CustomLog paths
+    $content = $content -replace '(?m)^CustomLog\s+"[^"]*"\s+', 'CustomLog "./logs/access.log" '    
+    # Update ScriptAlias paths
+    $content = $content -replace '(?m)^ScriptAlias\s+/cgi-bin/\s+"[^"]*"', 'ScriptAlias /cgi-bin/ "./cgi-bin/"'
+    # Update Directory configuration for CGI
+    $content = $content -replace '<Directory\s+"[^"]*cgi-bin">', '<Directory "./cgi-bin">'
+    $content = $content -replace '#LoadModule rewrite_module', 'LoadModule rewrite_module'
+
+    # Update PHP module path (assuming PHP is in parent directory)
+    $phpModulePattern = 'LoadModule\s+php_module\s+"[^"]*"'
+    if ($content -match $phpModulePattern) {
+        $content = $content -replace $phpModulePattern, 'LoadModule php_module "../php/php8apache2_4.dll"'
+    } else {
+        # If no PHP module is defined, add it before the end of LoadModule section
+        $lastLoadModule = $content -split "(?m)^LoadModule" | Select-Object -Last 1
+        $insertPos = $content.LastIndexOf("LoadModule" + $lastLoadModule)
+        $insertPos = $content.IndexOf("`n", $insertPos) + 1
+        $content = $content.Insert($insertPos, "LoadModule php_module ""../php/php8apache2_4.dll""`n")
     }
+    
+    # Update PHPIniDir path
+    $phpIniDirPattern = 'PHPIniDir\s+"[^"]*"'
+    if ($content -match $phpIniDirPattern) {
+        $content = $content -replace $phpIniDirPattern, 'PHPIniDir "../php"'
+    } else {
+        # If PHPIniDir is not defined, add it after PHP module
+        $insertPos = $content.IndexOf("LoadModule php_module")
+        $insertPos = $content.IndexOf("`n", $insertPos) + 1
+        $content = $content.Insert($insertPos, "PHPIniDir ""../php""`n")
+    }
+    
+    # Make sure PHP file type is configured
+    if ($content -notmatch 'AddType\s+application/x-httpd-php\s+\.php') {
+        $insertPos = $content.IndexOf("PHPIniDir")
+        $insertPos = $content.IndexOf("`n", $insertPos) + 1
+        $content = $content.Insert($insertPos, "AddType application/x-httpd-php .php`n")
+        $insertPos = $content.IndexOf("`n", $insertPos) + 1
+        $content = $content.Insert($insertPos, "DirectoryIndex index.php index.html`n")        
+    }
+    
+    # Save updated file
+    $content | Set-Content -Path $HttpdConfPath -Force
+    Write-Host "httpd.conf updated successfully." -ForegroundColor Green
 }
+
+
+# function Configure-Apache {
+#     try {        
+#         Write-Log "Configuring Apache..." -Level "INFO"    
+        
+#         $httpdConf = Join-Path $apachePath "conf\httpd.conf"
+        
+#         if (Test-Path $httpdConf) {
+#             # Modify Apache config for portable use
+#             (Get-Content $httpdConf) | ForEach-Object {
+#                 $_ -replace "c:/Apache24", $apachePath.replace('\', '/') `
+#                     -replace "ServerRoot .*$", "ServerRoot `"$($apachePath.replace('\', '/'))`"" `
+#                     -replace "Listen 80", "Listen $serverPort" `
+#                     -replace "#ServerName www.example.com:80", "ServerName localhost:$serverPort" `
+#                     -replace "#LoadModule rewrite_module", "LoadModule rewrite_module"
+#             } | Set-Content $httpdConf
+            
+#             # Add PHP configuration
+#             Add-Content -Path $httpdConf -Value "`n# PHP Configuration"
+#             Add-Content -Path $httpdConf -Value "LoadModule php_module `"$($phpPath.replace('\', '/'))/php8apache2_4.dll`""
+#             Add-Content -Path $httpdConf -Value "AddHandler application/x-httpd-php .php"
+#             Add-Content -Path $httpdConf -Value "PHPIniDir `"$($phpPath.replace('\', '/'))`""
+            
+#             Write-Log "Apache configuration completed successfully" -Level "SUCCESS"
+#             return $true
+#         }
+#         else {
+#             Write-Log "Apache configuration file not found at $httpdConf" -Level "ERROR"
+#             return $false
+#         }
+#     }
+#     catch {
+#         Write-Log "Failed to configure Apache. Error: $_" -Level "ERROR"
+#         return $false
+#     }
+# }
 function Configure-PHP {
     Write-Log "Configuring PHP..." -Level "INFO"
     # Placeholder for PHP configuration logic
@@ -272,6 +361,11 @@ function Install-All {
         if (-not (Test-Path $installDir)) {
             New-Item -ItemType Directory -Path $installDir -Force | Out-Null
         }
+        # Create htdocs directory
+        if (-not (Test-Path $htdocsDir)) {
+            Write-Log "Creating directory: $htdocsDir" -ForegroundColor Yellow
+            New-Item -ItemType Directory -Path $htdocsDir -Force | Out-Null
+        }
         
         # Create temp directory
         if (-not (Test-Path $tempDir)) {
@@ -284,7 +378,7 @@ function Install-All {
         # Install-MySQL
                 
         # Configure components
-         if (-not (Configure-Apache)) { return $false }
+        #  if (-not (Configure-Apache)) { return $false }
         # if (-not (Configure-PHP)) { return $false }
         # if (-not (Initialize-MySQL)) { return $false }
         
@@ -318,6 +412,8 @@ if (-not (Test-Path $tempDir)) {
 
 
 Install-All
+Update-HttpdConf -HttpdConfPath "$apachePath\conf\httpd.conf"
+
 
 # $installMySql = Read-Host "Should MySql be installed? (y/n)"
 
