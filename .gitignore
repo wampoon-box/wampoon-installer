@@ -1,3 +1,5 @@
+src/PWAMP.Installer/Plan/
+
 tests/
 logs/
 temp/
@@ -5,9 +7,10 @@ pwampp/
 pwampp-bck/
 notes.ps1
 
-
-
 packages/
+src/
+apps/
+original-packages/
 
 # Build results
 [Dd]ebug/
