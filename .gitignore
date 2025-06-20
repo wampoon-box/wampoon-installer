@@ -1,14 +1,13 @@
 src/PWAMP.Installer/Plan/
-
+#src/
 tests/
 logs/
 temp/
 pwampp/
 pwampp-bck/
 notes.ps1
-
 packages/
-src/
+
 apps/
 original-packages/
 
