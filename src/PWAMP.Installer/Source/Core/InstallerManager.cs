@@ -429,7 +429,7 @@ server_id=1
             }
             catch
             {
-                // Ignore cleanup errors
+                // Ignore cleanup errors.
             }
         }
 

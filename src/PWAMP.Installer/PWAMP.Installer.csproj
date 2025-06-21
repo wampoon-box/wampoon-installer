@@ -52,21 +52,23 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Core\ArchiveExtractor.cs" />
-    <Compile Include="Core\InstallerManager.cs" />
-    <Compile Include="Core\PackageDownloader.cs" />
-    <Compile Include="Core\PackageRepository.cs" />
-    <Compile Include="Events\InstallerEvents.cs" />
-    <Compile Include="MainForm.cs">
+    <Compile Include="Source\Core\ArchiveExtractor.cs" />
+    <Compile Include="Source\Core\InstallerManager.cs" />
+    <Compile Include="Source\Core\PackageDownloader.cs" />
+    <Compile Include="Source\Core\PackageRepository.cs" />
+    <Compile Include="Source\Events\InstallerEvents.cs" />
+    <Compile Include="Source\Events\ProgressEventArgs.cs" />
+    <Compile Include="Source\PackageRepositoryTest.cs" />
+    <Compile Include="Source\UI\MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="MainForm.Designer.cs">
+    <Compile Include="Source\UI\MainForm.Designer.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Models\InstallablePackage.cs" />
+    <Compile Include="Source\Models\InstallablePackage.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="UI\InstallerWizardForm.cs">
+    <Compile Include="Source\UI\InstallerWizardForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -91,6 +93,11 @@
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Data\packages.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

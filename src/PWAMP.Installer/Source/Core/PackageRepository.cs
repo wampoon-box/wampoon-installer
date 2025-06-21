@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
+using System.Reflection;
 using PWAMP.Installer.Models;
 using Newtonsoft.Json;
 
@@ -14,6 +15,7 @@ namespace PWAMP.Installer.Core
         private readonly HttpClient _httpClient;
         private List<InstallablePackage> _packages;
         private bool _disposed = false;
+        private const string PackagesFileName = "packages.json";
 
         public PackageRepository()
         {
@@ -32,7 +34,7 @@ namespace PWAMP.Installer.Core
             }
             catch
             {
-                _packages = GetDefaultPackages();
+                _packages = LoadPackagesFromLocalFile();
             }
 
             return _packages;
@@ -45,16 +47,61 @@ namespace PWAMP.Installer.Core
             try
             {
                 var json = await _httpClient.GetStringAsync(manifestUrl);
-                return JsonConvert.DeserializeObject<List<InstallablePackage>>(json) ?? GetDefaultPackages();
+                return JsonConvert.DeserializeObject<List<InstallablePackage>>(json) ?? LoadPackagesFromLocalFile();
             }
             catch
             {
-                return GetDefaultPackages();
+                return LoadPackagesFromLocalFile();
             }
         }
 
-        private List<InstallablePackage> GetDefaultPackages()
+        private List<InstallablePackage> LoadPackagesFromLocalFile()
         {
+            try
+            {
+                // Try multiple locations for the packages.json file.
+                var possiblePaths = GetPossiblePackageFilePaths();
+                
+                foreach (var path in possiblePaths)
+                {
+                    if (File.Exists(path))
+                    {
+                        var json = File.ReadAllText(path);
+                        var packages = JsonConvert.DeserializeObject<List<InstallablePackage>>(json);
+                        if (packages != null && packages.Any())
+                        {
+                            return packages;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log the error if logging is available.
+                System.Diagnostics.Debug.WriteLine($"Error loading packages from local file: {ex.Message}");
+            }
+
+            // Fallback to minimal package list if JSON loading fails.
+            return GetFallbackPackages();
+        }
+
+        private string[] GetPossiblePackageFilePaths()
+        {
+            var appDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) ?? Environment.CurrentDirectory;
+            var currentDir = Environment.CurrentDirectory;
+            
+            return new[]
+            {
+                Path.Combine(appDir, "Data", PackagesFileName),
+                Path.Combine(appDir, PackagesFileName),
+                Path.Combine(currentDir, "Data", PackagesFileName),
+                Path.Combine(currentDir, PackagesFileName)
+            };
+        }
+
+        private List<InstallablePackage> GetFallbackPackages()
+        {
+            // Minimal fallback list with only essential packages.
             return new List<InstallablePackage>
             {
                 new InstallablePackage
@@ -66,42 +113,8 @@ namespace PWAMP.Installer.Core
                     ServerName = "Apache",
                     EstimatedSize = 14 * 1024 * 1024,
                     Description = "Apache HTTP Server - The world's most widely used web server software.",
-                    InstallPath = "apps/apache"
-                },
-                new InstallablePackage
-                {
-                    Name = "MariaDB Server",
-                    Version = new Version(11, 1, 3),
-                    DownloadUrl = new Uri("https://downloads.mariadb.org/rest-api/mariadb/11.1.3/mariadb-11.1.3-winx64.zip"),
-                    Type = PackageType.MariaDB,
-                    ServerName = "MariaDB",
-                    EstimatedSize = 180 * 1024 * 1024,
-                    Description = "MariaDB Server - Popular MySQL-compatible database server.",
-                    InstallPath = "apps/mariadb"
-                },
-                new InstallablePackage
-                {
-                    Name = "PHP Runtime",
-                    Version = new Version(8, 2, 13),
-                    DownloadUrl = new Uri("https://windows.php.net/downloads/releases/php-8.2.13-Win32-vs16-x64.zip"),
-                    Type = PackageType.PHP,
-                    ServerName = "PHP",
-                    EstimatedSize = 32 * 1024 * 1024,
-                    Description = "PHP - Server-side scripting language designed for web development.",
-                    InstallPath = "apps/php",
-                    Dependencies = new List<string> { "Apache HTTP Server" }
-                },
-                new InstallablePackage
-                {
-                    Name = "phpMyAdmin",
-                    Version = new Version(5, 2, 1),
-                    DownloadUrl = new Uri("https://files.phpmyadmin.net/phpMyAdmin/5.2.1/phpMyAdmin-5.2.1-all-languages.zip"),
-                    Type = PackageType.PhpMyAdmin,
-                    ServerName = "phpMyAdmin",
-                    EstimatedSize = 18 * 1024 * 1024,
-                    Description = "phpMyAdmin - Web-based database administration tool for MySQL and MariaDB.",
-                    InstallPath = "apps/phpmyadmin",
-                    Dependencies = new List<string> { "PHP Runtime", "MariaDB Server" }
+                    InstallPath = "apps/apache",
+                    Dependencies = new List<string>()
                 }
             };
         }
