@@ -14,7 +14,7 @@ namespace PWAMP.Installer
 {
     public partial class MainForm : Form
     {
-        private readonly InstallerManager _installerManager;
+        private InstallerManager _installerManager;
         private List<InstallablePackage> _availablePackages;
         private List<InstallablePackage> _selectedPackages;
         private CancellationTokenSource _cancellationTokenSource;
@@ -44,7 +44,6 @@ namespace PWAMP.Installer
         public MainForm()
         {
             Text = "PWAMP Server Installer";
-            _installerManager = new InstallerManager();
             _selectedPackages = new List<InstallablePackage>();
             _cancellationTokenSource = new CancellationTokenSource();
 
@@ -383,11 +382,6 @@ namespace PWAMP.Installer
             _backButton.Click += BackButton_Click;
             _exitButton.Click += ExitButton_Click;
 
-            _installerManager.DownloadProgressReported += OnDownloadProgress;
-            _installerManager.InstallationProgressReported += OnInstallationProgress;
-            _installerManager.ErrorOccurred += OnError;
-            _installerManager.InstallationCompleted += OnInstallationCompleted;
-
             this.FormClosing += MainForm_FormClosing;
         }
 
@@ -401,6 +395,7 @@ namespace PWAMP.Installer
                 case 1:
                     if (ValidateInstallationPath())
                     {
+                        InitializeInstallerManager();
                         await LoadAvailablePackages();
                         ShowSelectionStep();
                     }
@@ -775,6 +770,18 @@ namespace PWAMP.Installer
         }
 
         public string InstallationPath => _installationPath;
+
+        private void InitializeInstallerManager()
+        {
+            if (_installerManager != null)
+                _installerManager.Dispose();
+            
+            _installerManager = new InstallerManager(_installationPath);
+            _installerManager.DownloadProgressReported += OnDownloadProgress;
+            _installerManager.InstallationProgressReported += OnInstallationProgress;
+            _installerManager.ErrorOccurred += OnError;
+            _installerManager.InstallationCompleted += OnInstallationCompleted;
+        }
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
