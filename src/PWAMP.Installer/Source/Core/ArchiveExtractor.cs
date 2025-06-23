@@ -58,7 +58,7 @@ namespace PWAMP.Installer.Core
                         OnProgressReported(new InstallationProgressEventArgs
                         {
                             PackageName = package.Name,
-                            CurrentOperation = string.Format("Extracting {0} files...", totalEntries),
+                            CurrentOperation = $"Extracting {totalEntries} files...",
                             Stage = InstallationStage.Extracting,
                             PercentComplete = 10,
                             TotalSteps = totalEntries,
@@ -77,6 +77,18 @@ namespace PWAMP.Installer.Core
                                 continue;
 
                             var destinationPath = GetDestinationPath(entry.FullName, extractPath, shouldFlattenRoot ? rootDirName : null);
+                            
+                            // Validate destination path to prevent path traversal attacks
+                            if (!IsPathSafe(destinationPath, extractPath))
+                            {
+                                OnProgressReported(new InstallationProgressEventArgs
+                                {
+                                    PackageName = package.Name,
+                                    CurrentOperation = $"Skipping unsafe path: {entry.FullName}",
+                                    Stage = InstallationStage.Extracting
+                                });
+                                continue;
+                            }
                             
                             var destinationDir = Path.GetDirectoryName(destinationPath);
                             if (!Directory.Exists(destinationDir))
@@ -98,7 +110,7 @@ namespace PWAMP.Installer.Core
                                     OnProgressReported(new InstallationProgressEventArgs
                                     {
                                         PackageName = package.Name,
-                                        CurrentOperation = string.Format("Permission issue with: {0}", Path.GetFileName(destinationPath)),
+                                        CurrentOperation = $"Permission issue with: {Path.GetFileName(destinationPath)}",
                                         Stage = InstallationStage.Extracting
                                     });
                                 }
@@ -107,12 +119,12 @@ namespace PWAMP.Installer.Core
                             extractedEntries++;
                             var progress = 10 + (extractedEntries * 80 / totalEntries);
 
-                            if (extractedEntries % Math.Max(1, totalEntries / 20) == 0)
+                            if (extractedEntries % Math.Max(1, totalEntries / InstallerConstants.ProgressReportFrequency) == 0)
                             {
                                 OnProgressReported(new InstallationProgressEventArgs
                                 {
                                     PackageName = package.Name,
-                                    CurrentOperation = string.Format("Extracted {0} of {1} files...", extractedEntries, totalEntries),
+                                    CurrentOperation = $"Extracted {extractedEntries} of {totalEntries} files...",
                                     Stage = InstallationStage.Extracting,
                                     PercentComplete = progress,
                                     TotalSteps = totalEntries,
@@ -148,7 +160,7 @@ namespace PWAMP.Installer.Core
                 OnProgressReported(new InstallationProgressEventArgs
                 {
                     PackageName = package.Name,
-                    CurrentOperation = string.Format("Extraction failed: {0}", ex.Message),
+                    CurrentOperation = $"Extraction failed: {ex.Message}",
                     Stage = InstallationStage.Failed,
                     PercentComplete = 0
                 });
@@ -158,7 +170,7 @@ namespace PWAMP.Installer.Core
                     try { Directory.Delete(extractPath, true); } catch { }
                 }
 
-                throw new InvalidOperationException(string.Format("Failed to extract {0}: {1}", package.Name, ex.Message), ex);
+                throw new InvalidOperationException($"Failed to extract {package.Name}: {ex.Message}", ex);
             }
         }
 
@@ -259,7 +271,7 @@ namespace PWAMP.Installer.Core
             foreach (var file in expectedFiles)
             {
                 if (!FileExists(extractPath, file))
-                    throw new InvalidOperationException(string.Format("Apache validation failed: {0} not found", file));
+                    throw new InvalidOperationException($"Apache validation failed: {file} not found");
             }
         }
 
@@ -269,7 +281,7 @@ namespace PWAMP.Installer.Core
             foreach (var file in expectedFiles)
             {
                 if (!FileExists(extractPath, file))
-                    throw new InvalidOperationException(string.Format("Database validation failed: {0} not found", file));
+                    throw new InvalidOperationException($"Database validation failed: {file} not found");
             }
         }
 
@@ -279,7 +291,7 @@ namespace PWAMP.Installer.Core
             foreach (var file in expectedFiles)
             {
                 if (!FileExists(extractPath, file))
-                    throw new InvalidOperationException(string.Format("PHP validation failed: {0} not found", file));
+                    throw new InvalidOperationException($"PHP validation failed: {file} not found");
             }
         }
 
@@ -289,7 +301,7 @@ namespace PWAMP.Installer.Core
             foreach (var file in expectedFiles)
             {
                 if (!FileExists(extractPath, file))
-                    throw new InvalidOperationException(string.Format("phpMyAdmin validation failed: {0} not found", file));
+                    throw new InvalidOperationException($"phpMyAdmin validation failed: {file} not found");
             }
         }
 
@@ -298,10 +310,25 @@ namespace PWAMP.Installer.Core
             return Directory.GetFiles(basePath, fileName, SearchOption.AllDirectories).Length > 0;
         }
 
+        private bool IsPathSafe(string destinationPath, string extractPath)
+        {
+            try
+            {
+                var fullDestination = Path.GetFullPath(destinationPath);
+                var fullExtractPath = Path.GetFullPath(extractPath);
+                
+                // Ensure the destination is within the extract directory
+                return fullDestination.StartsWith(fullExtractPath, StringComparison.OrdinalIgnoreCase);
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
         protected virtual void OnProgressReported(InstallationProgressEventArgs e)
         {
-            if (ProgressReported != null)
-                ProgressReported.Invoke(this, e);
+            ProgressReported?.Invoke(this, e);
         }
 
         public void Dispose()

@@ -693,11 +693,11 @@ namespace PWAMP.Installer
             _logTextBox.ScrollToCaret();
 
             // Limit log size
-            if (_logTextBox.Lines.Length > 1000)
+            if (_logTextBox.Lines.Length > InstallerConstants.MaxLogLines)
             {
                 var lines = _logTextBox.Lines;
-                var newLines = new string[500];
-                Array.Copy(lines, lines.Length - 500, newLines, 0, 500);
+                var newLines = new string[InstallerConstants.LogTrimLines];
+                Array.Copy(lines, lines.Length - InstallerConstants.LogTrimLines, newLines, 0, InstallerConstants.LogTrimLines);
                 _logTextBox.Lines = newLines;
             }
         }
@@ -802,16 +802,5 @@ namespace PWAMP.Installer
                 _installerManager.Dispose();
         }
 
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                if (_cancellationTokenSource != null)
-                    _cancellationTokenSource.Dispose();
-                if (_installerManager != null)
-                    _installerManager.Dispose();
-            }
-            base.Dispose(disposing);
-        }
     }
 }

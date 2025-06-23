@@ -30,11 +30,11 @@ namespace PWAMP.Installer.Core
             _downloader = new PackageDownloader();
             _extractor = new ArchiveExtractor();
             
-            _installRootDirectory = installRootDirectory ?? Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "PWAMP");
-            _tempDirectory = Path.Combine(Path.GetTempPath(), "PWAMP-Installer", Guid.NewGuid().ToString("N").Substring(0, 8));
+            _installRootDirectory = installRootDirectory ?? InstallerConstants.DefaultInstallPath;
+            _tempDirectory = Path.Combine(Path.GetTempPath(), InstallerConstants.TempDirectoryPrefix, Guid.NewGuid().ToString("N").Substring(0, 8));
 
-            _downloader.ProgressReported += (s, e) => { if (DownloadProgressReported != null) DownloadProgressReported.Invoke(this, e); };
-            _extractor.ProgressReported += (s, e) => { if (InstallationProgressReported != null) InstallationProgressReported.Invoke(this, e); };
+            _downloader.ProgressReported += (s, e) => OnDownloadProgressReported(e);
+            _extractor.ProgressReported += (s, e) => OnInstallationProgressReported(e);
 
             Directory.CreateDirectory(_tempDirectory);
         }
@@ -106,7 +106,7 @@ namespace PWAMP.Installer.Core
                         OnInstallationProgressReported(new InstallationProgressEventArgs
                         {
                             PackageName = package.Name,
-                            CurrentOperation = string.Format("Installing {0} ({1} of {2})", package.Name, currentPackage, totalPackages),
+                            CurrentOperation = $"Installing {package.Name} ({currentPackage} of {totalPackages})",
                             Stage = InstallationStage.Initializing,
                             TotalSteps = totalPackages,
                             CompletedSteps = currentPackage - 1,
@@ -122,7 +122,7 @@ namespace PWAMP.Installer.Core
                             PackageName = package.Name,
                             Duration = duration,
                             InstallPath = Path.Combine(_installRootDirectory, package.InstallPath),
-                            Message = string.Format("{0} installed successfully", package.Name)
+                            Message = $"{package.Name} installed successfully"
                         });
                     }
                     catch (OperationCanceledException)
@@ -134,7 +134,7 @@ namespace PWAMP.Installer.Core
                         OnErrorOccurred(new InstallerErrorEventArgs
                         {
                             Exception = ex,
-                            Message = string.Format("Failed to install {0}", package.Name),
+                            Message = $"Failed to install {package.Name}",
                             PackageName = package.Name,
                             ErrorType = GetErrorType(ex),
                             IsFatal = false
@@ -145,7 +145,7 @@ namespace PWAMP.Installer.Core
                             Success = false,
                             PackageName = package.Name,
                             Duration = DateTime.UtcNow - packageStartTime,
-                            Message = string.Format("Failed to install {0}: {1}", package.Name, ex.Message)
+                            Message = $"Failed to install {package.Name}: {ex.Message}"
                         });
 
                         continue;
@@ -217,7 +217,7 @@ namespace PWAMP.Installer.Core
                 var isValid = await _downloader.ValidateChecksumAsync(downloadedFile, package.ChecksumUrl, cancellationToken);
                 if (!isValid)
                 {
-                    throw new InvalidOperationException(string.Format("Checksum validation failed for {0}", package.Name));
+                    throw new InvalidOperationException($"Checksum validation failed for {package.Name}");
                 }
             }
 
@@ -300,12 +300,12 @@ namespace PWAMP.Installer.Core
             var confFile = Path.Combine(installPath, "my.ini");
             if (!File.Exists(confFile))
             {
-                var configContent = string.Format(@"[mysqld]
-basedir={0}
-datadir={1}
+                var configContent = $@"[mysqld]
+basedir={installPath.Replace("\\", "/")}
+datadir={dataDir.Replace("\\", "/")}
 port=3306
 server_id=1
-", installPath.Replace("\\", "/"), dataDir.Replace("\\", "/"));
+";
                 File.WriteAllText(confFile, configContent);
             }
         }
@@ -330,7 +330,7 @@ server_id=1
             {
                 var configContent = File.ReadAllText(configSample);
                 configContent = configContent.Replace("$cfg['blowfish_secret'] = '';", 
-                    string.Format("$cfg['blowfish_secret'] = '{0}';", GenerateBlowfishSecret()));
+                    $"$cfg['blowfish_secret'] = '{GenerateBlowfishSecret()}';");
                 File.WriteAllText(config, configContent);
             }
         }
@@ -338,8 +338,19 @@ server_id=1
         private string GenerateBlowfishSecret()
         {
             const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-            var random = new Random();
-            return new string(Enumerable.Repeat(chars, 32).Select(s => s[random.Next(s.Length)]).ToArray());
+            using (var rng = System.Security.Cryptography.RandomNumberGenerator.Create())
+            {
+                var bytes = new byte[InstallerConstants.BlowfishSecretLength];
+                var result = new char[InstallerConstants.BlowfishSecretLength];
+                rng.GetBytes(bytes);
+                
+                for (int i = 0; i < InstallerConstants.BlowfishSecretLength; i++)
+                {
+                    result[i] = chars[bytes[i] % chars.Length];
+                }
+                
+                return new string(result);
+            }
         }
 
         public bool ValidatePrerequisites()
@@ -383,7 +394,7 @@ server_id=1
             try
             {
                 var drive = new DriveInfo(Path.GetPathRoot(_installRootDirectory));
-                return drive.AvailableFreeSpace > 500L * 1024L * 1024L; // 500MB minimum
+                return drive.AvailableFreeSpace > InstallerConstants.MinimumDiskSpace;
             }
             catch
             {
@@ -397,7 +408,7 @@ server_id=1
             {
                 using (var client = new System.Net.NetworkInformation.Ping())
                 {
-                    var reply = client.Send("8.8.8.8", 5000);
+                    var reply = client.Send("8.8.8.8", InstallerConstants.PingTimeout);
                     return reply.Status == System.Net.NetworkInformation.IPStatus.Success;
                 }
             }
@@ -427,46 +438,62 @@ server_id=1
                 if (Directory.Exists(_tempDirectory))
                     Directory.Delete(_tempDirectory, true);
             }
-            catch
+            catch (Exception ex)
             {
-                // Ignore cleanup errors.
+                // Log cleanup error but don't fail the operation
+                System.Diagnostics.Debug.WriteLine($"Warning: Failed to cleanup temp directory {_tempDirectory}: {ex.Message}");
+                OnErrorOccurred(new InstallerErrorEventArgs
+                {
+                    Exception = ex,
+                    Message = $"Failed to cleanup temporary files: {ex.Message}",
+                    ErrorType = ErrorType.FileSystem,
+                    IsFatal = false
+                });
             }
         }
 
         protected virtual void OnDownloadProgressReported(DownloadProgressEventArgs e)
         {
-            if (DownloadProgressReported != null)
-                DownloadProgressReported.Invoke(this, e);
+            DownloadProgressReported?.Invoke(this, e);
         }
 
         protected virtual void OnInstallationProgressReported(InstallationProgressEventArgs e)
         {
-            if (InstallationProgressReported != null)
-                InstallationProgressReported.Invoke(this, e);
+            InstallationProgressReported?.Invoke(this, e);
         }
 
         protected virtual void OnErrorOccurred(InstallerErrorEventArgs e)
         {
-            if (ErrorOccurred != null)
-                ErrorOccurred.Invoke(this, e);
+            ErrorOccurred?.Invoke(this, e);
         }
 
         protected virtual void OnInstallationCompleted(InstallationCompletedEventArgs e)
         {
-            if (InstallationCompleted != null)
-                InstallationCompleted.Invoke(this, e);
+            InstallationCompleted?.Invoke(this, e);
         }
 
         public void Dispose()
         {
             if (!_disposed)
             {
-                if (_packageRepository != null)
-                    _packageRepository.Dispose();
-                if (_downloader != null)
-                    _downloader.Dispose();
-                if (_extractor != null)
-                    _extractor.Dispose();
+                try
+                {
+                    _packageRepository?.Dispose();
+                }
+                catch { /* Ignore disposal errors */ }
+                
+                try
+                {
+                    _downloader?.Dispose();
+                }
+                catch { /* Ignore disposal errors */ }
+                
+                try
+                {
+                    _extractor?.Dispose();
+                }
+                catch { /* Ignore disposal errors */ }
+                
                 CleanupTempFiles();
                 _disposed = true;
             }

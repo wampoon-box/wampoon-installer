@@ -34,7 +34,7 @@ namespace PWAMP.Installer.Models
 
         public string GetDisplayName()
         {
-            return string.Format("{0} {1}", Name, Version);
+            return $"{Name} {Version}";
         }
 
         public string GetSizeText()
@@ -42,7 +42,7 @@ namespace PWAMP.Installer.Models
             if (EstimatedSize == 0) return "Unknown";
             
             var mb = EstimatedSize / (1024.0 * 1024.0);
-            return mb < 1 ? string.Format("{0} KB", EstimatedSize / 1024) : string.Format("{0:F1} MB", mb);
+            return mb < 1 ? $"{EstimatedSize / 1024} KB" : $"{mb:F1} MB";
         }
     }
 

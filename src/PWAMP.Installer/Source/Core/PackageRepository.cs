@@ -15,12 +15,11 @@ namespace PWAMP.Installer.Core
         private readonly HttpClient _httpClient;
         private List<InstallablePackage> _packages;
         private bool _disposed = false;
-        private const string PackagesFileName = "packages.json";
 
         public PackageRepository()
         {
             _httpClient = new HttpClient();
-            _httpClient.Timeout = TimeSpan.FromMinutes(5);
+            _httpClient.Timeout = InstallerConstants.HttpShortTimeout;
         }
 
         public async Task<List<InstallablePackage>> GetAvailablePackagesAsync()
@@ -42,7 +41,12 @@ namespace PWAMP.Installer.Core
 
         private async Task<List<InstallablePackage>> LoadPackagesFromManifestAsync()
         {
-            const string manifestUrl = "https://raw.githubusercontent.com/your-org/pwamp-packages/main/packages.json";
+            var manifestUrl = GetConfiguredManifestUrl();
+            
+            if (string.IsNullOrEmpty(manifestUrl) || !IsUrlAllowed(manifestUrl))
+            {
+                return LoadPackagesFromLocalFile();
+            }
             
             try
             {
@@ -53,6 +57,37 @@ namespace PWAMP.Installer.Core
             {
                 return LoadPackagesFromLocalFile();
             }
+        }
+
+        private string GetConfiguredManifestUrl()
+        {
+            // Try to get from config file first, then fallback to default
+            try
+            {
+                var configPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) ?? Environment.CurrentDirectory, InstallerConstants.ConfigFileName);
+                if (File.Exists(configPath))
+                {
+                    var config = JsonConvert.DeserializeObject<dynamic>(File.ReadAllText(configPath));
+                    return config?.manifestUrl?.ToString();
+                }
+            }
+            catch
+            {
+                // Ignore config errors and use default
+            }
+            
+            return "https://raw.githubusercontent.com/your-org/pwamp-packages/main/packages.json";
+        }
+
+        private bool IsUrlAllowed(string url)
+        {
+            if (!Uri.TryCreate(url, UriKind.Absolute, out var uri))
+                return false;
+                
+            if (uri.Scheme != "https")
+                return false;
+                
+            return InstallerConstants.AllowedManifestDomains.Any(domain => uri.Host.Equals(domain, StringComparison.OrdinalIgnoreCase));
         }
 
         private List<InstallablePackage> LoadPackagesFromLocalFile()
@@ -92,10 +127,10 @@ namespace PWAMP.Installer.Core
             
             return new[]
             {
-                Path.Combine(appDir, "Data", PackagesFileName),
-                Path.Combine(appDir, PackagesFileName),
-                Path.Combine(currentDir, "Data", PackagesFileName),
-                Path.Combine(currentDir, PackagesFileName)
+                Path.Combine(appDir, "Data", InstallerConstants.PackagesFileName),
+                Path.Combine(appDir, InstallerConstants.PackagesFileName),
+                Path.Combine(currentDir, "Data", InstallerConstants.PackagesFileName),
+                Path.Combine(currentDir, InstallerConstants.PackagesFileName)
             };
         }
 

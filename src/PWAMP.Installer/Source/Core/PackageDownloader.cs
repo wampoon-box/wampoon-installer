@@ -18,7 +18,7 @@ namespace PWAMP.Installer.Core
         public PackageDownloader()
         {
             _httpClient = new HttpClient();
-            _httpClient.Timeout = TimeSpan.FromMinutes(30);
+            _httpClient.Timeout = InstallerConstants.HttpClientTimeout;
             _httpClient.DefaultRequestHeaders.Add("User-Agent", "PWAMP-Installer/1.0");
         }
 
@@ -29,10 +29,7 @@ namespace PWAMP.Installer.Core
 
             var fileName = Path.GetFileName(package.DownloadUrl.AbsolutePath);
             if (string.IsNullOrEmpty(fileName) || !fileName.Contains("."))
-                fileName = string.Format("{0}_{1}.{2}", 
-                    package.Name.Replace(" ", "_"), 
-                    package.Version, 
-                    package.ArchiveFormat);
+                fileName = $"{package.Name.Replace(" ", "_")}_{package.Version}.{package.ArchiveFormat}";
 
             var filePath = Path.Combine(downloadDirectory, fileName);
             
@@ -80,9 +77,9 @@ namespace PWAMP.Installer.Core
                     var totalBytes = response.Content.Headers.ContentLength ?? package.EstimatedSize;
                     
                     using (var contentStream = await response.Content.ReadAsStreamAsync())
-                    using (var fileStream = new FileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.None, 8192, true))
+                    using (var fileStream = new FileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.None, InstallerConstants.FileStreamBufferSize, true))
                     {
-                        var buffer = new byte[8192];
+                        var buffer = new byte[InstallerConstants.DownloadBufferSize];
                         int bytesRead;
 
                         while ((bytesRead = await contentStream.ReadAsync(buffer, 0, buffer.Length, cancellationToken)) > 0)
@@ -91,7 +88,7 @@ namespace PWAMP.Installer.Core
                             totalBytesRead += bytesRead;
 
                             var now = DateTime.UtcNow;
-                            if (now - lastReportTime >= TimeSpan.FromMilliseconds(250))
+                            if (now - lastReportTime >= InstallerConstants.ProgressReportInterval)
                             {
                                 var elapsed = now - startTime;
                                 var speed = totalBytesRead / elapsed.TotalSeconds;
@@ -106,7 +103,7 @@ namespace PWAMP.Installer.Core
                                     PercentComplete = totalBytes > 0 ? Math.Min(100, (double)totalBytesRead / totalBytes * 100) : 0,
                                     TimeRemaining = timeRemaining,
                                     DownloadSpeed = speed,
-                                    Status = string.Format("Downloading... {0}/s", FormatBytes(speed))
+                                    Status = $"Downloading... {FormatBytes(speed)}/s"
                                 });
 
                                 lastReportTime = now;
@@ -132,7 +129,7 @@ namespace PWAMP.Installer.Core
                 {
                     try { File.Delete(filePath); } catch { }
                 }
-                throw new InvalidOperationException(string.Format("Failed to download {0}: {1}", package.Name, ex.Message), ex);
+                throw new InvalidOperationException($"Failed to download {package.Name}: {ex.Message}", ex);
             }
         }
 
@@ -143,7 +140,7 @@ namespace PWAMP.Installer.Core
                 var fileInfo = new FileInfo(filePath);
                 if (!fileInfo.Exists) return false;
 
-                if (package.EstimatedSize > 0 && Math.Abs(fileInfo.Length - package.EstimatedSize) > (long)(package.EstimatedSize * 0.1))
+                if (package.EstimatedSize > 0 && Math.Abs(fileInfo.Length - package.EstimatedSize) > (long)(package.EstimatedSize * InstallerConstants.FileSizeTolerancePercent))
                     return false;
 
                 if (!string.IsNullOrEmpty(package.ChecksumUrl))
@@ -193,13 +190,12 @@ namespace PWAMP.Installer.Core
                 counter++;
             }
             
-            return string.Format("{0:n1} {1}", number, suffixes[counter]);
+            return $"{number:n1} {suffixes[counter]}";
         }
 
         protected virtual void OnProgressReported(DownloadProgressEventArgs e)
         {
-            if (ProgressReported != null)
-                ProgressReported.Invoke(this, e);
+            ProgressReported?.Invoke(this, e);
         }
 
         public void Dispose()
