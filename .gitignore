@@ -1,0 +1,68 @@
+src/PWAMP.Installer/Plan/
+src/PWAMP.Installer/PWAMP.Admin/
+src/Pwamp.Neo.Installer/Plan
+
+
+
+#src/
+installer-scripts/tests/
+installer-scripts/logs/
+installer-scripts/temp/
+installer-scripts/pwampp/
+installer-scripts/pwampp-bck/
+installer-scripts/notes.ps1
+packages/
+
+apps/
+original-packages/
+
+# Build results
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+x64/
+x86/
+[Ww][Ii][Nn]32/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+bld/
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+
+# .NET Core
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+
+#
+.vs/
+
+# ASP.NET Scaffolding
+ScaffoldingReadMe.txt
+
+# NuGet Packages
+*.nupkg
+# NuGet Symbol Packages
+*.snupkg
+
+# Others
+~$*
+*~
+CodeCoverage/
+
+# MSBuild Binary and Structured Log
+*.binlog
+
+# MSTest test Results
+[Tt]est[Rr]esult*/
+[Bb]uild[Ll]og.*
+
+# NUnit
+*.VisualState.xml
+TestResult.xml
+nunit-*.xml
+.claude/

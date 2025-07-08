@@ -1,0 +1,30 @@
+[
+  {
+    "PackageID": "Apache",
+    "Name": "Apache HTTP Server",
+    "Version": "2.4.63",
+    "DownloadUrl": "https://www.apachelounge.com/download/VS17/binaries/httpd-2.4.63-250207-win64-VS17.zip",
+    "Checksum": ""
+  },
+  {
+    "PackageID": "MariaDB",
+    "Name": "MariaDB Server",
+    "Version": "11.8.2",
+    "DownloadUrl": "https://mirror.us.mirhosting.net/mariadb/mariadb-11.8.2/winx64-packages/mariadb-11.8.2-winx64.zip",
+    "Checksum": ""
+  },
+  {
+    "PackageID": "PHP",
+    "Name": "PHP Runtime",
+    "Version": "8.4.8",
+    "DownloadUrl": "https://windows.php.net/downloads/releases/archives/php-8.4.9-Win32-vs17-x86.zip",
+    "Checksum": ""
+  },
+  {
+    "PackageID": "PhpMyAdmin",
+    "Name": "phpMyAdmin",
+    "Version": "5.2.2",
+    "DownloadUrl": "https://files.phpmyadmin.net/phpMyAdmin/5.2.2/phpMyAdmin-5.2.2-all-languages.zip",
+    "Checksum": ""
+  }
+] 
