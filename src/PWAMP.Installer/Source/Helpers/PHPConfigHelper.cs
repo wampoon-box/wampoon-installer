@@ -80,6 +80,11 @@ namespace PWAMP.Installer.Neo.Helpers
             var phpDir = pathResolver.GetPackageDirectory(PackageNames.PHP);
             
             await FileHelper.CreateDirectoryIfNotExistsAsync(phpDir);
+            
+            // Create required PHP folders
+            await FileHelper.CreateDirectoryIfNotExistsAsync(Path.Combine(phpDir, "logs"));
+            await FileHelper.CreateDirectoryIfNotExistsAsync(Path.Combine(phpDir, "sessions"));
+            await FileHelper.CreateDirectoryIfNotExistsAsync(Path.Combine(phpDir, "temp"));
         }
 
         private static async Task ConfigurePHPFromTemplateAsync(IPathResolver pathResolver, IProgress<string> logger)

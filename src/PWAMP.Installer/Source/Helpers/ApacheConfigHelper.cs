@@ -168,12 +168,16 @@ namespace PWAMP.Installer.Neo.Helpers
         private static async Task CreateApacheDirectoriesAsync(IPathResolver pathResolver, IProgress<string> logger)
         {
             logger?.Report("Creating Apache directories...");
-            //TODO: Create Apache's log and tmp folders.
+            
             var apacheDir = pathResolver.GetPackageDirectory(PackageNames.Apache);
             var confDir = pathResolver.GetSubdirectoryPath(PackageNames.Apache, "conf");
 
             await FileHelper.CreateDirectoryIfNotExistsAsync(apacheDir);
             await FileHelper.CreateDirectoryIfNotExistsAsync(confDir);
+            
+            // Create required Apache folders
+            await FileHelper.CreateDirectoryIfNotExistsAsync(Path.Combine(apacheDir, "logs"));
+            await FileHelper.CreateDirectoryIfNotExistsAsync(Path.Combine(apacheDir, "tmp"));
         }
 
         private static async Task ConfigureApacheFromTemplateAsync(IPathResolver pathResolver, IProgress<string> logger)

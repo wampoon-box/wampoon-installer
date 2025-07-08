@@ -80,6 +80,12 @@ namespace PWAMP.Installer.Neo.Helpers
             var mariadbDir = pathResolver.GetPackageDirectory(PackageNames.MariaDB);
             
             await FileHelper.CreateDirectoryIfNotExistsAsync(mariadbDir);
+            
+            // Create required MariaDB folders
+            await FileHelper.CreateDirectoryIfNotExistsAsync(Path.Combine(mariadbDir, "data"));
+            await FileHelper.CreateDirectoryIfNotExistsAsync(Path.Combine(mariadbDir, "logs"));
+            await FileHelper.CreateDirectoryIfNotExistsAsync(Path.Combine(mariadbDir, "tmp"));
+            await FileHelper.CreateDirectoryIfNotExistsAsync(Path.Combine(mariadbDir, "secure-files"));
         }
 
         private static async Task ConfigureMariaDBFromTemplateAsync(IPathResolver pathResolver, IProgress<string> logger)

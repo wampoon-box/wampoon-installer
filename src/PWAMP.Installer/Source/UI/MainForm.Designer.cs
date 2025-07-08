@@ -18,6 +18,7 @@ namespace PWAMP.Installer.Neo.UI
         private CheckBox _phpmyadminCheckBox;
         private TextBox _installPathTextBox;
         private Button _browseButton;
+        private Button _openFolderButton;
         private Button _installButton;
         private Button _cancelButton;
         private Button _exportLogButton;
@@ -58,6 +59,7 @@ namespace PWAMP.Installer.Neo.UI
             this._pathGroup = new System.Windows.Forms.GroupBox();
             this._installPathTextBox = new System.Windows.Forms.TextBox();
             this._browseButton = new System.Windows.Forms.Button();
+            this._openFolderButton = new System.Windows.Forms.Button();
             this._installButton = new System.Windows.Forms.Button();
             this._cancelButton = new System.Windows.Forms.Button();
             this._exportLogButton = new System.Windows.Forms.Button();
@@ -134,6 +136,7 @@ namespace PWAMP.Installer.Neo.UI
             | System.Windows.Forms.AnchorStyles.Right)));
             this._pathGroup.Controls.Add(this._installPathTextBox);
             this._pathGroup.Controls.Add(this._browseButton);
+            this._pathGroup.Controls.Add(this._openFolderButton);
             this._pathGroup.Location = new System.Drawing.Point(10, 140);
             this._pathGroup.Name = "_pathGroup";
             this._pathGroup.Size = new System.Drawing.Size(925, 60);
@@ -147,19 +150,30 @@ namespace PWAMP.Installer.Neo.UI
             | System.Windows.Forms.AnchorStyles.Right)));
             this._installPathTextBox.Location = new System.Drawing.Point(10, 25);
             this._installPathTextBox.Name = "_installPathTextBox";
-            this._installPathTextBox.Size = new System.Drawing.Size(815, 20);
+            this._installPathTextBox.Size = new System.Drawing.Size(725, 20);
             this._installPathTextBox.TabIndex = 0;
             this._installPathTextBox.Text = "C:\\PWAMP";
             // 
             // _browseButton
             // 
             this._browseButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this._browseButton.Location = new System.Drawing.Point(835, 25);
+            this._browseButton.Location = new System.Drawing.Point(745, 25);
             this._browseButton.Name = "_browseButton";
             this._browseButton.Size = new System.Drawing.Size(80, 25);
             this._browseButton.TabIndex = 1;
             this._browseButton.Text = "Browse";
             this._browseButton.Click += new System.EventHandler(this.BrowseButton_Click);
+            // 
+            // _openFolderButton
+            // 
+            this._openFolderButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this._openFolderButton.Location = new System.Drawing.Point(835, 25);
+            this._openFolderButton.Name = "_openFolderButton";
+            this._openFolderButton.Size = new System.Drawing.Size(80, 25);
+            this._openFolderButton.TabIndex = 2;
+            this._openFolderButton.Text = "Open Folder";
+            this._openFolderButton.UseVisualStyleBackColor = true;
+            this._openFolderButton.Click += new System.EventHandler(this.OpenFolderButton_Click);
             // 
             // _installButton
             // 

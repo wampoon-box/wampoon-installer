@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Threading;
@@ -145,6 +146,36 @@ namespace PWAMP.Installer.Neo.UI
             {
                 MessageBox.Show($"Failed to export log: {ex.Message}", 
                     "Export Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void OpenFolderButton_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                var installPath = _installPathTextBox.Text;
+                
+                if (string.IsNullOrWhiteSpace(installPath))
+                {
+                    MessageBox.Show("Please specify an installation directory first.", 
+                        "No Path Selected", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    return;
+                }
+                
+                if (Directory.Exists(installPath))
+                {
+                    Process.Start("explorer.exe", installPath);
+                }
+                else
+                {
+                    MessageBox.Show($"Directory does not exist: {installPath}", 
+                        "Directory Not Found", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Failed to open directory: {ex.Message}", 
+                    "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
