@@ -27,7 +27,7 @@ namespace Wampoon.Installer.Models
         
         public string ServerName { get; set; }
         
-        // UI selection state (not serialized to JSON)
+        // UI selection state (not serialized to JSON).
         [JsonIgnore]
         public bool IsSelected { get; set; }
 

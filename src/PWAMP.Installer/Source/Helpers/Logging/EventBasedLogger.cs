@@ -50,7 +50,7 @@ namespace Wampoon.Installer.Helpers.Logging
         {
             OnLogMessage(new LogEventArgs(LogLevel.Error, message, packageName, exception));
             
-            // Also raise the error event for existing error handling
+            // Also raise the error event for existing error handling.
             OnErrorOccurred(new InstallerErrorEventArgs
             {
                 Message = message,
@@ -67,7 +67,7 @@ namespace Wampoon.Installer.Helpers.Logging
             
             OnLogMessage(new LogEventArgs(LogLevel.Progress, operation, packageName));
             
-            // Also raise the progress event for existing progress handling
+            // Also raise the progress event for existing progress handling.
             OnProgressReported(new InstallationProgressEventArgs
             {
                 CurrentOperation = operation,
@@ -86,7 +86,7 @@ namespace Wampoon.Installer.Helpers.Logging
             
             OnLogMessage(new LogEventArgs(LogLevel.DownloadProgress, message, packageName));
             
-            // Also raise the download progress event for existing download progress handling
+            // Also raise the download progress event for existing download progress handling.
             OnDownloadProgressReported(new DownloadProgressEventArgs
             {
                 PackageName = packageName,
@@ -104,7 +104,7 @@ namespace Wampoon.Installer.Helpers.Logging
             
             OnLogMessage(new LogEventArgs(LogLevel.InstallationCompleted, logMessage, packageName));
             
-            // Also raise the installation completed event for existing completion handling
+            // Also raise the installation completed event for existing completion handling.
             OnInstallationCompleted(new InstallationCompletedEventArgs
             {
                 Success = success,

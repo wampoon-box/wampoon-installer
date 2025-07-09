@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PWAMP.Installer.Helpers
+namespace Wampoon.Installer.Helpers
 {
     internal class AppConstants
     {

@@ -23,12 +23,12 @@ namespace Wampoon.Installer.Core
             if (!File.Exists(archivePath))
                 throw new FileNotFoundException($"Archive file not found: {archivePath}");
 
-            // Validate ZIP file integrity before attempting extraction
+            // Validate ZIP file integrity before attempting extraction.
             try
             {
                 using (var testArchive = ZipFile.OpenRead(archivePath))
                 {
-                    // Try to read the central directory
+                    // Try to read the central directory.
                     var entryCount = testArchive.Entries.Count;
                     OnProgressReported(new InstallationProgressEventArgs
                     {
@@ -141,7 +141,7 @@ namespace Wampoon.Installer.Core
 
                         extractedEntries++;
                         
-                        // Only report at 25%, 50%, 75% intervals
+                        // Only report at 25%, 50%, 75% intervals.
                         var progress = 10 + (extractedEntries * 80 / totalEntries);
                         var currentQuarter = progress / 25;
                         var lastQuarter = (10 + ((extractedEntries - 1) * 80 / totalEntries)) / 25;
@@ -342,7 +342,7 @@ namespace Wampoon.Installer.Core
                 var fullDestination = Path.GetFullPath(destinationPath);
                 var fullExtractPath = Path.GetFullPath(extractPath);
                 
-                // Ensure the destination is within the extract directory
+                // Ensure the destination is within the extract directory.
                 return fullDestination.StartsWith(fullExtractPath, StringComparison.OrdinalIgnoreCase);
             }
             catch

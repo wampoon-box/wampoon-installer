@@ -29,19 +29,19 @@ namespace Wampoon.Installer.Helpers.Common
             {
                 progressReporter?.Report($"Configuring {DisplayName}...");
 
-                // Validate prerequisites
+                // Validate prerequisites.
                 if (!await ValidatePrerequisitesAsync(pathResolver, progressReporter))
                 {
                     throw new Exception($"{DisplayName} prerequisites validation failed. Check the detailed error messages above for specific issues with {DisplayName} binary or template files.");
                 }
 
-                // Create necessary directories
+                // Create necessary directories.
                 await CreateDirectoriesAsync(pathResolver, progressReporter);
 
-                // Configure using template
+                // Configure using template.
                 await ConfigureFromTemplateAsync(pathResolver, progressReporter);
 
-                // Validate configuration was created
+                // Validate configuration was created.
                 if (!await ValidateConfigurationAsync(pathResolver, progressReporter))
                 {
                     throw new Exception($"{DisplayName} configuration validation failed");
@@ -61,7 +61,7 @@ namespace Wampoon.Installer.Helpers.Common
             progressReporter?.Report($"Validating {DisplayName} prerequisites...");
             var validationErrors = new List<string>();
 
-            // Check if binary exists
+            // Check if binary exists.
             var binaryPath = pathResolver.GetBinaryPath(PackageName, BinaryFileName);
             progressReporter?.Report($"Checking {DisplayName} binary at: {binaryPath}");
             
@@ -77,7 +77,7 @@ namespace Wampoon.Installer.Helpers.Common
                 progressReporter?.Report($"✗ {errorMsg}");
                 validationErrors.Add(errorMsg);
                 
-                // Check if directory exists
+                // Check if directory exists.
                 var binaryDir = Path.GetDirectoryName(binaryPath);
                 if (!Directory.Exists(binaryDir))
                 {
@@ -91,7 +91,7 @@ namespace Wampoon.Installer.Helpers.Common
                 }
             }
 
-            // Check if required template exists
+            // Check if required template exists.
             var templatePath = TemplateHelper.GetTemplatePath(TemplateFileName);
             progressReporter?.Report($"Checking {DisplayName} template at: {templatePath}");
             
@@ -107,7 +107,7 @@ namespace Wampoon.Installer.Helpers.Common
                 progressReporter?.Report($"✗ {errorMsg}");
                 validationErrors.Add(errorMsg);
                 
-                // Check if template directory exists
+                // Check if template directory exists.
                 var templateDir = Path.GetDirectoryName(templatePath);
                 if (!Directory.Exists(templateDir))
                 {
@@ -151,7 +151,7 @@ namespace Wampoon.Installer.Helpers.Common
 
         protected virtual async Task CreatePackageSpecificDirectoriesAsync(IPathResolver pathResolver, string packageDir, IProgress<string> progressReporter)
         {
-            // Default implementation - can be overridden by derived classes
+            // Default implementation - can be overridden by derived classes.
             await Task.CompletedTask;
         }
 
@@ -171,7 +171,7 @@ namespace Wampoon.Installer.Helpers.Common
 
         protected virtual async Task ConfigureAdditionalTemplatesAsync(IPathResolver pathResolver, IProgress<string> progressReporter)
         {
-            // Default implementation - can be overridden by derived classes for additional templates
+            // Default implementation - can be overridden by derived classes for additional templates.
             await Task.CompletedTask;
         }
 

@@ -19,7 +19,7 @@ namespace Wampoon.Installer.Core
         {
             _httpClient = new HttpClient();
             _httpClient.Timeout = InstallerConstants.HttpClientTimeout;
-            _httpClient.DefaultRequestHeaders.Add("User-Agent", "PWAMP-Installer/1.0");
+            _httpClient.DefaultRequestHeaders.Add("User-Agent", "Wampoon-Installer/1.0");
         }
 
         public async Task<string> DownloadPackageAsync(InstallablePackage package, string downloadDirectory, CancellationToken cancellationToken = default)
@@ -130,7 +130,7 @@ namespace Wampoon.Installer.Core
                     Status = "Download completed"
                 });
 
-                // Validate ZIP file integrity immediately after download
+                // Validate ZIP file integrity immediately after download.
                 if (package.ArchiveFormat?.ToLower() == "zip")
                 {
                     OnProgressReported(new DownloadProgressEventArgs
@@ -144,7 +144,7 @@ namespace Wampoon.Installer.Core
                     {
                         using (var archive = System.IO.Compression.ZipFile.OpenRead(filePath))
                         {
-                            // Try to read the central directory - this will fail if ZIP is corrupted
+                            // Try to read the central directory - this will fail if ZIP is corrupted.
                             var entryCount = archive.Entries.Count;
                             OnProgressReported(new DownloadProgressEventArgs
                             {
@@ -194,25 +194,25 @@ namespace Wampoon.Installer.Core
                 if (package.EstimatedSize > 0 && Math.Abs(fileInfo.Length - package.EstimatedSize) > (long)(package.EstimatedSize * InstallerConstants.FileSizeTolerancePercent))
                     return false;
 
-                // Validate ZIP file integrity for ZIP archives
+                // Validate ZIP file integrity for ZIP archives.
                 if (package.ArchiveFormat?.ToLower() == "zip")
                 {
                     try
                     {
                         using (var archive = System.IO.Compression.ZipFile.OpenRead(filePath))
                         {
-                            // Try to read the central directory - this will fail if ZIP is corrupted
+                            // Try to read the central directory - this will fail if ZIP is corrupted.
                             var entryCount = archive.Entries.Count;
                         }
                     }
                     catch (System.IO.InvalidDataException)
                     {
-                        // ZIP file is corrupted
+                        // ZIP file is corrupted.
                         return false;
                     }
                     catch
                     {
-                        // Other ZIP-related errors
+                        // Other ZIP-related errors.
                         return false;
                     }
                 }
@@ -279,23 +279,23 @@ namespace Wampoon.Installer.Core
 
         private int GetOptimalBufferSize(long totalBytes)
         {
-            // Adaptive buffer sizing based on file size
+            // Adaptive buffer sizing based on file size.
             const long TenMB = 10 * 1024 * 1024;
             const long HundredMB = 100 * 1024 * 1024;
 
             if (totalBytes >= HundredMB)
             {
-                // 1MB buffer for files >= 100MB
+                // 1MB buffer for files >= 100MB.
                 return InstallerConstants.HugeDownloadBufferSize;
             }
             else if (totalBytes >= TenMB)
             {
-                // 256KB buffer for files >= 10MB
+                // 256KB buffer for files >= 10MB.
                 return InstallerConstants.LargeDownloadBufferSize;
             }
             else
             {
-                // 64KB buffer for smaller files
+                // 64KB buffer for smaller files.
                 return InstallerConstants.DownloadBufferSize;
             }
         }

@@ -34,19 +34,19 @@ namespace Wampoon.Installer.Helpers
                 var confDir = pathResolver.GetSubdirectoryPath(PackageNames.Apache, "conf");
                 await FileHelper.CreateDirectoryIfNotExistsAsync(confDir);
                 
-                // Create required Apache folders
+                // Create required Apache folders.
                 await FileHelper.CreateDirectoryIfNotExistsAsync(Path.Combine(packageDir, "logs"));
                 await FileHelper.CreateDirectoryIfNotExistsAsync(Path.Combine(packageDir, "tmp"));
             }
 
             protected override async Task ConfigureAdditionalTemplatesAsync(IPathResolver pathResolver, IProgress<string> logger)
             {
-                // Copy the custom path file
+                // Copy the custom path file.
                 var templateCustomPath = TemplateHelper.GetTemplatePath(PackageNames.ApacheFiles.Templates.PwampCustomPathConf);
                 var customConfTargetPath = pathResolver.GetConfigPath(PackageNames.Apache, PackageNames.ApacheFiles.PwampCustomPathConf);
                 await TemplateHelper.CopyTemplateWithVersionAsync(templateCustomPath, customConfTargetPath);
 
-                // Copy the vhosts file
+                // Copy the vhosts file.
                 var templateVhostsPath = TemplateHelper.GetTemplatePath(PackageNames.ApacheFiles.Templates.PwampVhostsConf);
                 var vHostsConfTargetPath = pathResolver.GetConfigPath(PackageNames.Apache, PackageNames.ApacheFiles.PwampVhostsConf);
                 await TemplateHelper.CopyTemplateWithVersionAsync(templateVhostsPath, vHostsConfTargetPath);

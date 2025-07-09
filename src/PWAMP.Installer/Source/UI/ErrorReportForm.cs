@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.Net;
 using System.Text;
 using System.Windows.Forms;
-using PWAMP.Installer.Helpers;
+using Wampoon.Installer.Helpers;
 
 namespace Frostybee.Pwamp.UI
 {
@@ -79,7 +79,7 @@ namespace Frostybee.Pwamp.UI
         private string GenerateErrorReport()
         {
             var report = new StringBuilder();
-            report.AppendLine("PWAMP Control Panel Error Report");
+            report.AppendLine("Wampoon Control Panel Error Report");
             report.AppendLine("====================================");
             report.AppendLine($"Timestamp: {DateTime.Now:yyyy-MM-dd HH:mm:ss}");
             report.AppendLine($"Exception Type: {_exception.GetType().Name}");

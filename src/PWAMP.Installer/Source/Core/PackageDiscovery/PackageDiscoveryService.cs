@@ -21,7 +21,7 @@ namespace Wampoon.Installer.Core.PackageDiscovery
                 return null;
             }
 
-            // Map PackageNames constants to PackageType enum
+            // Map PackageNames constants to PackageType enum.
             var packageType = GetPackageTypeFromName(packageName);
             if (packageType == null)
             {
@@ -88,7 +88,7 @@ namespace Wampoon.Installer.Core.PackageDiscovery
                 case PackageNames.MariaDB:
                     return "mariadb";
                 case "mysql":
-                    return "mariadb"; // Map mysql to mariadb for legacy compatibility
+                    return "mariadb"; // Map mysql to mariadb for legacy compatibility.
                 case PackageNames.PHP:
                     return "php";
                 case PackageNames.PhpMyAdmin:

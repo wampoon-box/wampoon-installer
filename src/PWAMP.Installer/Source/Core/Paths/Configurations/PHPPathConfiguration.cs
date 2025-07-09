@@ -14,16 +14,16 @@ namespace Wampoon.Installer.Core.Paths.Configurations
 
         protected override void InitializeConfiguration()
         {
-            // Binary files (PHP binaries are typically in the root directory)
+            // Binary files (PHP binaries are typically in the root directory).
             AddBinaryFile(PackageNames.PHPFiles.PhpExe, PackageNames.PHPFiles.PhpExe);
             AddBinaryFile(PackageNames.PHPFiles.PhpCgiExe, PackageNames.PHPFiles.PhpCgiExe);
             
-            // Configuration files
+            // Configuration files.
             AddConfigFile(PackageNames.PHPFiles.PhpIni, PackageNames.PHPFiles.PhpIni);
             AddConfigFile(PackageNames.PHPFiles.PhpIniDevelopment, PackageNames.PHPFiles.PhpIniDevelopment);
             AddConfigFile(PackageNames.PHPFiles.PhpIniProduction, PackageNames.PHPFiles.PhpIniProduction);
             
-            // Subdirectories
+            // Subdirectories.
             AddSubdirectory("ext", "ext");
             AddSubdirectory("logs", "logs");
             AddSubdirectory("tmp", "tmp");

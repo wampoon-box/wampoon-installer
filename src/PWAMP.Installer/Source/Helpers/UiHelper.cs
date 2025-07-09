@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace PWAMP.Installer.Helpers
+namespace Wampoon.Installer.Helpers
 {
     internal class UiHelper
     {

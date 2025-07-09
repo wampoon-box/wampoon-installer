@@ -14,15 +14,15 @@ namespace Wampoon.Installer.Core.Paths.Configurations
 
         protected override void InitializeConfiguration()
         {
-            // Binary files
+            // Binary files.
             AddBinaryFile(PackageNames.MariaDBFiles.MysqldExe, $"bin/{PackageNames.MariaDBFiles.MysqldExe}");
             AddBinaryFile(PackageNames.MariaDBFiles.MysqlExe, $"bin/{PackageNames.MariaDBFiles.MysqlExe}");
             
-            // Configuration files
+            // Configuration files.
             AddConfigFile(PackageNames.MariaDBFiles.MyIni, PackageNames.MariaDBFiles.MyIni);
             AddConfigFile(PackageNames.MariaDBFiles.MyCnf, PackageNames.MariaDBFiles.MyCnf);
             
-            // Subdirectories
+            // Subdirectories.  
             AddSubdirectory("bin", "bin");
             AddSubdirectory("data", "data");
             AddSubdirectory("logs", "logs");

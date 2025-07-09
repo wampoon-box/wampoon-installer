@@ -12,7 +12,7 @@ namespace Wampoon.Installer.Core
 
         public InstallOptions()
         {
-            InstallPath = @"C:\PWAMP";
+            InstallPath = @"C:\Wampoon";
             InstallApache = true;
             InstallMariaDB = true;
             InstallPHP = true;

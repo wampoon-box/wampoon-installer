@@ -27,10 +27,10 @@ namespace Wampoon.Installer.Core
             if (_packages != null)
                 return _packages;
 
-            // Try local file first for faster startup
+            // Try local file first for faster startup.
             _packages = LoadPackagesFromLocalFile();
             
-            // If local file didn't have valid packages, try remote manifest
+            // If local file didn't have valid packages, try remote manifest.
             if (_packages == null || !_packages.Any())
             {
                 try
@@ -39,7 +39,7 @@ namespace Wampoon.Installer.Core
                 }
                 catch
                 {
-                    // If both fail, use fallback
+                    // If both fail, use fallback.
                     _packages = GetFallbackPackages();
                 }
             }
@@ -70,7 +70,7 @@ namespace Wampoon.Installer.Core
 
         private string GetConfiguredManifestUrl()
         {
-            // Try to get from config file first, then fallback to default
+            // Try to get from config file first, then fallback to default.
             try
             {
                 var configPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) ?? Environment.CurrentDirectory, InstallerConstants.ConfigFileName);
@@ -82,7 +82,7 @@ namespace Wampoon.Installer.Core
             }
             catch
             {
-                // Ignore config errors and use default
+                // Ignore config errors and use default.
             }
             
             return "https://raw.githubusercontent.com/your-org/pwamp-packages/main/packages.json";
@@ -134,7 +134,7 @@ namespace Wampoon.Installer.Core
                 var metadata = PackageMetadata.GetMetadata(package.PackageID);
                 if (metadata != null)
                 {
-                    // Merge hardcoded metadata with JSON data
+                    // Merge hardcoded metadata with JSON data.
                     package.Type = metadata.Type;
                     package.ServerName = metadata.ServerName;
                     package.EstimatedSize = metadata.EstimatedSize;
@@ -143,7 +143,7 @@ namespace Wampoon.Installer.Core
                     package.ArchiveFormat = metadata.ArchiveFormat;
                     package.Dependencies = metadata.Dependencies;
                     
-                    // If no checksum URL but we have a direct checksum, clear the URL
+                    // If no checksum URL but we have a direct checksum, clear the URL.
                     if (!string.IsNullOrEmpty(package.Checksum))
                     {
                         package.ChecksumUrl = null;
@@ -156,7 +156,7 @@ namespace Wampoon.Installer.Core
 
         private List<InstallablePackage> GetFallbackPackages()
         {
-            // Fallback packages matching the latest versions from packages.json
+            // Fallback packages matching the latest versions from packages.json.
             return new List<InstallablePackage>
             {
                 new InstallablePackage

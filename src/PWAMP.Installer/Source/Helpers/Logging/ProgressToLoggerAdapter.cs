@@ -18,7 +18,7 @@ namespace Wampoon.Installer.Helpers.Logging
             if (string.IsNullOrEmpty(value))
                 return;
 
-            // Simple heuristic to determine log level based on message content
+            // Simple heuristic to determine log level based on message content.
             if (value.StartsWith("✗") || value.Contains("failed") || value.Contains("error"))
             {
                 _logger.LogError(value, _packageName);

@@ -14,22 +14,22 @@ namespace Wampoon.Installer.Core.Paths.Configurations
 
         protected override void InitializeConfiguration()
         {
-            // Binary files
+            // Binary files.
             AddBinaryFile(PackageNames.ApacheFiles.HttpdExe, $"bin/{PackageNames.ApacheFiles.HttpdExe}");
             
-            // Configuration files
+            // Configuration files.
             AddConfigFile(PackageNames.ApacheFiles.HttpdConf, $"conf/{PackageNames.ApacheFiles.HttpdConf}");
             AddConfigFile(PackageNames.ApacheFiles.PwampCustomPathConf, $"conf/{PackageNames.ApacheFiles.PwampCustomPathConf}");
             AddConfigFile(PackageNames.ApacheFiles.PwampVhostsConf, $"conf/extra/{PackageNames.ApacheFiles.PwampVhostsConf}");
             
-            // Subdirectories
+            // Subdirectories.
             AddSubdirectory("conf", "conf");
             AddSubdirectory("bin", "bin");
             AddSubdirectory("logs", "logs");
             AddSubdirectory("htdocs", "htdocs");
             AddSubdirectory("conf-extra", "conf/extra");
             
-            // Alternative binary paths for Apache24 nested structure
+            // Alternative binary paths for Apache24 nested structure.
             AddAlternativeBinaryPaths(PackageNames.ApacheFiles.HttpdExe, $"Apache24/bin/{PackageNames.ApacheFiles.HttpdExe}");
         }
     }

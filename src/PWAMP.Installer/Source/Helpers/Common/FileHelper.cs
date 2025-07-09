@@ -11,7 +11,7 @@ namespace Wampoon.Installer.Helpers.Common
             if (!Directory.Exists(directoryPath))
             {
                 Directory.CreateDirectory(directoryPath);
-                await Task.Delay(10); // Small delay to ensure directory creation
+                await Task.Delay(10); // Small delay to ensure directory creation.
             }
         }
 
@@ -43,7 +43,7 @@ namespace Wampoon.Installer.Helpers.Common
                     var apachePath = Path.Combine(installPath, "apps", "apache", "bin", "httpd.exe");
                     var apacheExists = ValidateFileExists(apachePath, "Apache binary");
                     
-                    // Also check the Apache24 path in case the folder structure wasn't flattened
+                    // Also check the Apache24 path in case the folder structure wasn't flattened.
                     if (!apacheExists)
                     {
                         var apache24Path = Path.Combine(installPath, "apps", "apache", "Apache24", "bin", "httpd.exe");
@@ -98,7 +98,7 @@ namespace Wampoon.Installer.Helpers.Common
                 
                 await CreateDirectoryIfNotExistsAsync(targetDir);
                 
-                // If target file exists, delete it first
+                // If target file exists, delete it first.  
                 if (File.Exists(targetFile))
                 {
                     File.Delete(targetFile);
@@ -107,7 +107,7 @@ namespace Wampoon.Installer.Helpers.Common
                 File.Move(file, targetFile);
             }
 
-            // Move all empty directories
+            // Move all empty directories.
             var directories = Directory.GetDirectories(sourceDirectory, "*", SearchOption.AllDirectories);
             foreach (var directory in directories)
             {

@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{C6FA9B2E-B88A-4385-B9D7-6839A89E9FF0}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>PWAMP.Installer</RootNamespace>
-    <AssemblyName>PWAMP.Installer</AssemblyName>
+    <RootNamespace>Wampoon.Installer</RootNamespace>
+    <AssemblyName>Wampoon-Installer</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -130,6 +130,7 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
     <EmbeddedResource Include="Source\UI\AboutForm.resx">
       <DependentUpon>AboutForm.cs</DependentUpon>

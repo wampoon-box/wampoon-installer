@@ -10,7 +10,7 @@ using Wampoon.Installer.Core.Events;
 using Wampoon.Installer.Core.PackageDiscovery;
 using Wampoon.Installer.Models;
 using Frostybee.Pwamp.UI;
-using PWAMP.Installer.Helpers;
+using Wampoon.Installer.Helpers;
 
 namespace Wampoon.Installer.UI
 {
@@ -42,7 +42,7 @@ namespace Wampoon.Installer.UI
             _packageRepository = new PackageRepository();
             _packageDiscoveryService = new PackageDiscoveryService(_packageRepository);
             
-            // This should now be fast since it loads from local file first
+            // This should now be fast since it loads from local file first.
             UpdateComponentVersions();
             
             Text = AppConstants.APP_FULL_NAME;
@@ -68,7 +68,7 @@ namespace Wampoon.Installer.UI
 
             try
             {
-                // Validate at least one component is selected
+                // Validate at least one component is selected.
                 if (!_apacheCheckBox.Checked && !_mariadbCheckBox.Checked && 
                     !_phpCheckBox.Checked && !_phpmyadminCheckBox.Checked)
                 {
@@ -77,7 +77,7 @@ namespace Wampoon.Installer.UI
                     return;
                 }
 
-                // Validate installation path
+                // Validate installation path.
                 if (string.IsNullOrWhiteSpace(_installPathTextBox.Text))
                 {
                     MessageBox.Show("Please specify an installation directory.", 
@@ -88,13 +88,13 @@ namespace Wampoon.Installer.UI
                 _isInstalling = true;
                 _cancellationTokenSource = new CancellationTokenSource();
                 
-                // Update UI state
+                // Update UI state.
                 _installButton.Enabled = false;
                 _cancelButton.Enabled = true;
                 _progressBar.Value = 0;
                 _logTextBox.Clear();
                 
-                // Create install options
+                // Create install options.
                 var options = new InstallOptions
                 {
                     InstallPath = _installPathTextBox.Text,
@@ -104,7 +104,7 @@ namespace Wampoon.Installer.UI
                     InstallPhpMyAdmin = _phpmyadminCheckBox.Checked
                 };
 
-                // Start installation
+                // Start installation.
                 await _installManager.InstallAsync(options, _cancellationTokenSource.Token);
             }
             catch (OperationCanceledException)
@@ -121,11 +121,11 @@ namespace Wampoon.Installer.UI
             {
                 _isInstalling = false;
                 
-                // Reset progress bar on cancellation or error
+                // Reset progress bar on cancellation or error.
                 _progressBar.Value = 0;
                 _progressLabel.Text = "Ready to install";
                 
-                // Only reset install button text if installation didn't complete successfully
+                // Only reset install button text if installation didn't complete successfully.
                 if (_installButton.Text != "Install Again")
                 {
                     _installButton.Enabled = true;
@@ -202,7 +202,7 @@ namespace Wampoon.Installer.UI
 
         private void QuitButton_Click(object sender, EventArgs e)
         {
-            // Close the application
+            // Close the application.
             this.Close();
         }
 
@@ -225,13 +225,13 @@ namespace Wampoon.Installer.UI
             _progressBar.Value = progressValue;
             
             /*
-            // Debug: Log progress updates, especially near completion
+            // Debug: Log progress updates, especially near completion.
             if (e.PercentComplete >= 90)
             {
                 LogMessage($"DEBUG: Progress update - {e.PercentComplete}% (setting bar to {progressValue}%)", Color.Cyan);
             }*/
             
-            // Use green color for success messages (those with checkmark).
+            // Use green color for success messages (those with checkmark)..
             Color messageColor = e.Message.StartsWith("✓") ? Color.Green : Color.White;
             LogMessage(e.Message, messageColor);
         }
@@ -255,31 +255,31 @@ namespace Wampoon.Installer.UI
                 return;
             }
 
-            // MULTIPLE HACKS: Fix WinForms ProgressBar rendering bug
+            // MULTIPLE HACKS: Fix WinForms ProgressBar rendering bug.
             try
             {
-                // Method 1: Force refresh
+                // Method 1: Force refresh.
                 _progressBar.Value = 99;
                 _progressBar.Refresh();
                 _progressBar.Value = 100;
                 _progressBar.Refresh();
                 
-                // Method 2: Style change
+                // Method 2: Style change.
                 _progressBar.Style = ProgressBarStyle.Continuous;
                 
-                // Method 3: Force invalidate and update
+                // Method 3: Force invalidate and update.
                 _progressBar.Invalidate();
                 _progressBar.Update();
                 
-                // Method 4: SetWindowPos hack to force redraw
+                // Method 4: SetWindowPos hack to force redraw.
                 this.Refresh();
                 Application.DoEvents();
                 
-                // Method 5: Delayed final update
+                // Method 5: Delayed final update.
                 _progressBarTimer?.Stop();
                 _progressBarTimer?.Dispose();
                 _progressBarTimer = new System.Windows.Forms.Timer();
-                _progressBarTimer.Interval = 100; // 100ms delay
+                _progressBarTimer.Interval = 100; // 100ms delay.
                 _progressBarTimer.Tick += (s, args) =>
                 {
                     _progressBarTimer.Stop();
@@ -295,12 +295,12 @@ namespace Wampoon.Installer.UI
             }
             _progressLabel.Text = "Installation Completed Successfully";
             
-            // Update button states for completion
+            // Update button states for completion.
             _installButton.Enabled = true;
             _installButton.Text = "Install Again";
             _cancelButton.Enabled = false;
             
-            // Debug: Log that we're showing the quit button
+            // Debug: Log that we're showing the quit button.
             LogMessage("Quit button should now be visible", Color.Yellow);
             
             LogMessage("Installation completed successfully!", Color.Green);
@@ -339,10 +339,10 @@ namespace Wampoon.Installer.UI
                 _cancellationTokenSource?.Cancel();
             }
 
-            // Cleanup resources
+            // Cleanup resources.
             _cancellationTokenSource?.Dispose();
             
-            // Unsubscribe from events to prevent memory leaks
+            // Unsubscribe from events to prevent memory leaks.
             if (_installManager != null)
             {
                 _installManager.ProgressChanged -= InstallManager_ProgressChanged;
@@ -352,11 +352,11 @@ namespace Wampoon.Installer.UI
                 _installManager.Dispose();
             }
             
-            // Dispose timer
+            // Dispose timer.
             _progressBarTimer?.Stop();
             _progressBarTimer?.Dispose();
             
-            // Dispose package repository
+            // Dispose package repository.
             _packageRepository?.Dispose();
 
             base.OnFormClosing(e);
@@ -392,7 +392,7 @@ namespace Wampoon.Installer.UI
 
         private void SetDefaultComponentText()
         {
-            // Set default text immediately (non-blocking)
+            // Set default text immediately (non-blocking).
             _apacheCheckBox.Text = "🌐 Apache HTTP Server";
             _mariadbCheckBox.Text = "🗄️ MariaDB Database Server";
             _phpCheckBox.Text = "🐘 PHP Scripting Language";
@@ -403,11 +403,11 @@ namespace Wampoon.Installer.UI
         {
             try
             {
-                // Add a timeout to prevent hanging on startup
+                // Add a timeout to prevent hanging on startup.
                 var timeout = TimeSpan.FromSeconds(10);
                 var loadVersionsTask = Task.Run(async () =>
                 {
-                    // Run all package lookups in parallel for better performance
+                    // Run all package lookups in parallel for better performance.
                     var tasks = new[]
                     {
                         _packageDiscoveryService.GetPackageByNameAsync(PackageNames.Apache),
@@ -424,7 +424,7 @@ namespace Wampoon.Installer.UI
 
                 if (completedTask == timeoutTask)
                 {
-                    // Timeout occurred
+                    // Timeout occurred.
                     System.Diagnostics.Debug.WriteLine("Version loading timed out - using default component text");
                     return;
                 }
@@ -447,9 +447,9 @@ namespace Wampoon.Installer.UI
             }
             catch (Exception ex)
             {
-                // Log error but don't show to user as this is not critical
+                // Log error but don't show to user as this is not critical.
                 System.Diagnostics.Debug.WriteLine($"Error updating component versions: {ex.Message}");
-                // UI will keep the default text if version loading fails
+                // UI will keep the default text if version loading fails.
             }
         }
 

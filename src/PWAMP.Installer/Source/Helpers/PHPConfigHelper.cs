@@ -31,7 +31,7 @@ namespace Wampoon.Installer.Helpers
 
             protected override async Task CreatePackageSpecificDirectoriesAsync(IPathResolver pathResolver, string packageDir, IProgress<string> logger)
             {
-                // Create required PHP folders
+                // Create required PHP folders.
                 await FileHelper.CreateDirectoryIfNotExistsAsync(Path.Combine(packageDir, "logs"));
                 await FileHelper.CreateDirectoryIfNotExistsAsync(Path.Combine(packageDir, "sessions"));
                 await FileHelper.CreateDirectoryIfNotExistsAsync(Path.Combine(packageDir, "temp"));

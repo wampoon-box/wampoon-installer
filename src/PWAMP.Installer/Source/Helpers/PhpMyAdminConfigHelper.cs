@@ -30,7 +30,7 @@ namespace Wampoon.Installer.Helpers
 
             protected override async Task CreatePackageSpecificDirectoriesAsync(IPathResolver pathResolver, string packageDir, IProgress<string> logger)
             {
-                // phpMyAdmin doesn't need additional directories
+                // phpMyAdmin doesn't need additional directories.
                 await Task.CompletedTask;
             }
 

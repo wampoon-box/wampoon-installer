@@ -1,4 +1,4 @@
-using PWAMP.Installer.Helpers;
+using Wampoon.Installer.Helpers;
 using Wampoon.Installer.UI;
 using System;
 using System.Threading;
@@ -10,7 +10,7 @@ namespace Wampoon.Installer
     static class Program
     {
         /// <summary>
-        /// The main entry point for the Neo PWAMP installer application.
+        /// The main entry point for the Wampoon installer application.
         /// </summary>
         [STAThread]
         static void Main()
@@ -28,7 +28,7 @@ namespace Wampoon.Installer
             catch (Exception ex)
             {
                 MessageBox.Show($"An unexpected error occurred: {ex.Message}", 
-                    "PWAMP Installer Error", 
+                    $"{AppConstants.APP_FULL_NAME} Error", 
                     MessageBoxButtons.OK, 
                     MessageBoxIcon.Error);
             }

@@ -30,7 +30,7 @@ namespace Wampoon.Installer.Core
             _packageDownloadService = new PackageDownloadService(packageDownloader);
             _packageExtractionService = new PackageExtractionService(archiveExtractor);
 
-            // Subscribe to detailed progress events from services
+            // Subscribe to detailed progress events from services.
             _packageDownloadService.DownloadProgressReported += (sender, e) => DownloadProgressReported?.Invoke(this, e);
             _packageExtractionService.ExtractionProgressReported += (sender, e) => ExtractionProgressReported?.Invoke(this, e);
         }
@@ -49,7 +49,7 @@ namespace Wampoon.Installer.Core
                 throw new Exception($"Package '{packageName}' not found in repository");
             }
 
-            // Progress is now handled centrally through event forwarding
+            // Progress is now handled centrally through event forwarding.
 
             return await _packageDownloadService.DownloadPackageAsync(package, downloadDirectory, logger, cancellationToken);
         }
@@ -63,7 +63,7 @@ namespace Wampoon.Installer.Core
                 throw new Exception($"Package '{packageName}' not found in repository");
             }
 
-            // Progress is now handled centrally through event forwarding
+            // Progress is now handled centrally through event forwarding.
 
             return await _packageExtractionService.ExtractPackageAsync(package, archivePath, extractPath, logger, cancellationToken);
         }
@@ -77,18 +77,18 @@ namespace Wampoon.Installer.Core
                 throw new Exception($"Package '{packageName}' not found in repository");
             }
 
-            // Create download directory
+            // Create download directory.
             var downloadDir = Path.Combine(installPath, "downloads");
             Directory.CreateDirectory(downloadDir);
 
-            // Download package
+            // Download package.
             var downloadedPath = await DownloadPackageAsync(packageName, downloadDir, logger, cancellationToken);
 
-            // Extract to apps folder
+            // Extract to apps folder.
             var extractPath = Path.Combine(installPath, "apps", _packageDiscoveryService.GetPackageDirectoryName(packageName));
             var extractedPath = await ExtractPackageAsync(packageName, downloadedPath, extractPath, logger, cancellationToken);
 
-            // Clean up downloaded archive to save space
+            // Clean up downloaded archive to save space.
             try
             {
                 File.Delete(downloadedPath);
@@ -96,10 +96,10 @@ namespace Wampoon.Installer.Core
             }
             catch
             {
-                // Ignore cleanup errors
+                // Ignore cleanup errors.
             }
 
-            // Fire package installation completed event
+            // Fire package installation completed event.
             PackageInstallationCompleted?.Invoke(this, new InstallationCompletedEventArgs
             {
                 Success = true,

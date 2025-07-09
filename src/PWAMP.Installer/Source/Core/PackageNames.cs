@@ -58,10 +58,10 @@ namespace Wampoon.Installer.Core
         /// </summary>
         public static class ApacheFiles
         {
-            // Binary files
+            // Binary files.
             public const string HttpdExe = "httpd.exe";
 
-            // Configuration files
+            // Configuration files.
             public const string HttpdConf = "httpd.conf";
             public const string PwampCustomPathConf = "pwamp-custom-path.conf";
             public const string PwampVhostsConf = "pwamp-vhosts.conf";
@@ -80,12 +80,12 @@ namespace Wampoon.Installer.Core
         /// </summary>
         public static class MariaDBFiles
         {
-            // Binary files
+            // Binary files.
             public const string MysqldExe = "mysqld.exe";
             public const string MysqlExe = "mysql.exe";
             public const string MariaDbInstallDbExe = "mariadb-install-db.exe";
 
-            // Configuration files
+            // Configuration files.
             public const string MyIni = "my.ini";
             public const string MyCnf = "my.cnf";
 
@@ -101,11 +101,11 @@ namespace Wampoon.Installer.Core
         /// </summary>
         public static class PHPFiles
         {
-            // Binary files
+            // Binary files.
             public const string PhpExe = "php.exe";
             public const string PhpCgiExe = "php-cgi.exe";
 
-            // Configuration files
+            // Configuration files.
             public const string PhpIni = "php.ini";
             public const string PhpIniDevelopment = "php.ini-development";
             public const string PhpIniProduction = "php.ini-production";
@@ -122,14 +122,14 @@ namespace Wampoon.Installer.Core
         /// </summary>
         public static class PhpMyAdminFiles
         {
-            // Application files
+            // Application files.
             public const string IndexPhp = "index.php";
 
-            // Configuration files
+            // Configuration files.
             public const string ConfigIncPhp = "config.inc.php";
             public const string ConfigSampleIncPhp = "config.sample.inc.php";
 
-            // Template names
+            // Template names.
             public static class Templates
             {
                 public const string ConfigIncPhp = "config.inc.php";

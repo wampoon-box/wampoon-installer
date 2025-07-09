@@ -40,7 +40,7 @@ namespace Wampoon.Installer.Core
             _selectedPackages = new List<string>();
             _installationValidator = new InstallationValidator();
             
-            // Subscribe to package manager progress events
+            // Subscribe to package manager progress events.
             SubscribeToPackageManagerEvents();
         }
 
@@ -52,33 +52,33 @@ namespace Wampoon.Installer.Core
                 _totalSteps = CalculateTotalSteps(options);
                 _selectedPackages.Clear();
                 
-                // Initialize package progress tracking
+                // Initialize package progress tracking.
                 _totalPackages = CountSelectedPackages(options);
                 _currentPackageIndex = 0;
                 _currentPackageProgress = 0;
 
-                // Initialize path resolver and installation coordinator
+                // Initialize path resolver and installation coordinator.
                 _pathResolver = PathResolverFactory.CreatePathResolver(options.InstallPath);
                 var packageInstaller = new PackageInstaller(_packageManager, _pathResolver);
                 var installationCoordinator = new InstallationCoordinator(packageInstaller, _pathResolver);
 
-                ReportProgress("Starting PWAMP installation...", 0, "Initialization");
+                ReportProgress("Starting Wampoon installation...", 0, "Initialization");
 
-                // Validate installation directory
+                // Validate installation directory.
                 await _installationValidator.ValidateInstallationPathAsync(options.InstallPath);
                 ReportProgress($"Installation path validated: {options.InstallPath}", GetProgressPercentage(), "Validation");
 
-                // Check for existing packages
+                // Check for existing packages.
                 var selectedPackages = options.GetSelectedPackages();
                 var existingPackages = await CheckForExistingPackagesAsync(options.InstallPath, selectedPackages);
                 
                 if (existingPackages.Length > 0)
                 {
-                    // Notify caller about existing packages and wait for confirmation
+                    // Notify caller about existing packages and wait for confirmation.
                     var existingPackagesEventArgs = new ExistingPackagesEventArgs(existingPackages);
                     ExistingPackagesDetected?.Invoke(this, existingPackagesEventArgs);
                     
-                    // If the caller doesn't set OverwriteRequested to true, cancel the installation
+                    // If the caller doesn't set OverwriteRequested to true, cancel the installation.
                     if (!existingPackagesEventArgs.OverwriteRequested)
                     {
                         ReportProgress("Installation cancelled due to existing packages", 0, "Cancelled");
@@ -88,26 +88,26 @@ namespace Wampoon.Installer.Core
                     ReportProgress($"Continuing with installation - overwriting existing packages: {string.Join(", ", existingPackages)}", GetProgressPercentage(), "Validation");
                 }
 
-                // Create base directories
+                // Create base directories.
                 await CreateBaseDirectoriesAsync();
 
-                // Phase 1: Install all selected packages
+                // Phase 1: Install all selected packages.
                 var installProgress = new Progress<string>(message => 
                     ReportProgress(message, GetDetailedProgressPercentage(), "Package Installation"));
                 await installationCoordinator.ExecuteInstallationAsync(options, installProgress, cancellationToken);
                 
-                // Track selected packages for configuration
+                // Track selected packages for configuration.
                 TrackSelectedPackages(options);
 
-                // Phase 2: Configure all installed packages
+                // Phase 2: Configure all installed packages.
                 var configProgress = new Progress<string>(message => 
                     ReportProgress(message, GetProgressPercentage(), "Package Configuration"));
                 await installationCoordinator.ExecuteConfigurationAsync(_selectedPackages.ToArray(), configProgress, cancellationToken);
 
-                // Clean up downloads folder
+                // Clean up downloads folder.
                 await CleanupDownloadsFolderAsync(options.InstallPath);
 
-                // Final validation
+                // Final validation.
                 var isValid = await _installationValidator.ValidateCompleteInstallationAsync(options);
                 if (!isValid)
                 {
@@ -115,7 +115,7 @@ namespace Wampoon.Installer.Core
                 }
                 ReportProgress("Installation validation completed", GetProgressPercentage(), "Final Validation");
 
-                ReportProgress("PWAMP installation completed successfully!", 100, "Completed");
+                ReportProgress("Wampoon installation completed successfully!", 100, "Completed");
                 InstallationCompleted?.Invoke(this, EventArgs.Empty);
             }
             catch (OperationCanceledException)
@@ -159,7 +159,7 @@ namespace Wampoon.Installer.Core
 
         private int CalculateTotalSteps(InstallOptions options)
         {
-            int steps = 4; // Base setup + installation phase + configuration phase + validation
+            int steps = 4; // Base setup + installation phase + configuration phase + validation.
             
             int packageCount = 0;
             if (options.InstallApache) packageCount++;
@@ -167,7 +167,7 @@ namespace Wampoon.Installer.Core
             if (options.InstallPHP) packageCount++;
             if (options.InstallPhpMyAdmin) packageCount++;
             
-            steps += packageCount * 2; // Each package has install + configure step
+            steps += packageCount * 2; // Each package has install + configure step.
             
             return steps;
         }
@@ -179,20 +179,20 @@ namespace Wampoon.Installer.Core
 
         private int GetDetailedProgressPercentage()
         {
-            // Base progress from completed steps
+            // Base progress from completed steps.
             int baseProgress = (_currentStep * 100) / _totalSteps;
             
-            // Add package progress if in installation phase
+            // Add package progress if in installation phase.
             if (_totalPackages > 0)
             {
-                // Calculate the weight of each package in the installation phase
-                // Installation phase is roughly 60% of total progress (packages + configuration)
+                // Calculate the weight of each package in the installation phase.
+                // Installation phase is roughly 60% of total progress (packages + configuration).
                 double packageWeight = 60.0 / _totalPackages;
                 
-                // Progress from completed packages
+                // Progress from completed packages.
                 double completedPackagesProgress = _currentPackageIndex * packageWeight;
                 
-                // Progress from current package (if not all packages are done)
+                // Progress from current package (if not all packages are done).
                 double currentPackageContribution = 0;
                 if (_currentPackageIndex < _totalPackages)
                 {
@@ -219,7 +219,7 @@ namespace Wampoon.Installer.Core
 
         private void SubscribeToPackageManagerEvents()
         {
-            // Initialize event handlers
+            // Initialize event handlers.
             _downloadProgressHandler = (sender, e) =>
             {
                 _currentPackageProgress = e.PercentComplete;
@@ -249,7 +249,7 @@ namespace Wampoon.Installer.Core
                 ReportProgress($"Package {e.PackageName} installation completed", GetDetailedProgressPercentage(), "Package Installation");
             };
 
-            // Subscribe to events
+            // Subscribe to events.
             _packageManager.DownloadProgressReported += _downloadProgressHandler;
             _packageManager.ExtractionProgressReported += _extractionProgressHandler;
             _packageManager.PackageInstallationCompleted += _packageCompletionHandler;
@@ -284,11 +284,11 @@ namespace Wampoon.Installer.Core
                 {
                     ReportProgress("Cleaning up downloads folder...", GetProgressPercentage(), "Cleanup");
                     
-                    // Delete all files and subdirectories in the downloads folder
+                    // Delete all files and subdirectories in the downloads folder.
                     var files = Directory.GetFiles(downloadsPath, "*", SearchOption.AllDirectories);
                     var directories = Directory.GetDirectories(downloadsPath, "*", SearchOption.AllDirectories);
                     
-                    // Delete all files
+                    // Delete all files.
                     foreach (var file in files)
                     {
                         try
@@ -297,11 +297,11 @@ namespace Wampoon.Installer.Core
                         }
                         catch
                         {
-                            // Ignore individual file deletion errors
+                            // Ignore individual file deletion errors.
                         }
                     }
                     
-                    // Delete all directories (in reverse order to handle nested directories)
+                    // Delete all directories (in reverse order to handle nested directories).
                     Array.Reverse(directories);
                     foreach (var directory in directories)
                     {
@@ -311,18 +311,18 @@ namespace Wampoon.Installer.Core
                         }
                         catch
                         {
-                            // Ignore individual directory deletion errors
+                            // Ignore individual directory deletion errors.
                         }
                     }
                     
-                    // Finally, delete the downloads folder itself
+                    // Finally, delete the downloads folder itself.
                     Directory.Delete(downloadsPath, false);
                     
                     ReportProgress("Downloads folder cleaned up successfully", GetProgressPercentage(), "Cleanup");
                 }
                 catch (Exception ex)
                 {
-                    // Log the error but don't fail the installation
+                    // Log the error but don't fail the installation.
                     ReportProgress($"Warning: Could not fully clean up downloads folder: {ex.Message}", GetProgressPercentage(), "Cleanup");
                 }
             }
@@ -343,7 +343,7 @@ namespace Wampoon.Installer.Core
                 var packagePath = Path.Combine(appsDirectory, packageName);
                 if (Directory.Exists(packagePath))
                 {
-                    // Check if the package has its key binary files to confirm it's actually installed
+                    // Check if the package has its key binary files to confirm it's actually installed.
                     var packageExists = await FileHelper.ValidatePackagePrerequisitesAsync(installPath, packageName);
                     if (packageExists)
                     {
@@ -367,7 +367,7 @@ namespace Wampoon.Installer.Core
             {
                 if (disposing)
                 {
-                    // Unsubscribe from events to prevent memory leaks
+                    // Unsubscribe from events to prevent memory leaks.
                     if (_packageManager != null)
                     {
                         if (_downloadProgressHandler != null)

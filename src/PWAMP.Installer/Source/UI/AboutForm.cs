@@ -1,4 +1,4 @@
-using PWAMP.Installer.Helpers;
+using Wampoon.Installer.Helpers;
 using System;
 using System.Diagnostics;
 using System.Windows.Forms;

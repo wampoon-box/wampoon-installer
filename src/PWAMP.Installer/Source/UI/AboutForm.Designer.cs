@@ -85,7 +85,7 @@ namespace Frostybee.Pwamp.UI
             this.appNameLabel.Name = "appNameLabel";
             this.appNameLabel.Size = new System.Drawing.Size(172, 30);
             this.appNameLabel.TabIndex = 0;
-            this.appNameLabel.Text = "PWAMP Admin";
+            this.appNameLabel.Text = "Wampoon Admin";
             // 
             // appVersionLabel
             // 
@@ -208,7 +208,7 @@ namespace Frostybee.Pwamp.UI
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "About - PWAMP Admin";
+            this.Text = "About - Wampoon Admin";
             this.mainPanel.ResumeLayout(false);
             this.appInfoGroupBox.ResumeLayout(false);
             this.appInfoGroupBox.PerformLayout();

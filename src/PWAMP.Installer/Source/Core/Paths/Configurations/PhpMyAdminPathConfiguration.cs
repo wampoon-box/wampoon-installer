@@ -14,14 +14,14 @@ namespace Wampoon.Installer.Core.Paths.Configurations
 
         protected override void InitializeConfiguration()
         {
-            // Application files (phpMyAdmin doesn't have traditional binaries)
+            // Application files (phpMyAdmin doesn't have traditional binaries).
             AddBinaryFile(PackageNames.PhpMyAdminFiles.IndexPhp, PackageNames.PhpMyAdminFiles.IndexPhp);
             
-            // Configuration files
+            // Configuration files.
             AddConfigFile(PackageNames.PhpMyAdminFiles.ConfigIncPhp, PackageNames.PhpMyAdminFiles.ConfigIncPhp);
             AddConfigFile(PackageNames.PhpMyAdminFiles.ConfigSampleIncPhp, PackageNames.PhpMyAdminFiles.ConfigSampleIncPhp);
             
-            // Subdirectories
+            // Subdirectories.  
             AddSubdirectory("tmp", "tmp");
             AddSubdirectory("libraries", "libraries");
             AddSubdirectory("themes", "themes");
