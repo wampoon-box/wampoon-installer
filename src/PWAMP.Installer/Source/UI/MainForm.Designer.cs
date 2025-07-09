@@ -81,71 +81,85 @@ namespace PWAMP.Installer.Neo.UI
             // 
             this._componentsGroup.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this._componentsGroup.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(248)))), ((int)(((byte)(249)))), ((int)(((byte)(250)))));
             this._componentsGroup.Controls.Add(this._apacheCheckBox);
             this._componentsGroup.Controls.Add(this._mariadbCheckBox);
             this._componentsGroup.Controls.Add(this._phpCheckBox);
             this._componentsGroup.Controls.Add(this._phpmyadminCheckBox);
-            this._componentsGroup.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-            this._componentsGroup.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(62)))), ((int)(((byte)(80)))));
-            this._componentsGroup.Location = new System.Drawing.Point(10, 10);
+            this._componentsGroup.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this._componentsGroup.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
+            this._componentsGroup.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(37)))), ((int)(((byte)(41)))));
+            this._componentsGroup.Location = new System.Drawing.Point(20, 20);
             this._componentsGroup.Name = "_componentsGroup";
-            this._componentsGroup.Padding = new System.Windows.Forms.Padding(15);
-            this._componentsGroup.Size = new System.Drawing.Size(925, 120);
+            this._componentsGroup.Padding = new System.Windows.Forms.Padding(20);
+            this._componentsGroup.Size = new System.Drawing.Size(835, 154);
             this._componentsGroup.TabIndex = 0;
             this._componentsGroup.TabStop = false;
-            this._componentsGroup.Text = "🔧 Select Components:";
+            this._componentsGroup.Text = "📦 Select Components to Install";
             // 
             // _apacheCheckBox
             // 
+            this._apacheCheckBox.BackColor = System.Drawing.Color.White;
             this._apacheCheckBox.Checked = true;
             this._apacheCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
-            this._apacheCheckBox.Font = new System.Drawing.Font("Segoe UI", 9F);
-            this._apacheCheckBox.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this._apacheCheckBox.Location = new System.Drawing.Point(15, 35);
+            this._apacheCheckBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this._apacheCheckBox.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
+            this._apacheCheckBox.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(37)))), ((int)(((byte)(41)))));
+            this._apacheCheckBox.Location = new System.Drawing.Point(30, 39);
             this._apacheCheckBox.Name = "_apacheCheckBox";
-            this._apacheCheckBox.Size = new System.Drawing.Size(200, 20);
+            this._apacheCheckBox.Padding = new System.Windows.Forms.Padding(10);
+            this._apacheCheckBox.Size = new System.Drawing.Size(278, 43);
             this._apacheCheckBox.TabIndex = 0;
-            this._apacheCheckBox.Text = "Apache HTTP Server";
-            this._apacheCheckBox.UseVisualStyleBackColor = true;
+            this._apacheCheckBox.Text = "🌐 Apache HTTP Server";
+            this._apacheCheckBox.UseVisualStyleBackColor = false;
             // 
             // _mariadbCheckBox
             // 
+            this._mariadbCheckBox.BackColor = System.Drawing.Color.White;
             this._mariadbCheckBox.Checked = true;
             this._mariadbCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
-            this._mariadbCheckBox.Font = new System.Drawing.Font("Segoe UI", 9F);
-            this._mariadbCheckBox.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this._mariadbCheckBox.Location = new System.Drawing.Point(15, 60);
+            this._mariadbCheckBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this._mariadbCheckBox.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
+            this._mariadbCheckBox.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(37)))), ((int)(((byte)(41)))));
+            this._mariadbCheckBox.Location = new System.Drawing.Point(394, 39);
             this._mariadbCheckBox.Name = "_mariadbCheckBox";
-            this._mariadbCheckBox.Size = new System.Drawing.Size(200, 20);
+            this._mariadbCheckBox.Padding = new System.Windows.Forms.Padding(10);
+            this._mariadbCheckBox.Size = new System.Drawing.Size(278, 42);
             this._mariadbCheckBox.TabIndex = 1;
-            this._mariadbCheckBox.Text = "MariaDB Database";
-            this._mariadbCheckBox.UseVisualStyleBackColor = true;
+            this._mariadbCheckBox.Text = "🗄️ MariaDB Database Server";
+            this._mariadbCheckBox.UseVisualStyleBackColor = false;
             // 
             // _phpCheckBox
             // 
+            this._phpCheckBox.BackColor = System.Drawing.Color.White;
             this._phpCheckBox.Checked = true;
             this._phpCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
-            this._phpCheckBox.Font = new System.Drawing.Font("Segoe UI", 9F);
-            this._phpCheckBox.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this._phpCheckBox.Location = new System.Drawing.Point(280, 35);
+            this._phpCheckBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this._phpCheckBox.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
+            this._phpCheckBox.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(37)))), ((int)(((byte)(41)))));
+            this._phpCheckBox.Location = new System.Drawing.Point(30, 92);
             this._phpCheckBox.Name = "_phpCheckBox";
-            this._phpCheckBox.Size = new System.Drawing.Size(200, 20);
+            this._phpCheckBox.Padding = new System.Windows.Forms.Padding(10);
+            this._phpCheckBox.Size = new System.Drawing.Size(278, 43);
             this._phpCheckBox.TabIndex = 2;
-            this._phpCheckBox.Text = "PHP Scripting Language";
-            this._phpCheckBox.UseVisualStyleBackColor = true;
+            this._phpCheckBox.Text = "🐘 PHP Scripting Language";
+            this._phpCheckBox.UseVisualStyleBackColor = false;
             // 
             // _phpmyadminCheckBox
             // 
+            this._phpmyadminCheckBox.BackColor = System.Drawing.Color.White;
             this._phpmyadminCheckBox.Checked = true;
             this._phpmyadminCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
-            this._phpmyadminCheckBox.Font = new System.Drawing.Font("Segoe UI", 9F);
-            this._phpmyadminCheckBox.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this._phpmyadminCheckBox.Location = new System.Drawing.Point(280, 60);
+            this._phpmyadminCheckBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this._phpmyadminCheckBox.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
+            this._phpmyadminCheckBox.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(37)))), ((int)(((byte)(41)))));
+            this._phpmyadminCheckBox.Location = new System.Drawing.Point(394, 92);
             this._phpmyadminCheckBox.Name = "_phpmyadminCheckBox";
-            this._phpmyadminCheckBox.Size = new System.Drawing.Size(200, 20);
+            this._phpmyadminCheckBox.Padding = new System.Windows.Forms.Padding(10);
+            this._phpmyadminCheckBox.Size = new System.Drawing.Size(278, 42);
             this._phpmyadminCheckBox.TabIndex = 3;
-            this._phpmyadminCheckBox.Text = "phpMyAdmin Database Manager";
-            this._phpmyadminCheckBox.UseVisualStyleBackColor = true;
+            this._phpmyadminCheckBox.Text = "🔧 phpMyAdmin Database Manager";
+            this._phpmyadminCheckBox.UseVisualStyleBackColor = false;
             // 
             // _pathGroup
             // 
@@ -156,10 +170,10 @@ namespace PWAMP.Installer.Neo.UI
             this._pathGroup.Controls.Add(this._openFolderButton);
             this._pathGroup.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
             this._pathGroup.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(62)))), ((int)(((byte)(80)))));
-            this._pathGroup.Location = new System.Drawing.Point(10, 140);
+            this._pathGroup.Location = new System.Drawing.Point(20, 180);
             this._pathGroup.Name = "_pathGroup";
             this._pathGroup.Padding = new System.Windows.Forms.Padding(15);
-            this._pathGroup.Size = new System.Drawing.Size(925, 60);
+            this._pathGroup.Size = new System.Drawing.Size(835, 60);
             this._pathGroup.TabIndex = 1;
             this._pathGroup.TabStop = false;
             this._pathGroup.Text = "📁 Installation Directory:";
@@ -171,7 +185,7 @@ namespace PWAMP.Installer.Neo.UI
             this._installPathTextBox.Font = new System.Drawing.Font("Segoe UI", 9F);
             this._installPathTextBox.Location = new System.Drawing.Point(15, 25);
             this._installPathTextBox.Name = "_installPathTextBox";
-            this._installPathTextBox.Size = new System.Drawing.Size(637, 23);
+            this._installPathTextBox.Size = new System.Drawing.Size(479, 23);
             this._installPathTextBox.TabIndex = 0;
             this._installPathTextBox.Text = "C:\\PWAMP";
             // 
@@ -184,7 +198,7 @@ namespace PWAMP.Installer.Neo.UI
             this._browseButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this._browseButton.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
             this._browseButton.ForeColor = System.Drawing.Color.White;
-            this._browseButton.Location = new System.Drawing.Point(658, 20);
+            this._browseButton.Location = new System.Drawing.Point(500, 20);
             this._browseButton.Name = "_browseButton";
             this._browseButton.Size = new System.Drawing.Size(80, 30);
             this._browseButton.TabIndex = 1;
@@ -201,7 +215,7 @@ namespace PWAMP.Installer.Neo.UI
             this._openFolderButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this._openFolderButton.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
             this._openFolderButton.ForeColor = System.Drawing.Color.White;
-            this._openFolderButton.Location = new System.Drawing.Point(744, 20);
+            this._openFolderButton.Location = new System.Drawing.Point(586, 20);
             this._openFolderButton.Name = "_openFolderButton";
             this._openFolderButton.Size = new System.Drawing.Size(117, 30);
             this._openFolderButton.TabIndex = 2;
@@ -217,7 +231,7 @@ namespace PWAMP.Installer.Neo.UI
             this._installButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this._installButton.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
             this._installButton.ForeColor = System.Drawing.Color.White;
-            this._installButton.Location = new System.Drawing.Point(25, 210);
+            this._installButton.Location = new System.Drawing.Point(25, 260);
             this._installButton.Name = "_installButton";
             this._installButton.Size = new System.Drawing.Size(146, 30);
             this._installButton.TabIndex = 2;
@@ -234,7 +248,7 @@ namespace PWAMP.Installer.Neo.UI
             this._cancelButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this._cancelButton.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
             this._cancelButton.ForeColor = System.Drawing.Color.White;
-            this._cancelButton.Location = new System.Drawing.Point(200, 210);
+            this._cancelButton.Location = new System.Drawing.Point(200, 260);
             this._cancelButton.Name = "_cancelButton";
             this._cancelButton.Size = new System.Drawing.Size(80, 30);
             this._cancelButton.TabIndex = 3;
@@ -250,7 +264,7 @@ namespace PWAMP.Installer.Neo.UI
             this._exportLogButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this._exportLogButton.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
             this._exportLogButton.ForeColor = System.Drawing.Color.White;
-            this._exportLogButton.Location = new System.Drawing.Point(290, 210);
+            this._exportLogButton.Location = new System.Drawing.Point(290, 260);
             this._exportLogButton.Name = "_exportLogButton";
             this._exportLogButton.Size = new System.Drawing.Size(107, 30);
             this._exportLogButton.TabIndex = 4;
@@ -266,7 +280,7 @@ namespace PWAMP.Installer.Neo.UI
             this._quitButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this._quitButton.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
             this._quitButton.ForeColor = System.Drawing.Color.White;
-            this._quitButton.Location = new System.Drawing.Point(538, 210);
+            this._quitButton.Location = new System.Drawing.Point(538, 260);
             this._quitButton.Name = "_quitButton";
             this._quitButton.Size = new System.Drawing.Size(80, 30);
             this._quitButton.TabIndex = 6;
@@ -282,7 +296,7 @@ namespace PWAMP.Installer.Neo.UI
             this._aboutButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this._aboutButton.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
             this._aboutButton.ForeColor = System.Drawing.Color.White;
-            this._aboutButton.Location = new System.Drawing.Point(444, 210);
+            this._aboutButton.Location = new System.Drawing.Point(444, 260);
             this._aboutButton.Name = "_aboutButton";
             this._aboutButton.Size = new System.Drawing.Size(88, 30);
             this._aboutButton.TabIndex = 5;
@@ -296,7 +310,7 @@ namespace PWAMP.Installer.Neo.UI
             | System.Windows.Forms.AnchorStyles.Right)));
             this._progressLabel.Font = new System.Drawing.Font("Segoe UI", 9F);
             this._progressLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this._progressLabel.Location = new System.Drawing.Point(20, 247);
+            this._progressLabel.Location = new System.Drawing.Point(20, 300);
             this._progressLabel.Name = "_progressLabel";
             this._progressLabel.Size = new System.Drawing.Size(915, 20);
             this._progressLabel.TabIndex = 5;
@@ -306,7 +320,7 @@ namespace PWAMP.Installer.Neo.UI
             // 
             this._progressBar.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this._progressBar.Location = new System.Drawing.Point(20, 270);
+            this._progressBar.Location = new System.Drawing.Point(20, 320);
             this._progressBar.Name = "_progressBar";
             this._progressBar.Size = new System.Drawing.Size(915, 25);
             this._progressBar.Style = System.Windows.Forms.ProgressBarStyle.Continuous;
@@ -349,15 +363,15 @@ namespace PWAMP.Installer.Neo.UI
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panel1.Controls.Add(this._logGroup);
-            this.panel1.Location = new System.Drawing.Point(13, 301);
+            this.panel1.Location = new System.Drawing.Point(20, 355);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(925, 280);
+            this.panel1.Size = new System.Drawing.Size(915, 250);
             this.panel1.TabIndex = 7;
             // 
             // MainForm
             // 
             this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(949, 600);
+            this.ClientSize = new System.Drawing.Size(959, 630);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this._componentsGroup);
             this.Controls.Add(this._pathGroup);
