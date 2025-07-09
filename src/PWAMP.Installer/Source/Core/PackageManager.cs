@@ -5,11 +5,16 @@ using System.Threading.Tasks;
 using PWAMP.Installer.Neo.Core.PackageDiscovery;
 using PWAMP.Installer.Neo.Core.PackageOperations;
 using PWAMP.Installer.Neo.Models;
+using PWAMP.Installer.Neo.Events;
 
 namespace PWAMP.Installer.Neo.Core
 {
     public class PackageManager : IDisposable
     {
+        public event EventHandler<DownloadProgressEventArgs> DownloadProgressReported;
+        public event EventHandler<InstallationProgressEventArgs> ExtractionProgressReported;
+        public event EventHandler<InstallationCompletedEventArgs> PackageInstallationCompleted;
+
         private readonly IPackageDiscoveryService _packageDiscoveryService;
         private readonly IPackageDownloadService _packageDownloadService;
         private readonly IPackageExtractionService _packageExtractionService;
@@ -24,6 +29,10 @@ namespace PWAMP.Installer.Neo.Core
             _packageDiscoveryService = new PackageDiscoveryService(packageRepository);
             _packageDownloadService = new PackageDownloadService(packageDownloader);
             _packageExtractionService = new PackageExtractionService(archiveExtractor);
+
+            // Subscribe to detailed progress events from services
+            _packageDownloadService.DownloadProgressReported += (sender, e) => DownloadProgressReported?.Invoke(this, e);
+            _packageExtractionService.ExtractionProgressReported += (sender, e) => ExtractionProgressReported?.Invoke(this, e);
         }
 
         public async Task<InstallablePackage> GetPackageByNameAsync(string packageName)
@@ -40,16 +49,7 @@ namespace PWAMP.Installer.Neo.Core
                 throw new Exception($"Package '{packageName}' not found in repository");
             }
 
-            // Subscribe to download progress for logging
-            _packageDownloadService.DownloadProgressReported += (sender, e) =>
-            {
-                var message = $"Downloading {e.PackageName}: {e.Status}";
-                if (e.PercentComplete > 0)
-                {
-                    message += $" ({e.PercentComplete:F1}%)";
-                }
-                logger?.Report(message);
-            };
+            // Progress is now handled centrally through event forwarding
 
             return await _packageDownloadService.DownloadPackageAsync(package, downloadDirectory, logger, cancellationToken);
         }
@@ -63,16 +63,7 @@ namespace PWAMP.Installer.Neo.Core
                 throw new Exception($"Package '{packageName}' not found in repository");
             }
 
-            // Subscribe to extraction progress for logging
-            _packageExtractionService.ExtractionProgressReported += (sender, e) =>
-            {
-                var message = $"Extracting {e.PackageName}: {e.CurrentOperation}";
-                if (e.PercentComplete > 0)
-                {
-                    message += $" ({e.PercentComplete}%)";
-                }
-                logger?.Report(message);
-            };
+            // Progress is now handled centrally through event forwarding
 
             return await _packageExtractionService.ExtractPackageAsync(package, archivePath, extractPath, logger, cancellationToken);
         }
@@ -107,6 +98,15 @@ namespace PWAMP.Installer.Neo.Core
             {
                 // Ignore cleanup errors
             }
+
+            // Fire package installation completed event
+            PackageInstallationCompleted?.Invoke(this, new InstallationCompletedEventArgs
+            {
+                Success = true,
+                PackageName = packageName,
+                InstallPath = extractedPath,
+                Message = $"Package {packageName} installed successfully"
+            });
 
             return extractedPath;
         }

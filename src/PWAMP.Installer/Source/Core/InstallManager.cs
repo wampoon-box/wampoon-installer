@@ -23,12 +23,18 @@ namespace PWAMP.Installer.Neo.Core
         private int _currentStep;
         private bool _disposed = false;
         private IPathResolver _pathResolver;
+        private int _totalPackages;
+        private int _currentPackageIndex;
+        private double _currentPackageProgress;
 
         public InstallManager()
         {
             _packageManager = new PackageManager();
             _selectedPackages = new List<string>();
             _installationValidator = new InstallationValidator();
+            
+            // Subscribe to package manager progress events
+            SubscribeToPackageManagerEvents();
         }
 
         public async Task InstallAsync(InstallOptions options, CancellationToken cancellationToken = default)
@@ -38,6 +44,11 @@ namespace PWAMP.Installer.Neo.Core
                 _currentStep = 0;
                 _totalSteps = CalculateTotalSteps(options);
                 _selectedPackages.Clear();
+                
+                // Initialize package progress tracking
+                _totalPackages = CountSelectedPackages(options);
+                _currentPackageIndex = 0;
+                _currentPackageProgress = 0;
 
                 // Initialize path resolver and installation coordinator
                 _pathResolver = PathResolverFactory.CreatePathResolver(options.InstallPath);
@@ -55,7 +66,7 @@ namespace PWAMP.Installer.Neo.Core
 
                 // Phase 1: Install all selected packages
                 var installProgress = new Progress<string>(message => 
-                    ReportProgress(message, GetProgressPercentage(), "Package Installation"));
+                    ReportProgress(message, GetDetailedProgressPercentage(), "Package Installation"));
                 await installationCoordinator.ExecuteInstallationAsync(options, installProgress, cancellationToken);
                 
                 // Track selected packages for configuration
@@ -79,7 +90,8 @@ namespace PWAMP.Installer.Neo.Core
             }
             catch (OperationCanceledException)
             {
-                ReportProgress("Installation was cancelled by user", _currentStep * 100 / _totalSteps, "Cancelled");
+                ResetProgressTracking();
+                ReportProgress("Installation was cancelled by user", 0, "Cancelled");
                 throw;
             }
             catch (Exception ex)
@@ -133,6 +145,90 @@ namespace PWAMP.Installer.Neo.Core
         private int GetProgressPercentage()
         {
             return (_currentStep * 100) / _totalSteps;
+        }
+
+        private int GetDetailedProgressPercentage()
+        {
+            // Base progress from completed steps
+            int baseProgress = (_currentStep * 100) / _totalSteps;
+            
+            // Add package progress if in installation phase
+            if (_totalPackages > 0)
+            {
+                // Calculate the weight of each package in the installation phase
+                // Installation phase is roughly 60% of total progress (packages + configuration)
+                double packageWeight = 60.0 / _totalPackages;
+                
+                // Progress from completed packages
+                double completedPackagesProgress = _currentPackageIndex * packageWeight;
+                
+                // Progress from current package (if not all packages are done)
+                double currentPackageContribution = 0;
+                if (_currentPackageIndex < _totalPackages)
+                {
+                    currentPackageContribution = (_currentPackageProgress * packageWeight) / 100.0;
+                }
+                
+                double totalPackageProgress = completedPackagesProgress + currentPackageContribution;
+                
+                return (int)Math.Min(100, baseProgress + totalPackageProgress);
+            }
+            
+            return baseProgress;
+        }
+
+        private int CountSelectedPackages(InstallOptions options)
+        {
+            int count = 0;
+            if (options.InstallApache) count++;
+            if (options.InstallMariaDB) count++;
+            if (options.InstallPHP) count++;
+            if (options.InstallPhpMyAdmin) count++;
+            return count;
+        }
+
+        private void SubscribeToPackageManagerEvents()
+        {
+            // Subscribe to download progress events
+            _packageManager.DownloadProgressReported += (sender, e) =>
+            {
+                _currentPackageProgress = e.PercentComplete;
+                var message = $"Downloading {e.PackageName}: {e.Status}";
+                if (e.PercentComplete > 0)
+                {
+                    message += $" ({e.PercentComplete:F1}%)";
+                }
+                ReportProgress(message, GetDetailedProgressPercentage(), "Package Installation");
+            };
+
+            // Subscribe to extraction progress events
+            _packageManager.ExtractionProgressReported += (sender, e) =>
+            {
+                _currentPackageProgress = e.PercentComplete;
+                var message = $"Extracting {e.PackageName}: {e.CurrentOperation}";
+                if (e.PercentComplete > 0)
+                {
+                    message += $" ({e.PercentComplete}%)";
+                }
+                ReportProgress(message, GetDetailedProgressPercentage(), "Package Installation");
+            };
+
+            // Subscribe to package completion events
+            _packageManager.PackageInstallationCompleted += (sender, e) =>
+            {
+                _currentPackageIndex++;
+                _currentPackageProgress = 0;
+                ReportProgress($"Package {e.PackageName} installation completed", GetDetailedProgressPercentage(), "Package Installation");
+            };
+        }
+
+        private void ResetProgressTracking()
+        {
+            _currentStep = 0;
+            _currentPackageIndex = 0;
+            _currentPackageProgress = 0;
+            _totalPackages = 0;
+            _totalSteps = 0;
         }
 
         private void ReportProgress(string message, int percentComplete = 0, string currentStep = "")

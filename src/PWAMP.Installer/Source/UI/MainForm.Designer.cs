@@ -23,6 +23,7 @@ namespace PWAMP.Installer.Neo.UI
         private Button _cancelButton;
         private Button _exportLogButton;
         private Button _quitButton;
+        private Button _aboutButton;
         private ProgressBar _progressBar;
         private Label _progressLabel;
         private RichTextBox _logTextBox;
@@ -64,6 +65,7 @@ namespace PWAMP.Installer.Neo.UI
             this._cancelButton = new System.Windows.Forms.Button();
             this._exportLogButton = new System.Windows.Forms.Button();
             this._quitButton = new System.Windows.Forms.Button();
+            this._aboutButton = new System.Windows.Forms.Button();
             this._progressLabel = new System.Windows.Forms.Label();
             this._progressBar = new System.Windows.Forms.ProgressBar();
             this._logGroup = new System.Windows.Forms.GroupBox();
@@ -213,13 +215,23 @@ namespace PWAMP.Installer.Neo.UI
             this._quitButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(57)))), ((int)(((byte)(43)))));
             this._quitButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this._quitButton.ForeColor = System.Drawing.Color.White;
-            this._quitButton.Location = new System.Drawing.Point(320, 210);
+            this._quitButton.Location = new System.Drawing.Point(410, 210);
             this._quitButton.Name = "_quitButton";
             this._quitButton.Size = new System.Drawing.Size(80, 30);
-            this._quitButton.TabIndex = 5;
+            this._quitButton.TabIndex = 6;
             this._quitButton.Text = "Quit";
             this._quitButton.UseVisualStyleBackColor = false;
             this._quitButton.Click += new System.EventHandler(this.QuitButton_Click);
+            // 
+            // _aboutButton
+            // 
+            this._aboutButton.Location = new System.Drawing.Point(320, 210);
+            this._aboutButton.Name = "_aboutButton";
+            this._aboutButton.Size = new System.Drawing.Size(80, 30);
+            this._aboutButton.TabIndex = 5;
+            this._aboutButton.Text = "About";
+            this._aboutButton.UseVisualStyleBackColor = true;
+            this._aboutButton.Click += new System.EventHandler(this.AboutButton_Click);
             // 
             // _progressLabel
             // 
@@ -290,6 +302,7 @@ namespace PWAMP.Installer.Neo.UI
             this.Controls.Add(this._cancelButton);
             this.Controls.Add(this._exportLogButton);
             this.Controls.Add(this._quitButton);
+            this.Controls.Add(this._aboutButton);
             this.Controls.Add(this._progressLabel);
             this.Controls.Add(this._progressBar);
             this.MinimumSize = new System.Drawing.Size(600, 500);

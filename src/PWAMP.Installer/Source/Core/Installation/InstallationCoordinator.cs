@@ -21,31 +21,26 @@ namespace PWAMP.Installer.Neo.Core.Installation
         {
             progress?.Report("Installing selected packages...");
 
-            var installTasks = new List<Task>();
-
             if (options.InstallApache)
             {
-                installTasks.Add(InstallPackageAsync(PackageNames.Apache, options.InstallPath, progress, cancellationToken));
+                await InstallPackageAsync(PackageNames.Apache, options.InstallPath, progress, cancellationToken);
             }
 
             if (options.InstallMariaDB)
             {
-                installTasks.Add(InstallPackageAsync(PackageNames.MariaDB, options.InstallPath, progress, cancellationToken));
+                await InstallPackageAsync(PackageNames.MariaDB, options.InstallPath, progress, cancellationToken);
             }
 
             if (options.InstallPHP)
             {
-                installTasks.Add(InstallPackageAsync(PackageNames.PHP, options.InstallPath, progress, cancellationToken));
+                await InstallPackageAsync(PackageNames.PHP, options.InstallPath, progress, cancellationToken);
             }
 
             if (options.InstallPhpMyAdmin)
             {
-                installTasks.Add(InstallPackageAsync(PackageNames.PhpMyAdmin, options.InstallPath, progress, cancellationToken));
+                await InstallPackageAsync(PackageNames.PhpMyAdmin, options.InstallPath, progress, cancellationToken);
             }
 
-            // Execute all package installations
-            await Task.WhenAll(installTasks);
-            
             progress?.Report("Package installation completed");
         }
 

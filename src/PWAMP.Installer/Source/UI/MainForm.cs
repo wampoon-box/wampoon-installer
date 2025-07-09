@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using PWAMP.Installer.Neo.Core;
 using PWAMP.Installer.Neo.Core.Events;
+using Frostybee.Pwamp.UI;
 
 namespace PWAMP.Installer.Neo.UI
 {
@@ -104,6 +105,11 @@ namespace PWAMP.Installer.Neo.UI
             finally
             {
                 _isInstalling = false;
+                
+                // Reset progress bar on cancellation or error
+                _progressBar.Value = 0;
+                _progressLabel.Text = "Ready to install";
+                
                 // Only reset install button text if installation didn't complete successfully
                 if (_installButton.Text != "Install Again")
                 {
@@ -183,6 +189,12 @@ namespace PWAMP.Installer.Neo.UI
         {
             // Close the application
             this.Close();
+        }
+
+        private void AboutButton_Click(object sender, EventArgs e)
+        {
+            var aboutForm = new AboutForm();
+            aboutForm.ShowDialog();
         }
 
         private void InstallManager_ProgressChanged(object sender, InstallProgressEventArgs e)
