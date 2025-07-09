@@ -95,19 +95,16 @@ namespace PWAMP.Installer.Neo.Core
         {
             try
             {
-                // Try multiple locations for the packages.json file.
-                var possiblePaths = GetPossiblePackageFilePaths();
+                var appDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) ?? Environment.CurrentDirectory;
+                var packagesPath = Path.Combine(appDir, "Data", InstallerConstants.PackagesFileName);
                 
-                foreach (var path in possiblePaths)
+                if (File.Exists(packagesPath))
                 {
-                    if (File.Exists(path))
+                    var json = File.ReadAllText(packagesPath);
+                    var packages = JsonConvert.DeserializeObject<List<InstallablePackage>>(json);
+                    if (packages != null && packages.Any())
                     {
-                        var json = File.ReadAllText(path);
-                        var packages = JsonConvert.DeserializeObject<List<InstallablePackage>>(json);
-                        if (packages != null && packages.Any())
-                        {
-                            return MergeWithMetadata(packages);
-                        }
+                        return MergeWithMetadata(packages);
                     }
                 }
             }
@@ -121,19 +118,6 @@ namespace PWAMP.Installer.Neo.Core
             return GetFallbackPackages();
         }
 
-        private string[] GetPossiblePackageFilePaths()
-        {
-            var appDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) ?? Environment.CurrentDirectory;
-            var currentDir = Environment.CurrentDirectory;
-            
-            return new[]
-            {
-                Path.Combine(appDir, "Data", InstallerConstants.PackagesFileName),
-                Path.Combine(appDir, InstallerConstants.PackagesFileName),
-                Path.Combine(currentDir, "Data", InstallerConstants.PackagesFileName),
-                Path.Combine(currentDir, InstallerConstants.PackagesFileName)
-            };
-        }
 
         private List<InstallablePackage> MergeWithMetadata(List<InstallablePackage> packages)
         {
@@ -164,21 +148,64 @@ namespace PWAMP.Installer.Neo.Core
 
         private List<InstallablePackage> GetFallbackPackages()
         {
-            // Minimal fallback list with only essential packages.
+            // Fallback packages matching the latest versions from packages.json
             return new List<InstallablePackage>
             {
                 new InstallablePackage
                 {
                     PackageID = PackageType.Apache,
                     Name = "Apache HTTP Server",
-                    Version = new Version(2, 4, 58),
-                    DownloadUrl = new Uri("https://www.apachelounge.com/download/VS17/binaries/httpd-2.4.58-win64-VS17.zip"),
+                    Version = new Version(2, 4, 63),
+                    DownloadUrl = new Uri("https://www.apachelounge.com/download/VS17/binaries/httpd-2.4.63-250207-win64-VS17.zip"),
                     Type = PackageType.Apache,
                     ServerName = "Apache",
-                    EstimatedSize = 14 * 1024 * 1024,
+                    EstimatedSize = 15 * 1024 * 1024,
                     Description = "Apache HTTP Server - The world's most widely used web server software.",
                     InstallPath = "apps/apache",
+                    ArchiveFormat = "zip",
                     Dependencies = new List<PackageType>()
+                },
+                new InstallablePackage
+                {
+                    PackageID = PackageType.MariaDB,
+                    Name = "MariaDB Server",
+                    Version = new Version(11, 8, 2),
+                    DownloadUrl = new Uri("https://mirror.us.mirhosting.net/mariadb/mariadb-11.8.2/winx64-packages/mariadb-11.8.2-winx64.zip"),
+                    Type = PackageType.MariaDB,
+                    ServerName = "MariaDB",
+                    EstimatedSize = 180 * 1024 * 1024,
+                    Description = "MariaDB Server - Popular MySQL-compatible database server.",
+                    InstallPath = "apps/mariadb",
+                    ArchiveFormat = "zip",
+                    Dependencies = new List<PackageType>()
+                },
+                new InstallablePackage
+                {
+                    PackageID = PackageType.PHP,
+                    Name = "PHP Runtime",
+                    Version = new Version(8, 4, 9),
+                    DownloadUrl = new Uri("https://windows.php.net/downloads/releases/archives/php-8.4.9-Win32-vs17-x64.zip"),
+                    Type = PackageType.PHP,
+                    ServerName = "PHP",
+                    EstimatedSize = 35 * 1024 * 1024,
+                    Description = "PHP - Server-side scripting language designed for web development.",
+                    InstallPath = "apps/php",
+                    ArchiveFormat = "zip",
+                    Dependencies = new List<PackageType> { PackageType.Apache }
+                },
+                new InstallablePackage
+                {
+                    PackageID = PackageType.PhpMyAdmin,
+                    Name = "phpMyAdmin",
+                    Version = new Version(5, 2, 2),
+                    DownloadUrl = new Uri("https://files.phpmyadmin.net/phpMyAdmin/5.2.2/phpMyAdmin-5.2.2-all-languages.zip"),
+                    Type = PackageType.PhpMyAdmin,
+                    ServerName = "phpMyAdmin",
+                    EstimatedSize = 15 * 1024 * 1024,
+                    Description = "phpMyAdmin - Web-based database administration tool for MySQL and MariaDB.",
+                    InstallPath = "apps/phpmyadmin",
+                    ArchiveFormat = "zip",
+                    Dependencies = new List<PackageType> { PackageType.PHP, PackageType.MariaDB }
                 }
             };
         }

@@ -6,7 +6,6 @@ namespace PWAMP.Installer.Neo.Models
 {
     public class InstallablePackage
     {
-        [JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
         public PackageType PackageID { get; set; }
         public string Name { get; set; }
         
@@ -24,7 +23,6 @@ namespace PWAMP.Installer.Neo.Models
         public List<PackageType> Dependencies { get; set; }
         public string Description { get; set; }
         
-        [JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
         public PackageType Type { get; set; }
         
         public string ServerName { get; set; }
@@ -55,12 +53,12 @@ namespace PWAMP.Installer.Neo.Models
 
     public enum PackageType
     {
-        Apache,
-        MariaDB,
-        MySQL,
-        PHP,
-        PhpMyAdmin,
-        PwampDashboard
+        Apache = 1,
+        MariaDB = 2,
+        MySQL = 3,
+        PHP = 4,
+        PhpMyAdmin = 5,
+        PwampDashboard = 6
     }
 
     /// <summary>

@@ -160,7 +160,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Data\packages.json">
+    <Content Include="Data\packagesInfo.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <None Include="config-templates\httpd.conf.template">

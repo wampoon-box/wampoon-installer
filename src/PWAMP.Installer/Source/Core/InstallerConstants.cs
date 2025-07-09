@@ -30,7 +30,7 @@ namespace PWAMP.Installer.Neo.Core
         
         // Paths
         public const string DefaultInstallPath = @"C:\PWAMP";
-        public const string PackagesFileName = "packages.json";
+        public const string PackagesFileName = "packagesInfo.json";
         public const string ConfigFileName = "config.json";
         public const string TempDirectoryPrefix = "PWAMP-Installer";
         public const string CacheDirectoryName = "PWAMP-Cache";
