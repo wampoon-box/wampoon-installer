@@ -15,6 +15,7 @@ namespace PWAMP.Installer.Neo.Core
         public event EventHandler<InstallProgressEventArgs> ProgressChanged;
         public event EventHandler<InstallErrorEventArgs> ErrorOccurred;
         public event EventHandler<EventArgs> InstallationCompleted;
+        public event EventHandler<ExistingPackagesEventArgs> ExistingPackagesDetected;
 
         private readonly PackageManager _packageManager;
         private readonly IInstallationCoordinator _installationCoordinator;
@@ -61,6 +62,26 @@ namespace PWAMP.Installer.Neo.Core
                 // Validate installation directory
                 await _installationValidator.ValidateInstallationPathAsync(options.InstallPath);
                 ReportProgress($"Installation path validated: {options.InstallPath}", GetProgressPercentage(), "Validation");
+
+                // Check for existing packages
+                var selectedPackages = options.GetSelectedPackages();
+                var existingPackages = await CheckForExistingPackagesAsync(options.InstallPath, selectedPackages);
+                
+                if (existingPackages.Length > 0)
+                {
+                    // Notify caller about existing packages and wait for confirmation
+                    var existingPackagesEventArgs = new ExistingPackagesEventArgs(existingPackages);
+                    ExistingPackagesDetected?.Invoke(this, existingPackagesEventArgs);
+                    
+                    // If the caller doesn't set OverwriteRequested to true, cancel the installation
+                    if (!existingPackagesEventArgs.OverwriteRequested)
+                    {
+                        ReportProgress("Installation cancelled due to existing packages", 0, "Cancelled");
+                        return;
+                    }
+                    
+                    ReportProgress($"Continuing with installation - overwriting existing packages: {string.Join(", ", existingPackages)}", GetProgressPercentage(), "Validation");
+                }
 
                 // Create base directories
                 await CreateBaseDirectoriesAsync();
@@ -297,6 +318,33 @@ namespace PWAMP.Installer.Neo.Core
                     ReportProgress($"Warning: Could not fully clean up downloads folder: {ex.Message}", GetProgressPercentage(), "Cleanup");
                 }
             }
+        }
+
+        private async Task<string[]> CheckForExistingPackagesAsync(string installPath, string[] selectedPackages)
+        {
+            var existingPackages = new List<string>();
+            var appsDirectory = Path.Combine(installPath, "apps");
+            
+            if (!Directory.Exists(appsDirectory))
+            {
+                return existingPackages.ToArray();
+            }
+            
+            foreach (var packageName in selectedPackages)
+            {
+                var packagePath = Path.Combine(appsDirectory, packageName);
+                if (Directory.Exists(packagePath))
+                {
+                    // Check if the package has its key binary files to confirm it's actually installed
+                    var packageExists = await FileHelper.ValidatePackagePrerequisitesAsync(installPath, packageName);
+                    if (packageExists)
+                    {
+                        existingPackages.Add(packageName);
+                    }
+                }
+            }
+            
+            return existingPackages.ToArray();
         }
 
         public void Dispose()

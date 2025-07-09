@@ -53,6 +53,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Source\Core\ArchiveExtractor.cs" />
+    <Compile Include="Source\Core\Events\ExistingPackagesEventArgs.cs" />
     <Compile Include="Source\Core\Events\InstallErrorEventArgs.cs" />
     <Compile Include="Source\Core\Events\InstallProgressEventArgs.cs" />
     <Compile Include="Source\Core\Installation\IInstallationCoordinator.cs" />

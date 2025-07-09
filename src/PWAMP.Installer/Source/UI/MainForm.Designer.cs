@@ -105,7 +105,7 @@ namespace PWAMP.Installer.Neo.UI
             this._apacheCheckBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this._apacheCheckBox.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
             this._apacheCheckBox.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(37)))), ((int)(((byte)(41)))));
-            this._apacheCheckBox.Location = new System.Drawing.Point(30, 39);
+            this._apacheCheckBox.Location = new System.Drawing.Point(17, 30);
             this._apacheCheckBox.Name = "_apacheCheckBox";
             this._apacheCheckBox.Padding = new System.Windows.Forms.Padding(10);
             this._apacheCheckBox.Size = new System.Drawing.Size(308, 43);
@@ -121,10 +121,10 @@ namespace PWAMP.Installer.Neo.UI
             this._mariadbCheckBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this._mariadbCheckBox.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
             this._mariadbCheckBox.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(37)))), ((int)(((byte)(41)))));
-            this._mariadbCheckBox.Location = new System.Drawing.Point(362, 39);
+            this._mariadbCheckBox.Location = new System.Drawing.Point(343, 30);
             this._mariadbCheckBox.Name = "_mariadbCheckBox";
             this._mariadbCheckBox.Padding = new System.Windows.Forms.Padding(10);
-            this._mariadbCheckBox.Size = new System.Drawing.Size(351, 42);
+            this._mariadbCheckBox.Size = new System.Drawing.Size(346, 42);
             this._mariadbCheckBox.TabIndex = 1;
             this._mariadbCheckBox.Text = "🗄️ MariaDB Database Server";
             this._mariadbCheckBox.UseVisualStyleBackColor = false;
@@ -137,7 +137,7 @@ namespace PWAMP.Installer.Neo.UI
             this._phpCheckBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this._phpCheckBox.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
             this._phpCheckBox.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(37)))), ((int)(((byte)(41)))));
-            this._phpCheckBox.Location = new System.Drawing.Point(30, 92);
+            this._phpCheckBox.Location = new System.Drawing.Point(17, 83);
             this._phpCheckBox.Name = "_phpCheckBox";
             this._phpCheckBox.Padding = new System.Windows.Forms.Padding(10);
             this._phpCheckBox.Size = new System.Drawing.Size(308, 43);
@@ -153,10 +153,10 @@ namespace PWAMP.Installer.Neo.UI
             this._phpmyadminCheckBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this._phpmyadminCheckBox.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
             this._phpmyadminCheckBox.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(37)))), ((int)(((byte)(41)))));
-            this._phpmyadminCheckBox.Location = new System.Drawing.Point(362, 92);
+            this._phpmyadminCheckBox.Location = new System.Drawing.Point(343, 83);
             this._phpmyadminCheckBox.Name = "_phpmyadminCheckBox";
             this._phpmyadminCheckBox.Padding = new System.Windows.Forms.Padding(10);
-            this._phpmyadminCheckBox.Size = new System.Drawing.Size(351, 42);
+            this._phpmyadminCheckBox.Size = new System.Drawing.Size(346, 42);
             this._phpmyadminCheckBox.TabIndex = 3;
             this._phpmyadminCheckBox.Text = "🔧 phpMyAdmin Database Manager";
             this._phpmyadminCheckBox.UseVisualStyleBackColor = false;
@@ -308,7 +308,7 @@ namespace PWAMP.Installer.Neo.UI
             // 
             this._progressLabel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this._progressLabel.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this._progressLabel.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
             this._progressLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this._progressLabel.Location = new System.Drawing.Point(27, 300);
             this._progressLabel.Name = "_progressLabel";
@@ -383,7 +383,7 @@ namespace PWAMP.Installer.Neo.UI
             this.Controls.Add(this._progressLabel);
             this.Controls.Add(this._progressBar);
             this.Font = new System.Drawing.Font("Segoe UI", 9F);
-            this.MinimumSize = new System.Drawing.Size(800, 700);
+            this.MinimumSize = new System.Drawing.Size(840, 700);
             this.Name = "MainForm";
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Show;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;

@@ -20,7 +20,7 @@ namespace Frostybee.Pwamp.UI
             appNameLabel.Text = AppConstants.APP_NAME;
             //appVersionLabel.Text = $"Version {AppConstants.APP_VERSION}";
             copyrightLabel.Text = "Copyright © 2025 - frostybee";
-            descriptionLabel.Text = "An installer for setting up WAMPoon (Portable Windows Apache MySQL PHP) local development environment with Apache HTTP Server, MariaDB, PHP, and phpMyAdmin.";
+            descriptionLabel.Text = "An installer for setting up WAMPoon, a local development environment with Apache HTTP Server, MariaDB, PHP, and phpMyAdmin.";
         }
 
         private void GitHubRepoButton_Click(object sender, EventArgs e)

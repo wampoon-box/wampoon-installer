@@ -33,6 +33,7 @@ namespace PWAMP.Installer.Neo.UI
             _installManager.ProgressChanged += InstallManager_ProgressChanged;
             _installManager.ErrorOccurred += InstallManager_ErrorOccurred;
             _installManager.InstallationCompleted += InstallManager_InstallationCompleted;
+            _installManager.ExistingPackagesDetected += InstallManager_ExistingPackagesDetected;
             
             _packageDiscoveryService = new PackageDiscoveryService(new PackageRepository());
             UpdateComponentVersions();
@@ -214,13 +215,14 @@ namespace PWAMP.Installer.Neo.UI
             var progressValue = Math.Min(e.PercentComplete, 100);
             _progressBar.Value = progressValue;
             
+            /*
             // Debug: Log progress updates, especially near completion
             if (e.PercentComplete >= 90)
             {
                 LogMessage($"DEBUG: Progress update - {e.PercentComplete}% (setting bar to {progressValue}%)", Color.Cyan);
-            }
+            }*/
             
-            // Use green color for success messages (those with checkmark)
+            // Use green color for success messages (those with checkmark).
             Color messageColor = e.Message.StartsWith("✓") ? Color.Green : Color.White;
             LogMessage(e.Message, messageColor);
         }
@@ -332,6 +334,34 @@ namespace PWAMP.Installer.Neo.UI
             _installManager?.Dispose();
 
             base.OnFormClosing(e);
+        }
+
+        private void InstallManager_ExistingPackagesDetected(object sender, ExistingPackagesEventArgs e)
+        {
+            if (InvokeRequired)
+            {
+                Invoke(new Action(() => InstallManager_ExistingPackagesDetected(sender, e)));
+                return;
+            }
+
+            var packageList = string.Join(", ", e.ExistingPackages);
+            var message = $"The following packages are already installed in the target directory:\n\n{packageList}\n\nDo you want to overwrite the existing packages and continue with the installation?";
+            
+            var result = MessageBox.Show(
+                message,
+                "Existing Packages Found",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Question);
+
+            if (result == DialogResult.Yes)
+            {
+                e.OverwriteRequested = true;
+                LogMessage($"User confirmed to overwrite existing packages: {packageList}", Color.Yellow);
+            }
+            else
+            {
+                LogMessage("Installation cancelled by user due to existing packages", Color.Yellow);
+            }
         }
 
         private async void UpdateComponentVersions()
