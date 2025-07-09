@@ -53,9 +53,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Source\Core\ArchiveExtractor.cs" />
-    <Compile Include="Source\Core\Events\ExistingPackagesEventArgs.cs" />
-    <Compile Include="Source\Core\Events\InstallErrorEventArgs.cs" />
-    <Compile Include="Source\Core\Events\InstallProgressEventArgs.cs" />
+    <Compile Include="Source\Enums\InstallerEnums.cs" />
+    <Compile Include="Source\Events\ExistingPackagesEventArgs.cs" />
+    <Compile Include="Source\Events\InstallErrorEventArgs.cs" />
+    <Compile Include="Source\Events\InstallProgressEventArgs.cs" />
     <Compile Include="Source\Core\Installation\IInstallationCoordinator.cs" />
     <Compile Include="Source\Core\Installation\InstallationCoordinator.cs" />
     <Compile Include="Source\Core\Installation\IInstallationValidator.cs" />
