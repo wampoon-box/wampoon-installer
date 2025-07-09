@@ -195,7 +195,7 @@ namespace PWAMP.Installer.Neo.UI
             // _openFolderButton
             // 
             this._openFolderButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this._openFolderButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(108)))), ((int)(((byte)(117)))), ((int)(((byte)(125)))));
+            this._openFolderButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(192)))));
             this._openFolderButton.Cursor = System.Windows.Forms.Cursors.Hand;
             this._openFolderButton.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(108)))), ((int)(((byte)(117)))), ((int)(((byte)(125)))));
             this._openFolderButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
@@ -227,14 +227,14 @@ namespace PWAMP.Installer.Neo.UI
             // 
             // _cancelButton
             // 
-            this._cancelButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(53)))), ((int)(((byte)(69)))));
+            this._cancelButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
             this._cancelButton.Cursor = System.Windows.Forms.Cursors.Hand;
             this._cancelButton.Enabled = false;
             this._cancelButton.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(53)))), ((int)(((byte)(69)))));
             this._cancelButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this._cancelButton.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
             this._cancelButton.ForeColor = System.Drawing.Color.White;
-            this._cancelButton.Location = new System.Drawing.Point(177, 210);
+            this._cancelButton.Location = new System.Drawing.Point(200, 210);
             this._cancelButton.Name = "_cancelButton";
             this._cancelButton.Size = new System.Drawing.Size(80, 30);
             this._cancelButton.TabIndex = 3;
@@ -250,7 +250,7 @@ namespace PWAMP.Installer.Neo.UI
             this._exportLogButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this._exportLogButton.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
             this._exportLogButton.ForeColor = System.Drawing.Color.White;
-            this._exportLogButton.Location = new System.Drawing.Point(267, 210);
+            this._exportLogButton.Location = new System.Drawing.Point(290, 210);
             this._exportLogButton.Name = "_exportLogButton";
             this._exportLogButton.Size = new System.Drawing.Size(107, 30);
             this._exportLogButton.TabIndex = 4;
@@ -296,9 +296,9 @@ namespace PWAMP.Installer.Neo.UI
             | System.Windows.Forms.AnchorStyles.Right)));
             this._progressLabel.Font = new System.Drawing.Font("Segoe UI", 9F);
             this._progressLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this._progressLabel.Location = new System.Drawing.Point(10, 250);
+            this._progressLabel.Location = new System.Drawing.Point(20, 247);
             this._progressLabel.Name = "_progressLabel";
-            this._progressLabel.Size = new System.Drawing.Size(925, 20);
+            this._progressLabel.Size = new System.Drawing.Size(915, 20);
             this._progressLabel.TabIndex = 5;
             this._progressLabel.Text = "Ready to install";
             // 
@@ -306,9 +306,9 @@ namespace PWAMP.Installer.Neo.UI
             // 
             this._progressBar.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this._progressBar.Location = new System.Drawing.Point(10, 270);
+            this._progressBar.Location = new System.Drawing.Point(20, 270);
             this._progressBar.Name = "_progressBar";
-            this._progressBar.Size = new System.Drawing.Size(925, 25);
+            this._progressBar.Size = new System.Drawing.Size(915, 25);
             this._progressBar.Style = System.Windows.Forms.ProgressBarStyle.Continuous;
             this._progressBar.TabIndex = 6;
             // 
