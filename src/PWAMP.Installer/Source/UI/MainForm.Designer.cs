@@ -108,7 +108,7 @@ namespace PWAMP.Installer.Neo.UI
             this._apacheCheckBox.Location = new System.Drawing.Point(30, 39);
             this._apacheCheckBox.Name = "_apacheCheckBox";
             this._apacheCheckBox.Padding = new System.Windows.Forms.Padding(10);
-            this._apacheCheckBox.Size = new System.Drawing.Size(278, 43);
+            this._apacheCheckBox.Size = new System.Drawing.Size(308, 43);
             this._apacheCheckBox.TabIndex = 0;
             this._apacheCheckBox.Text = "🌐 Apache HTTP Server";
             this._apacheCheckBox.UseVisualStyleBackColor = false;
@@ -121,10 +121,10 @@ namespace PWAMP.Installer.Neo.UI
             this._mariadbCheckBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this._mariadbCheckBox.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
             this._mariadbCheckBox.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(37)))), ((int)(((byte)(41)))));
-            this._mariadbCheckBox.Location = new System.Drawing.Point(394, 39);
+            this._mariadbCheckBox.Location = new System.Drawing.Point(362, 39);
             this._mariadbCheckBox.Name = "_mariadbCheckBox";
             this._mariadbCheckBox.Padding = new System.Windows.Forms.Padding(10);
-            this._mariadbCheckBox.Size = new System.Drawing.Size(278, 42);
+            this._mariadbCheckBox.Size = new System.Drawing.Size(351, 42);
             this._mariadbCheckBox.TabIndex = 1;
             this._mariadbCheckBox.Text = "🗄️ MariaDB Database Server";
             this._mariadbCheckBox.UseVisualStyleBackColor = false;
@@ -140,7 +140,7 @@ namespace PWAMP.Installer.Neo.UI
             this._phpCheckBox.Location = new System.Drawing.Point(30, 92);
             this._phpCheckBox.Name = "_phpCheckBox";
             this._phpCheckBox.Padding = new System.Windows.Forms.Padding(10);
-            this._phpCheckBox.Size = new System.Drawing.Size(278, 43);
+            this._phpCheckBox.Size = new System.Drawing.Size(308, 43);
             this._phpCheckBox.TabIndex = 2;
             this._phpCheckBox.Text = "🐘 PHP Scripting Language";
             this._phpCheckBox.UseVisualStyleBackColor = false;
@@ -153,10 +153,10 @@ namespace PWAMP.Installer.Neo.UI
             this._phpmyadminCheckBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this._phpmyadminCheckBox.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
             this._phpmyadminCheckBox.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(37)))), ((int)(((byte)(41)))));
-            this._phpmyadminCheckBox.Location = new System.Drawing.Point(394, 92);
+            this._phpmyadminCheckBox.Location = new System.Drawing.Point(362, 92);
             this._phpmyadminCheckBox.Name = "_phpmyadminCheckBox";
             this._phpmyadminCheckBox.Padding = new System.Windows.Forms.Padding(10);
-            this._phpmyadminCheckBox.Size = new System.Drawing.Size(278, 42);
+            this._phpmyadminCheckBox.Size = new System.Drawing.Size(351, 42);
             this._phpmyadminCheckBox.TabIndex = 3;
             this._phpmyadminCheckBox.Text = "🔧 phpMyAdmin Database Manager";
             this._phpmyadminCheckBox.UseVisualStyleBackColor = false;
@@ -310,9 +310,9 @@ namespace PWAMP.Installer.Neo.UI
             | System.Windows.Forms.AnchorStyles.Right)));
             this._progressLabel.Font = new System.Drawing.Font("Segoe UI", 9F);
             this._progressLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this._progressLabel.Location = new System.Drawing.Point(20, 300);
+            this._progressLabel.Location = new System.Drawing.Point(27, 300);
             this._progressLabel.Name = "_progressLabel";
-            this._progressLabel.Size = new System.Drawing.Size(915, 20);
+            this._progressLabel.Size = new System.Drawing.Size(908, 20);
             this._progressLabel.TabIndex = 5;
             this._progressLabel.Text = "Ready to install";
             // 
@@ -320,9 +320,9 @@ namespace PWAMP.Installer.Neo.UI
             // 
             this._progressBar.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this._progressBar.Location = new System.Drawing.Point(20, 320);
+            this._progressBar.Location = new System.Drawing.Point(27, 320);
             this._progressBar.Name = "_progressBar";
-            this._progressBar.Size = new System.Drawing.Size(915, 25);
+            this._progressBar.Size = new System.Drawing.Size(908, 25);
             this._progressBar.Style = System.Windows.Forms.ProgressBarStyle.Continuous;
             this._progressBar.TabIndex = 6;
             // 
@@ -337,7 +337,7 @@ namespace PWAMP.Installer.Neo.UI
             this._logGroup.Location = new System.Drawing.Point(7, 3);
             this._logGroup.Name = "_logGroup";
             this._logGroup.Padding = new System.Windows.Forms.Padding(15);
-            this._logGroup.Size = new System.Drawing.Size(925, 280);
+            this._logGroup.Size = new System.Drawing.Size(925, 311);
             this._logGroup.TabIndex = 7;
             this._logGroup.TabStop = false;
             this._logGroup.Text = "📜 Installation Log:";
@@ -353,7 +353,7 @@ namespace PWAMP.Installer.Neo.UI
             this._logTextBox.Location = new System.Drawing.Point(20, 25);
             this._logTextBox.Name = "_logTextBox";
             this._logTextBox.ReadOnly = true;
-            this._logTextBox.Size = new System.Drawing.Size(885, 240);
+            this._logTextBox.Size = new System.Drawing.Size(885, 271);
             this._logTextBox.TabIndex = 0;
             this._logTextBox.Text = "";
             // 
@@ -365,13 +365,13 @@ namespace PWAMP.Installer.Neo.UI
             this.panel1.Controls.Add(this._logGroup);
             this.panel1.Location = new System.Drawing.Point(20, 355);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(915, 250);
+            this.panel1.Size = new System.Drawing.Size(915, 281);
             this.panel1.TabIndex = 7;
             // 
             // MainForm
             // 
             this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(959, 630);
+            this.ClientSize = new System.Drawing.Size(959, 661);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this._componentsGroup);
             this.Controls.Add(this._pathGroup);
@@ -383,8 +383,9 @@ namespace PWAMP.Installer.Neo.UI
             this.Controls.Add(this._progressLabel);
             this.Controls.Add(this._progressBar);
             this.Font = new System.Drawing.Font("Segoe UI", 9F);
-            this.MinimumSize = new System.Drawing.Size(600, 500);
+            this.MinimumSize = new System.Drawing.Size(800, 700);
             this.Name = "MainForm";
+            this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Show;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "PWAMP Installer";
             this._componentsGroup.ResumeLayout(false);

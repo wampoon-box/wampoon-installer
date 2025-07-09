@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using PWAMP.Installer.Neo.Core;
 using PWAMP.Installer.Neo.Core.Events;
+using PWAMP.Installer.Neo.Core.PackageDiscovery;
 using Frostybee.Pwamp.UI;
 
 namespace PWAMP.Installer.Neo.UI
@@ -16,6 +17,7 @@ namespace PWAMP.Installer.Neo.UI
         private InstallManager _installManager;
         private CancellationTokenSource _cancellationTokenSource;
         private bool _isInstalling;
+        private PackageDiscoveryService _packageDiscoveryService;
 
 
         public MainForm()
@@ -31,6 +33,9 @@ namespace PWAMP.Installer.Neo.UI
             _installManager.ProgressChanged += InstallManager_ProgressChanged;
             _installManager.ErrorOccurred += InstallManager_ErrorOccurred;
             _installManager.InstallationCompleted += InstallManager_InstallationCompleted;
+            
+            _packageDiscoveryService = new PackageDiscoveryService(new PackageRepository());
+            UpdateComponentVersions();
         }
 
         private void BrowseButton_Click(object sender, EventArgs e)
@@ -327,6 +332,34 @@ namespace PWAMP.Installer.Neo.UI
             _installManager?.Dispose();
 
             base.OnFormClosing(e);
+        }
+
+        private async void UpdateComponentVersions()
+        {
+            try
+            {
+                var apachePackage = await _packageDiscoveryService.GetPackageByNameAsync(PackageNames.Apache);
+                var mariadbPackage = await _packageDiscoveryService.GetPackageByNameAsync(PackageNames.MariaDB);
+                var phpPackage = await _packageDiscoveryService.GetPackageByNameAsync(PackageNames.PHP);
+                var phpmyadminPackage = await _packageDiscoveryService.GetPackageByNameAsync(PackageNames.PhpMyAdmin);
+
+                if (apachePackage != null)
+                    _apacheCheckBox.Text = $"🌐 Apache HTTP Server (v{apachePackage.Version})";
+                    
+                if (mariadbPackage != null)
+                    _mariadbCheckBox.Text = $"🗄️ MariaDB Database Server (v{mariadbPackage.Version})";
+                    
+                if (phpPackage != null)
+                    _phpCheckBox.Text = $"🐘 PHP Scripting Language (v{phpPackage.Version})";
+                    
+                if (phpmyadminPackage != null)
+                    _phpmyadminCheckBox.Text = $"🔧 phpMyAdmin Database Manager (v{phpmyadminPackage.Version})";
+            }
+            catch (Exception ex)
+            {
+                // Log error but don't show to user as this is not critical
+                System.Diagnostics.Debug.WriteLine($"Error updating component versions: {ex.Message}");
+            }
         }
     }
 }
