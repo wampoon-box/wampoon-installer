@@ -85,52 +85,67 @@ namespace PWAMP.Installer.Neo.UI
             this._componentsGroup.Controls.Add(this._mariadbCheckBox);
             this._componentsGroup.Controls.Add(this._phpCheckBox);
             this._componentsGroup.Controls.Add(this._phpmyadminCheckBox);
+            this._componentsGroup.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+            this._componentsGroup.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(62)))), ((int)(((byte)(80)))));
             this._componentsGroup.Location = new System.Drawing.Point(10, 10);
             this._componentsGroup.Name = "_componentsGroup";
+            this._componentsGroup.Padding = new System.Windows.Forms.Padding(15);
             this._componentsGroup.Size = new System.Drawing.Size(925, 120);
             this._componentsGroup.TabIndex = 0;
             this._componentsGroup.TabStop = false;
-            this._componentsGroup.Text = "Select Components:";
+            this._componentsGroup.Text = "🔧 Select Components:";
             // 
             // _apacheCheckBox
             // 
             this._apacheCheckBox.Checked = true;
             this._apacheCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
-            this._apacheCheckBox.Location = new System.Drawing.Point(10, 25);
+            this._apacheCheckBox.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this._apacheCheckBox.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this._apacheCheckBox.Location = new System.Drawing.Point(15, 35);
             this._apacheCheckBox.Name = "_apacheCheckBox";
             this._apacheCheckBox.Size = new System.Drawing.Size(200, 20);
             this._apacheCheckBox.TabIndex = 0;
             this._apacheCheckBox.Text = "Apache HTTP Server";
+            this._apacheCheckBox.UseVisualStyleBackColor = true;
             // 
             // _mariadbCheckBox
             // 
             this._mariadbCheckBox.Checked = true;
             this._mariadbCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
-            this._mariadbCheckBox.Location = new System.Drawing.Point(10, 50);
+            this._mariadbCheckBox.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this._mariadbCheckBox.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this._mariadbCheckBox.Location = new System.Drawing.Point(15, 60);
             this._mariadbCheckBox.Name = "_mariadbCheckBox";
             this._mariadbCheckBox.Size = new System.Drawing.Size(200, 20);
             this._mariadbCheckBox.TabIndex = 1;
             this._mariadbCheckBox.Text = "MariaDB Database";
+            this._mariadbCheckBox.UseVisualStyleBackColor = true;
             // 
             // _phpCheckBox
             // 
             this._phpCheckBox.Checked = true;
             this._phpCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
-            this._phpCheckBox.Location = new System.Drawing.Point(280, 25);
+            this._phpCheckBox.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this._phpCheckBox.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this._phpCheckBox.Location = new System.Drawing.Point(280, 35);
             this._phpCheckBox.Name = "_phpCheckBox";
             this._phpCheckBox.Size = new System.Drawing.Size(200, 20);
             this._phpCheckBox.TabIndex = 2;
             this._phpCheckBox.Text = "PHP Scripting Language";
+            this._phpCheckBox.UseVisualStyleBackColor = true;
             // 
             // _phpmyadminCheckBox
             // 
             this._phpmyadminCheckBox.Checked = true;
             this._phpmyadminCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
-            this._phpmyadminCheckBox.Location = new System.Drawing.Point(280, 50);
+            this._phpmyadminCheckBox.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this._phpmyadminCheckBox.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this._phpmyadminCheckBox.Location = new System.Drawing.Point(280, 60);
             this._phpmyadminCheckBox.Name = "_phpmyadminCheckBox";
             this._phpmyadminCheckBox.Size = new System.Drawing.Size(200, 20);
             this._phpmyadminCheckBox.TabIndex = 3;
             this._phpmyadminCheckBox.Text = "phpMyAdmin Database Manager";
+            this._phpmyadminCheckBox.UseVisualStyleBackColor = true;
             // 
             // _pathGroup
             // 
@@ -139,104 +154,148 @@ namespace PWAMP.Installer.Neo.UI
             this._pathGroup.Controls.Add(this._installPathTextBox);
             this._pathGroup.Controls.Add(this._browseButton);
             this._pathGroup.Controls.Add(this._openFolderButton);
+            this._pathGroup.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+            this._pathGroup.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(62)))), ((int)(((byte)(80)))));
             this._pathGroup.Location = new System.Drawing.Point(10, 140);
             this._pathGroup.Name = "_pathGroup";
+            this._pathGroup.Padding = new System.Windows.Forms.Padding(15);
             this._pathGroup.Size = new System.Drawing.Size(925, 60);
             this._pathGroup.TabIndex = 1;
             this._pathGroup.TabStop = false;
-            this._pathGroup.Text = "Installation Directory:";
+            this._pathGroup.Text = "📁 Installation Directory:";
             // 
             // _installPathTextBox
             // 
             this._installPathTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this._installPathTextBox.Location = new System.Drawing.Point(10, 25);
+            this._installPathTextBox.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this._installPathTextBox.Location = new System.Drawing.Point(15, 25);
             this._installPathTextBox.Name = "_installPathTextBox";
-            this._installPathTextBox.Size = new System.Drawing.Size(725, 20);
+            this._installPathTextBox.Size = new System.Drawing.Size(637, 23);
             this._installPathTextBox.TabIndex = 0;
             this._installPathTextBox.Text = "C:\\PWAMP";
             // 
             // _browseButton
             // 
             this._browseButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this._browseButton.Location = new System.Drawing.Point(745, 25);
+            this._browseButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(78)))), ((int)(((byte)(150)))), ((int)(((byte)(85)))));
+            this._browseButton.Cursor = System.Windows.Forms.Cursors.Hand;
+            this._browseButton.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(108)))), ((int)(((byte)(117)))), ((int)(((byte)(125)))));
+            this._browseButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this._browseButton.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+            this._browseButton.ForeColor = System.Drawing.Color.White;
+            this._browseButton.Location = new System.Drawing.Point(658, 20);
             this._browseButton.Name = "_browseButton";
-            this._browseButton.Size = new System.Drawing.Size(80, 25);
+            this._browseButton.Size = new System.Drawing.Size(80, 30);
             this._browseButton.TabIndex = 1;
             this._browseButton.Text = "Browse";
+            this._browseButton.UseVisualStyleBackColor = false;
             this._browseButton.Click += new System.EventHandler(this.BrowseButton_Click);
             // 
             // _openFolderButton
             // 
             this._openFolderButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this._openFolderButton.Location = new System.Drawing.Point(835, 25);
+            this._openFolderButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(108)))), ((int)(((byte)(117)))), ((int)(((byte)(125)))));
+            this._openFolderButton.Cursor = System.Windows.Forms.Cursors.Hand;
+            this._openFolderButton.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(108)))), ((int)(((byte)(117)))), ((int)(((byte)(125)))));
+            this._openFolderButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this._openFolderButton.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+            this._openFolderButton.ForeColor = System.Drawing.Color.White;
+            this._openFolderButton.Location = new System.Drawing.Point(744, 20);
             this._openFolderButton.Name = "_openFolderButton";
-            this._openFolderButton.Size = new System.Drawing.Size(80, 25);
+            this._openFolderButton.Size = new System.Drawing.Size(117, 30);
             this._openFolderButton.TabIndex = 2;
             this._openFolderButton.Text = "Open Folder";
-            this._openFolderButton.UseVisualStyleBackColor = true;
+            this._openFolderButton.UseVisualStyleBackColor = false;
             this._openFolderButton.Click += new System.EventHandler(this.OpenFolderButton_Click);
             // 
             // _installButton
             // 
-            this._installButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this._installButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(123)))), ((int)(((byte)(255)))));
+            this._installButton.Cursor = System.Windows.Forms.Cursors.Hand;
+            this._installButton.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(123)))), ((int)(((byte)(255)))));
             this._installButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this._installButton.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
             this._installButton.ForeColor = System.Drawing.Color.White;
-            this._installButton.Location = new System.Drawing.Point(10, 210);
+            this._installButton.Location = new System.Drawing.Point(25, 210);
             this._installButton.Name = "_installButton";
-            this._installButton.Size = new System.Drawing.Size(120, 30);
+            this._installButton.Size = new System.Drawing.Size(146, 30);
             this._installButton.TabIndex = 2;
-            this._installButton.Text = "Start Installation";
+            this._installButton.Text = "▶️ Start Installation";
             this._installButton.UseVisualStyleBackColor = false;
             this._installButton.Click += new System.EventHandler(this.InstallButton_Click);
             // 
             // _cancelButton
             // 
+            this._cancelButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(53)))), ((int)(((byte)(69)))));
+            this._cancelButton.Cursor = System.Windows.Forms.Cursors.Hand;
             this._cancelButton.Enabled = false;
-            this._cancelButton.Location = new System.Drawing.Point(140, 210);
+            this._cancelButton.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(53)))), ((int)(((byte)(69)))));
+            this._cancelButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this._cancelButton.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+            this._cancelButton.ForeColor = System.Drawing.Color.White;
+            this._cancelButton.Location = new System.Drawing.Point(177, 210);
             this._cancelButton.Name = "_cancelButton";
             this._cancelButton.Size = new System.Drawing.Size(80, 30);
             this._cancelButton.TabIndex = 3;
-            this._cancelButton.Text = "Cancel";
+            this._cancelButton.Text = "❌ Cancel";
+            this._cancelButton.UseVisualStyleBackColor = false;
             this._cancelButton.Click += new System.EventHandler(this.CancelButton_Click);
             // 
             // _exportLogButton
             // 
-            this._exportLogButton.Location = new System.Drawing.Point(230, 210);
+            this._exportLogButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(46)))), ((int)(((byte)(125)))), ((int)(((byte)(192)))));
+            this._exportLogButton.Cursor = System.Windows.Forms.Cursors.Hand;
+            this._exportLogButton.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(108)))), ((int)(((byte)(117)))), ((int)(((byte)(125)))));
+            this._exportLogButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this._exportLogButton.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+            this._exportLogButton.ForeColor = System.Drawing.Color.White;
+            this._exportLogButton.Location = new System.Drawing.Point(267, 210);
             this._exportLogButton.Name = "_exportLogButton";
-            this._exportLogButton.Size = new System.Drawing.Size(80, 30);
+            this._exportLogButton.Size = new System.Drawing.Size(107, 30);
             this._exportLogButton.TabIndex = 4;
-            this._exportLogButton.Text = "Export Log";
-            this._exportLogButton.UseVisualStyleBackColor = true;
+            this._exportLogButton.Text = "💾 Export Log";
+            this._exportLogButton.UseVisualStyleBackColor = false;
             this._exportLogButton.Click += new System.EventHandler(this.ExportLogButton_Click);
             // 
             // _quitButton
             // 
-            this._quitButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(57)))), ((int)(((byte)(43)))));
+            this._quitButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(53)))), ((int)(((byte)(69)))));
+            this._quitButton.Cursor = System.Windows.Forms.Cursors.Hand;
+            this._quitButton.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(53)))), ((int)(((byte)(69)))));
             this._quitButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this._quitButton.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
             this._quitButton.ForeColor = System.Drawing.Color.White;
-            this._quitButton.Location = new System.Drawing.Point(410, 210);
+            this._quitButton.Location = new System.Drawing.Point(538, 210);
             this._quitButton.Name = "_quitButton";
             this._quitButton.Size = new System.Drawing.Size(80, 30);
             this._quitButton.TabIndex = 6;
-            this._quitButton.Text = "Quit";
+            this._quitButton.Text = "❌ Quit";
             this._quitButton.UseVisualStyleBackColor = false;
             this._quitButton.Click += new System.EventHandler(this.QuitButton_Click);
             // 
             // _aboutButton
             // 
-            this._aboutButton.Location = new System.Drawing.Point(320, 210);
+            this._aboutButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(41)))), ((int)(((byte)(60)))));
+            this._aboutButton.Cursor = System.Windows.Forms.Cursors.Hand;
+            this._aboutButton.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(108)))), ((int)(((byte)(117)))), ((int)(((byte)(125)))));
+            this._aboutButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this._aboutButton.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+            this._aboutButton.ForeColor = System.Drawing.Color.White;
+            this._aboutButton.Location = new System.Drawing.Point(444, 210);
             this._aboutButton.Name = "_aboutButton";
-            this._aboutButton.Size = new System.Drawing.Size(80, 30);
+            this._aboutButton.Size = new System.Drawing.Size(88, 30);
             this._aboutButton.TabIndex = 5;
-            this._aboutButton.Text = "About";
-            this._aboutButton.UseVisualStyleBackColor = true;
+            this._aboutButton.Text = "ℹ️ About";
+            this._aboutButton.UseVisualStyleBackColor = false;
             this._aboutButton.Click += new System.EventHandler(this.AboutButton_Click);
             // 
             // _progressLabel
             // 
             this._progressLabel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this._progressLabel.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this._progressLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this._progressLabel.Location = new System.Drawing.Point(10, 250);
             this._progressLabel.Name = "_progressLabel";
             this._progressLabel.Size = new System.Drawing.Size(925, 20);
@@ -259,12 +318,15 @@ namespace PWAMP.Installer.Neo.UI
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this._logGroup.Controls.Add(this._logTextBox);
+            this._logGroup.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+            this._logGroup.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(62)))), ((int)(((byte)(80)))));
             this._logGroup.Location = new System.Drawing.Point(7, 3);
             this._logGroup.Name = "_logGroup";
+            this._logGroup.Padding = new System.Windows.Forms.Padding(15);
             this._logGroup.Size = new System.Drawing.Size(925, 280);
             this._logGroup.TabIndex = 7;
             this._logGroup.TabStop = false;
-            this._logGroup.Text = "Installation Log:";
+            this._logGroup.Text = "📜 Installation Log:";
             // 
             // _logTextBox
             // 
@@ -294,6 +356,7 @@ namespace PWAMP.Installer.Neo.UI
             // 
             // MainForm
             // 
+            this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(949, 600);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this._componentsGroup);
@@ -305,6 +368,7 @@ namespace PWAMP.Installer.Neo.UI
             this.Controls.Add(this._aboutButton);
             this.Controls.Add(this._progressLabel);
             this.Controls.Add(this._progressBar);
+            this.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.MinimumSize = new System.Drawing.Size(600, 500);
             this.Name = "MainForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
