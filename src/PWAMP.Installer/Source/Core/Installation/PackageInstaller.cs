@@ -52,6 +52,7 @@ namespace PWAMP.Installer.Neo.Core.Installation
                     break;
                 case PackageNames.MariaDB:
                     await MariaDBConfigHelper.ConfigureMariaDBAsync(pathResolver, progress);
+                    await MariaDBConfigHelper.InitializeMariaDBDataDirectoryAsync(pathResolver, progress);
                     break;
                 case PackageNames.PHP:
                     await PHPConfigHelper.ConfigurePHPAsync(pathResolver, progress);

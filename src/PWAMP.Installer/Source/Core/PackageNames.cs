@@ -83,6 +83,7 @@ namespace PWAMP.Installer.Neo.Core
             // Binary files
             public const string MysqldExe = "mysqld.exe";
             public const string MysqlExe = "mysql.exe";
+            public const string MariaDbInstallDbExe = "mariadb-install-db.exe";
 
             // Configuration files
             public const string MyIni = "my.ini";

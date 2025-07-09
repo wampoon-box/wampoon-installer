@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using PWAMP.Installer.Neo.Core.Events;
@@ -76,6 +77,9 @@ namespace PWAMP.Installer.Neo.Core
                 var configProgress = new Progress<string>(message => 
                     ReportProgress(message, GetProgressPercentage(), "Package Configuration"));
                 await installationCoordinator.ExecuteConfigurationAsync(_selectedPackages.ToArray(), configProgress, cancellationToken);
+
+                // Clean up downloads folder
+                await CleanupDownloadsFolderAsync(options.InstallPath);
 
                 // Final validation
                 var isValid = await _installationValidator.ValidateCompleteInstallationAsync(options);
@@ -239,6 +243,60 @@ namespace PWAMP.Installer.Neo.Core
         private void ReportError(string message, Exception exception = null, string component = "")
         {
             ErrorOccurred?.Invoke(this, new InstallErrorEventArgs(message, exception, component));
+        }
+
+        private async Task CleanupDownloadsFolderAsync(string installPath)
+        {
+            var downloadsPath = Path.Combine(installPath, "downloads");
+            
+            if (Directory.Exists(downloadsPath))
+            {
+                try
+                {
+                    ReportProgress("Cleaning up downloads folder...", GetProgressPercentage(), "Cleanup");
+                    
+                    // Delete all files and subdirectories in the downloads folder
+                    var files = Directory.GetFiles(downloadsPath, "*", SearchOption.AllDirectories);
+                    var directories = Directory.GetDirectories(downloadsPath, "*", SearchOption.AllDirectories);
+                    
+                    // Delete all files
+                    foreach (var file in files)
+                    {
+                        try
+                        {
+                            File.Delete(file);
+                        }
+                        catch
+                        {
+                            // Ignore individual file deletion errors
+                        }
+                    }
+                    
+                    // Delete all directories (in reverse order to handle nested directories)
+                    Array.Reverse(directories);
+                    foreach (var directory in directories)
+                    {
+                        try
+                        {
+                            Directory.Delete(directory, false);
+                        }
+                        catch
+                        {
+                            // Ignore individual directory deletion errors
+                        }
+                    }
+                    
+                    // Finally, delete the downloads folder itself
+                    Directory.Delete(downloadsPath, false);
+                    
+                    ReportProgress("Downloads folder cleaned up successfully", GetProgressPercentage(), "Cleanup");
+                }
+                catch (Exception ex)
+                {
+                    // Log the error but don't fail the installation
+                    ReportProgress($"Warning: Could not fully clean up downloads folder: {ex.Message}", GetProgressPercentage(), "Cleanup");
+                }
+            }
         }
 
         public void Dispose()

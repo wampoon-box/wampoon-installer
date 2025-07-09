@@ -350,10 +350,10 @@ namespace PWAMP.Installer.Neo.UI
             this._logTextBox.BackColor = System.Drawing.Color.Black;
             this._logTextBox.Font = new System.Drawing.Font("Consolas", 10F);
             this._logTextBox.ForeColor = System.Drawing.Color.White;
-            this._logTextBox.Location = new System.Drawing.Point(10, 20);
+            this._logTextBox.Location = new System.Drawing.Point(20, 25);
             this._logTextBox.Name = "_logTextBox";
             this._logTextBox.ReadOnly = true;
-            this._logTextBox.Size = new System.Drawing.Size(905, 250);
+            this._logTextBox.Size = new System.Drawing.Size(885, 240);
             this._logTextBox.TabIndex = 0;
             this._logTextBox.Text = "";
             // 

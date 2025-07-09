@@ -24,7 +24,7 @@
     "PackageID": 5,
     "Name": "phpMyAdmin",
     "Version": "5.2.2",
-    "DownloadUrl": "https://files.phpmyadmin.net/phpMyAdmin/5.2.2/phpMyAdmin-5.2.2-all-languages.zip",
+    "DownloadUrl": "https://files.phpmyadmin.net/snapshots/phpMyAdmin-5.2+snapshot-all-languages.zip",
     "Checksum": ""
   }
 ] 
