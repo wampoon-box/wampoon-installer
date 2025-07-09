@@ -1,10 +1,10 @@
 using System;
 using System.Threading.Tasks;
-using PWAMP.Installer.Neo.Helpers.Common;
-using PWAMP.Installer.Neo.Core;
-using PWAMP.Installer.Neo.Core.Paths;
+using Wampoon.Installer.Helpers.Common;
+using Wampoon.Installer.Core;
+using Wampoon.Installer.Core.Paths;
 
-namespace PWAMP.Installer.Neo.Helpers
+namespace Wampoon.Installer.Helpers
 {
     public static class PhpMyAdminConfigHelper
     {

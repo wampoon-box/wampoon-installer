@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
-using PWAMP.Installer.Neo.Models;
+using Wampoon.Installer.Models;
 
-namespace PWAMP.Installer.Neo.Core
+namespace Wampoon.Installer.Core
 {
     public static class PackageMetadata
     {

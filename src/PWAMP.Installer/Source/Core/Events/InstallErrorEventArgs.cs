@@ -1,6 +1,6 @@
 using System;
 
-namespace PWAMP.Installer.Neo.Core.Events
+namespace Wampoon.Installer.Core.Events
 {
     public class InstallErrorEventArgs : EventArgs
     {

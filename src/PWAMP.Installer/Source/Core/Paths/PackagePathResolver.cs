@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using PWAMP.Installer.Neo.Helpers.Common;
+using Wampoon.Installer.Helpers.Common;
 
-namespace PWAMP.Installer.Neo.Core.Paths
+namespace Wampoon.Installer.Core.Paths
 {
     /// <summary>
     /// Concrete implementation of IPathResolver that handles path resolution for PWAMP packages.    

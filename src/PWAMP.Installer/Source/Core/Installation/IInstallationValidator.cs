@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
 
-namespace PWAMP.Installer.Neo.Core.Installation
+namespace Wampoon.Installer.Core.Installation
 {
     public interface IInstallationValidator
     {

@@ -1,6 +1,6 @@
 using System;
 
-namespace PWAMP.Installer.Neo.Helpers.Logging
+namespace Wampoon.Installer.Helpers.Logging
 {
     public static class LoggerFactory
     {

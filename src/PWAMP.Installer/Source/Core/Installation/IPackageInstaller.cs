@@ -1,9 +1,9 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using PWAMP.Installer.Neo.Core.Paths;
+using Wampoon.Installer.Core.Paths;
 
-namespace PWAMP.Installer.Neo.Core.Installation
+namespace Wampoon.Installer.Core.Installation
 {
     public interface IPackageInstaller
     {

@@ -5,12 +5,14 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using PWAMP.Installer.Neo.Core;
-using PWAMP.Installer.Neo.Core.Events;
-using PWAMP.Installer.Neo.Core.PackageDiscovery;
+using Wampoon.Installer.Core;
+using Wampoon.Installer.Core.Events;
+using Wampoon.Installer.Core.PackageDiscovery;
+using Wampoon.Installer.Models;
 using Frostybee.Pwamp.UI;
+using PWAMP.Installer.Helpers;
 
-namespace PWAMP.Installer.Neo.UI
+namespace Wampoon.Installer.UI
 {
     public partial class MainForm : Form
     {
@@ -18,6 +20,8 @@ namespace PWAMP.Installer.Neo.UI
         private CancellationTokenSource _cancellationTokenSource;
         private bool _isInstalling;
         private PackageDiscoveryService _packageDiscoveryService;
+        private PackageRepository _packageRepository;
+        private System.Windows.Forms.Timer _progressBarTimer;
 
 
         public MainForm()
@@ -35,8 +39,13 @@ namespace PWAMP.Installer.Neo.UI
             _installManager.InstallationCompleted += InstallManager_InstallationCompleted;
             _installManager.ExistingPackagesDetected += InstallManager_ExistingPackagesDetected;
             
-            _packageDiscoveryService = new PackageDiscoveryService(new PackageRepository());
+            _packageRepository = new PackageRepository();
+            _packageDiscoveryService = new PackageDiscoveryService(_packageRepository);
+            
+            // This should now be fast since it loads from local file first
             UpdateComponentVersions();
+            
+            Text = AppConstants.APP_FULL_NAME;
         }
 
         private void BrowseButton_Click(object sender, EventArgs e)
@@ -267,17 +276,18 @@ namespace PWAMP.Installer.Neo.UI
                 Application.DoEvents();
                 
                 // Method 5: Delayed final update
-                var timer = new System.Windows.Forms.Timer();
-                timer.Interval = 100; // 100ms delay
-                timer.Tick += (s, args) =>
+                _progressBarTimer?.Stop();
+                _progressBarTimer?.Dispose();
+                _progressBarTimer = new System.Windows.Forms.Timer();
+                _progressBarTimer.Interval = 100; // 100ms delay
+                _progressBarTimer.Tick += (s, args) =>
                 {
-                    timer.Stop();
-                    timer.Dispose();
+                    _progressBarTimer.Stop();
                     _progressBar.Value = 100;
                     _progressBar.Refresh();
                     LogMessage("Final progress bar update applied", Color.Cyan);
                 };
-                timer.Start();
+                _progressBarTimer.Start();
             }
             catch (Exception ex)
             {
@@ -331,7 +341,23 @@ namespace PWAMP.Installer.Neo.UI
 
             // Cleanup resources
             _cancellationTokenSource?.Dispose();
-            _installManager?.Dispose();
+            
+            // Unsubscribe from events to prevent memory leaks
+            if (_installManager != null)
+            {
+                _installManager.ProgressChanged -= InstallManager_ProgressChanged;
+                _installManager.ErrorOccurred -= InstallManager_ErrorOccurred;
+                _installManager.InstallationCompleted -= InstallManager_InstallationCompleted;
+                _installManager.ExistingPackagesDetected -= InstallManager_ExistingPackagesDetected;
+                _installManager.Dispose();
+            }
+            
+            // Dispose timer
+            _progressBarTimer?.Stop();
+            _progressBarTimer?.Dispose();
+            
+            // Dispose package repository
+            _packageRepository?.Dispose();
 
             base.OnFormClosing(e);
         }
@@ -364,32 +390,82 @@ namespace PWAMP.Installer.Neo.UI
             }
         }
 
+        private void SetDefaultComponentText()
+        {
+            // Set default text immediately (non-blocking)
+            _apacheCheckBox.Text = "🌐 Apache HTTP Server";
+            _mariadbCheckBox.Text = "🗄️ MariaDB Database Server";
+            _phpCheckBox.Text = "🐘 PHP Scripting Language";
+            _phpmyadminCheckBox.Text = "🔧 phpMyAdmin Database Manager";
+        }
+
         private async void UpdateComponentVersions()
         {
             try
             {
-                var apachePackage = await _packageDiscoveryService.GetPackageByNameAsync(PackageNames.Apache);
-                var mariadbPackage = await _packageDiscoveryService.GetPackageByNameAsync(PackageNames.MariaDB);
-                var phpPackage = await _packageDiscoveryService.GetPackageByNameAsync(PackageNames.PHP);
-                var phpmyadminPackage = await _packageDiscoveryService.GetPackageByNameAsync(PackageNames.PhpMyAdmin);
+                // Add a timeout to prevent hanging on startup
+                var timeout = TimeSpan.FromSeconds(10);
+                var loadVersionsTask = Task.Run(async () =>
+                {
+                    // Run all package lookups in parallel for better performance
+                    var tasks = new[]
+                    {
+                        _packageDiscoveryService.GetPackageByNameAsync(PackageNames.Apache),
+                        _packageDiscoveryService.GetPackageByNameAsync(PackageNames.MariaDB),
+                        _packageDiscoveryService.GetPackageByNameAsync(PackageNames.PHP),
+                        _packageDiscoveryService.GetPackageByNameAsync(PackageNames.PhpMyAdmin)
+                    };
 
-                if (apachePackage != null)
-                    _apacheCheckBox.Text = $"🌐 Apache HTTP Server (v{apachePackage.Version})";
-                    
-                if (mariadbPackage != null)
-                    _mariadbCheckBox.Text = $"🗄️ MariaDB Database Server (v{mariadbPackage.Version})";
-                    
-                if (phpPackage != null)
-                    _phpCheckBox.Text = $"🐘 PHP Scripting Language (v{phpPackage.Version})";
-                    
-                if (phpmyadminPackage != null)
-                    _phpmyadminCheckBox.Text = $"🔧 phpMyAdmin Database Manager (v{phpmyadminPackage.Version})";
+                    return await Task.WhenAll(tasks);
+                });
+
+                var timeoutTask = Task.Delay(timeout);
+                var completedTask = await Task.WhenAny(loadVersionsTask, timeoutTask);
+
+                if (completedTask == timeoutTask)
+                {
+                    // Timeout occurred
+                    System.Diagnostics.Debug.WriteLine("Version loading timed out - using default component text");
+                    return;
+                }
+
+                var packages = await loadVersionsTask;
+                var apachePackage = packages[0];
+                var mariadbPackage = packages[1];
+                var phpPackage = packages[2];
+                var phpmyadminPackage = packages[3];
+
+                // Update UI on the main thread
+                if (InvokeRequired)
+                {
+                    Invoke(new Action(() => UpdateComponentTextWithVersions(apachePackage, mariadbPackage, phpPackage, phpmyadminPackage)));
+                }
+                else
+                {
+                    UpdateComponentTextWithVersions(apachePackage, mariadbPackage, phpPackage, phpmyadminPackage);
+                }
             }
             catch (Exception ex)
             {
                 // Log error but don't show to user as this is not critical
                 System.Diagnostics.Debug.WriteLine($"Error updating component versions: {ex.Message}");
+                // UI will keep the default text if version loading fails
             }
+        }
+
+        private void UpdateComponentTextWithVersions(InstallablePackage apachePackage, InstallablePackage mariadbPackage, InstallablePackage phpPackage, InstallablePackage phpmyadminPackage)
+        {
+            if (apachePackage != null)
+                _apacheCheckBox.Text = $"🌐 Apache HTTP Server (v{apachePackage.Version})";
+                
+            if (mariadbPackage != null)
+                _mariadbCheckBox.Text = $"🗄️ MariaDB Database Server (v{mariadbPackage.Version})";
+                
+            if (phpPackage != null)
+                _phpCheckBox.Text = $"🐘 PHP Scripting Language (v{phpPackage.Version})";
+                
+            if (phpmyadminPackage != null)
+                _phpmyadminCheckBox.Text = $"🔧 phpMyAdmin Database Manager (v{phpmyadminPackage.Version})";
         }
     }
 }

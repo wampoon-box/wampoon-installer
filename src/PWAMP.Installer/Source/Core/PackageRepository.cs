@@ -5,10 +5,10 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Reflection;
-using PWAMP.Installer.Neo.Models;
+using Wampoon.Installer.Models;
 using Newtonsoft.Json;
 
-namespace PWAMP.Installer.Neo.Core
+namespace Wampoon.Installer.Core
 {
     public class PackageRepository : IDisposable
     {
@@ -27,13 +27,21 @@ namespace PWAMP.Installer.Neo.Core
             if (_packages != null)
                 return _packages;
 
-            try
+            // Try local file first for faster startup
+            _packages = LoadPackagesFromLocalFile();
+            
+            // If local file didn't have valid packages, try remote manifest
+            if (_packages == null || !_packages.Any())
             {
-                _packages = await LoadPackagesFromManifestAsync();
-            }
-            catch
-            {
-                _packages = LoadPackagesFromLocalFile();
+                try
+                {
+                    _packages = await LoadPackagesFromManifestAsync();
+                }
+                catch
+                {
+                    // If both fail, use fallback
+                    _packages = GetFallbackPackages();
+                }
             }
 
             return _packages;

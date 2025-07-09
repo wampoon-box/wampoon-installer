@@ -1,7 +1,7 @@
 using System;
-using PWAMP.Installer.Neo.Events;
+using Wampoon.Installer.Events;
 
-namespace PWAMP.Installer.Neo.Helpers.Logging
+namespace Wampoon.Installer.Helpers.Logging
 {
     public interface ILogger
     {

@@ -1,4 +1,4 @@
-namespace PWAMP.Installer.Neo.Core
+namespace Wampoon.Installer.Core
 {
     /// <summary>
     /// Centralized constants for PWAMP package names and file names.        

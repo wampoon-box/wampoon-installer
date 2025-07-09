@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 
-namespace PWAMP.Installer.Neo.Models
+namespace Wampoon.Installer.Models
 {
     public class InstallablePackage
     {

@@ -2,7 +2,7 @@ using System;
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace PWAMP.Installer.Neo.UI
+namespace Wampoon.Installer.UI
 {
     partial class MainForm
     {
@@ -92,7 +92,7 @@ namespace PWAMP.Installer.Neo.UI
             this._componentsGroup.Location = new System.Drawing.Point(20, 20);
             this._componentsGroup.Name = "_componentsGroup";
             this._componentsGroup.Padding = new System.Windows.Forms.Padding(20);
-            this._componentsGroup.Size = new System.Drawing.Size(835, 154);
+            this._componentsGroup.Size = new System.Drawing.Size(839, 154);
             this._componentsGroup.TabIndex = 0;
             this._componentsGroup.TabStop = false;
             this._componentsGroup.Text = "📦 Select Components to Install";
@@ -173,7 +173,7 @@ namespace PWAMP.Installer.Neo.UI
             this._pathGroup.Location = new System.Drawing.Point(20, 180);
             this._pathGroup.Name = "_pathGroup";
             this._pathGroup.Padding = new System.Windows.Forms.Padding(15);
-            this._pathGroup.Size = new System.Drawing.Size(835, 60);
+            this._pathGroup.Size = new System.Drawing.Size(839, 60);
             this._pathGroup.TabIndex = 1;
             this._pathGroup.TabStop = false;
             this._pathGroup.Text = "📁 Installation Directory:";
@@ -185,20 +185,20 @@ namespace PWAMP.Installer.Neo.UI
             this._installPathTextBox.Font = new System.Drawing.Font("Segoe UI", 9F);
             this._installPathTextBox.Location = new System.Drawing.Point(15, 25);
             this._installPathTextBox.Name = "_installPathTextBox";
-            this._installPathTextBox.Size = new System.Drawing.Size(479, 23);
+            this._installPathTextBox.Size = new System.Drawing.Size(483, 23);
             this._installPathTextBox.TabIndex = 0;
             this._installPathTextBox.Text = "C:\\PWAMP";
             // 
             // _browseButton
             // 
             this._browseButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this._browseButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(78)))), ((int)(((byte)(150)))), ((int)(((byte)(85)))));
+            this._browseButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(123)))), ((int)(((byte)(255)))));
             this._browseButton.Cursor = System.Windows.Forms.Cursors.Hand;
             this._browseButton.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(108)))), ((int)(((byte)(117)))), ((int)(((byte)(125)))));
             this._browseButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this._browseButton.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
             this._browseButton.ForeColor = System.Drawing.Color.White;
-            this._browseButton.Location = new System.Drawing.Point(500, 20);
+            this._browseButton.Location = new System.Drawing.Point(504, 20);
             this._browseButton.Name = "_browseButton";
             this._browseButton.Size = new System.Drawing.Size(80, 30);
             this._browseButton.TabIndex = 1;
@@ -215,7 +215,7 @@ namespace PWAMP.Installer.Neo.UI
             this._openFolderButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this._openFolderButton.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
             this._openFolderButton.ForeColor = System.Drawing.Color.White;
-            this._openFolderButton.Location = new System.Drawing.Point(586, 20);
+            this._openFolderButton.Location = new System.Drawing.Point(590, 20);
             this._openFolderButton.Name = "_openFolderButton";
             this._openFolderButton.Size = new System.Drawing.Size(117, 30);
             this._openFolderButton.TabIndex = 2;
@@ -225,7 +225,7 @@ namespace PWAMP.Installer.Neo.UI
             // 
             // _installButton
             // 
-            this._installButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(123)))), ((int)(((byte)(255)))));
+            this._installButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(78)))), ((int)(((byte)(150)))), ((int)(((byte)(85)))));
             this._installButton.Cursor = System.Windows.Forms.Cursors.Hand;
             this._installButton.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(123)))), ((int)(((byte)(255)))));
             this._installButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
@@ -312,7 +312,7 @@ namespace PWAMP.Installer.Neo.UI
             this._progressLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this._progressLabel.Location = new System.Drawing.Point(27, 300);
             this._progressLabel.Name = "_progressLabel";
-            this._progressLabel.Size = new System.Drawing.Size(908, 20);
+            this._progressLabel.Size = new System.Drawing.Size(912, 20);
             this._progressLabel.TabIndex = 5;
             this._progressLabel.Text = "Ready to install";
             // 
@@ -322,7 +322,7 @@ namespace PWAMP.Installer.Neo.UI
             | System.Windows.Forms.AnchorStyles.Right)));
             this._progressBar.Location = new System.Drawing.Point(27, 320);
             this._progressBar.Name = "_progressBar";
-            this._progressBar.Size = new System.Drawing.Size(908, 25);
+            this._progressBar.Size = new System.Drawing.Size(912, 25);
             this._progressBar.Style = System.Windows.Forms.ProgressBarStyle.Continuous;
             this._progressBar.TabIndex = 6;
             // 
@@ -337,7 +337,7 @@ namespace PWAMP.Installer.Neo.UI
             this._logGroup.Location = new System.Drawing.Point(7, 3);
             this._logGroup.Name = "_logGroup";
             this._logGroup.Padding = new System.Windows.Forms.Padding(15);
-            this._logGroup.Size = new System.Drawing.Size(925, 311);
+            this._logGroup.Size = new System.Drawing.Size(929, 311);
             this._logGroup.TabIndex = 7;
             this._logGroup.TabStop = false;
             this._logGroup.Text = "📜 Installation Log:";
@@ -353,7 +353,7 @@ namespace PWAMP.Installer.Neo.UI
             this._logTextBox.Location = new System.Drawing.Point(20, 25);
             this._logTextBox.Name = "_logTextBox";
             this._logTextBox.ReadOnly = true;
-            this._logTextBox.Size = new System.Drawing.Size(885, 271);
+            this._logTextBox.Size = new System.Drawing.Size(889, 271);
             this._logTextBox.TabIndex = 0;
             this._logTextBox.Text = "";
             // 
@@ -365,13 +365,13 @@ namespace PWAMP.Installer.Neo.UI
             this.panel1.Controls.Add(this._logGroup);
             this.panel1.Location = new System.Drawing.Point(20, 355);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(915, 281);
+            this.panel1.Size = new System.Drawing.Size(919, 281);
             this.panel1.TabIndex = 7;
             // 
             // MainForm
             // 
             this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(959, 661);
+            this.ClientSize = new System.Drawing.Size(963, 661);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this._componentsGroup);
             this.Controls.Add(this._pathGroup);

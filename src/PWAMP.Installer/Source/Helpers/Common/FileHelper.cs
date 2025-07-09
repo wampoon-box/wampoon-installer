@@ -2,7 +2,7 @@ using System;
 using System.IO;
 using System.Threading.Tasks;
 
-namespace PWAMP.Installer.Neo.Helpers.Common
+namespace Wampoon.Installer.Helpers.Common
 {
     public static class FileHelper
     {

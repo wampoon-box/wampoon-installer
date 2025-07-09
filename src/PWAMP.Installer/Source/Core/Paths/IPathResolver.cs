@@ -1,6 +1,6 @@
 using System;
 
-namespace PWAMP.Installer.Neo.Core.Paths
+namespace Wampoon.Installer.Core.Paths
 {
     /// <summary>
     /// Provides centralized path resolution for PWAMP package installations.

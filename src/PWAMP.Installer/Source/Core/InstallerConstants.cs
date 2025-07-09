@@ -1,6 +1,6 @@
 using System;
 
-namespace PWAMP.Installer.Neo.Core
+namespace Wampoon.Installer.Core
 {
     public static class InstallerConstants
     {

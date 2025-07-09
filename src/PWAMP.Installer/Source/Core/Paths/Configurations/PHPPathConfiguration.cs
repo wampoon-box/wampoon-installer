@@ -1,6 +1,6 @@
-using PWAMP.Installer.Neo.Core;
+using Wampoon.Installer.Core;
 
-namespace PWAMP.Installer.Neo.Core.Paths.Configurations
+namespace Wampoon.Installer.Core.Paths.Configurations
 {
     /// <summary>
     /// Path configuration for PHP Scripting Language package.

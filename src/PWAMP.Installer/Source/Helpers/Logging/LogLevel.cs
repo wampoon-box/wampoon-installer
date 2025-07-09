@@ -1,4 +1,4 @@
-namespace PWAMP.Installer.Neo.Helpers.Logging
+namespace Wampoon.Installer.Helpers.Logging
 {
     public enum LogLevel
     {

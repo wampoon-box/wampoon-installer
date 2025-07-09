@@ -2,12 +2,12 @@ using System;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
-using PWAMP.Installer.Neo.Core.PackageDiscovery;
-using PWAMP.Installer.Neo.Core.PackageOperations;
-using PWAMP.Installer.Neo.Models;
-using PWAMP.Installer.Neo.Events;
+using Wampoon.Installer.Core.PackageDiscovery;
+using Wampoon.Installer.Core.PackageOperations;
+using Wampoon.Installer.Models;
+using Wampoon.Installer.Events;
 
-namespace PWAMP.Installer.Neo.Core
+namespace Wampoon.Installer.Core
 {
     public class PackageManager : IDisposable
     {

@@ -1,7 +1,7 @@
 using System.Collections.Generic;
-using PWAMP.Installer.Neo.Core.Paths.Configurations;
+using Wampoon.Installer.Core.Paths.Configurations;
 
-namespace PWAMP.Installer.Neo.Core.Paths
+namespace Wampoon.Installer.Core.Paths
 {
     /// <summary>
     /// Factory class for creating configured IPathResolver instances.    

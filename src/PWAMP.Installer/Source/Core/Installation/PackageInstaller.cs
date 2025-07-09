@@ -2,11 +2,11 @@ using System;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
-using PWAMP.Installer.Neo.Core.Paths;
-using PWAMP.Installer.Neo.Helpers;
-using PWAMP.Installer.Neo.Helpers.Common;
+using Wampoon.Installer.Core.Paths;
+using Wampoon.Installer.Helpers;
+using Wampoon.Installer.Helpers.Common;
 
-namespace PWAMP.Installer.Neo.Core.Installation
+namespace Wampoon.Installer.Core.Installation
 {
     public class PackageInstaller : IPackageInstaller
     {

@@ -1,8 +1,8 @@
 using System;
 using System.Threading.Tasks;
-using PWAMP.Installer.Neo.Helpers.Common;
+using Wampoon.Installer.Helpers.Common;
 
-namespace PWAMP.Installer.Neo.Core.Installation
+namespace Wampoon.Installer.Core.Installation
 {
     public class InstallationValidator : IInstallationValidator
     {

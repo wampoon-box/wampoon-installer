@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace PWAMP.Installer.Neo.Core.Paths
+namespace Wampoon.Installer.Core.Paths
 {
     /// <summary>
     /// Base implementation of package path configuration.

@@ -1,9 +1,9 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using PWAMP.Installer.Neo.Models;
+using Wampoon.Installer.Models;
 
-namespace PWAMP.Installer.Neo.Core.PackageDiscovery
+namespace Wampoon.Installer.Core.PackageDiscovery
 {
     public class PackageDiscoveryService : IPackageDiscoveryService
     {

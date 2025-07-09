@@ -1,11 +1,11 @@
 using PWAMP.Installer.Helpers;
-using PWAMP.Installer.Neo.UI;
+using Wampoon.Installer.UI;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace PWAMP.Installer.Neo
+namespace Wampoon.Installer
 {
     static class Program
     {

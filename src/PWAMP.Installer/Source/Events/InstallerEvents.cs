@@ -1,6 +1,6 @@
 using System;
 
-namespace PWAMP.Installer.Neo.Events
+namespace Wampoon.Installer.Events
 {
     public class DownloadProgressEventArgs : EventArgs
     {

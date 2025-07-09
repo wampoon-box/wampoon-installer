@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
-using PWAMP.Installer.Neo.Core.Events;
-using PWAMP.Installer.Neo.Core.Installation;
-using PWAMP.Installer.Neo.Core.Paths;
-using PWAMP.Installer.Neo.Helpers.Common;
+using Wampoon.Installer.Core.Events;
+using Wampoon.Installer.Core.Installation;
+using Wampoon.Installer.Core.Paths;
+using Wampoon.Installer.Helpers.Common;
+using Wampoon.Installer.Events;
 
-namespace PWAMP.Installer.Neo.Core
+namespace Wampoon.Installer.Core
 {
     public class InstallManager : IDisposable
     {
@@ -28,6 +29,10 @@ namespace PWAMP.Installer.Neo.Core
         private int _totalPackages;
         private int _currentPackageIndex;
         private double _currentPackageProgress;
+        
+        private EventHandler<DownloadProgressEventArgs> _downloadProgressHandler;
+        private EventHandler<InstallationProgressEventArgs> _extractionProgressHandler;
+        private EventHandler<InstallationCompletedEventArgs> _packageCompletionHandler;
 
         public InstallManager()
         {
@@ -214,8 +219,8 @@ namespace PWAMP.Installer.Neo.Core
 
         private void SubscribeToPackageManagerEvents()
         {
-            // Subscribe to download progress events
-            _packageManager.DownloadProgressReported += (sender, e) =>
+            // Initialize event handlers
+            _downloadProgressHandler = (sender, e) =>
             {
                 _currentPackageProgress = e.PercentComplete;
                 var message = $"Downloading {e.PackageName}: {e.Status}";
@@ -226,8 +231,7 @@ namespace PWAMP.Installer.Neo.Core
                 ReportProgress(message, GetDetailedProgressPercentage(), "Package Installation");
             };
 
-            // Subscribe to extraction progress events
-            _packageManager.ExtractionProgressReported += (sender, e) =>
+            _extractionProgressHandler = (sender, e) =>
             {
                 _currentPackageProgress = e.PercentComplete;
                 var message = $"Extracting {e.PackageName}: {e.CurrentOperation}";
@@ -238,13 +242,17 @@ namespace PWAMP.Installer.Neo.Core
                 ReportProgress(message, GetDetailedProgressPercentage(), "Package Installation");
             };
 
-            // Subscribe to package completion events
-            _packageManager.PackageInstallationCompleted += (sender, e) =>
+            _packageCompletionHandler = (sender, e) =>
             {
                 _currentPackageIndex++;
                 _currentPackageProgress = 0;
                 ReportProgress($"Package {e.PackageName} installation completed", GetDetailedProgressPercentage(), "Package Installation");
             };
+
+            // Subscribe to events
+            _packageManager.DownloadProgressReported += _downloadProgressHandler;
+            _packageManager.ExtractionProgressReported += _extractionProgressHandler;
+            _packageManager.PackageInstallationCompleted += _packageCompletionHandler;
         }
 
         private void ResetProgressTracking()
@@ -349,9 +357,29 @@ namespace PWAMP.Installer.Neo.Core
 
         public void Dispose()
         {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
             if (!_disposed)
             {
-                _packageManager?.Dispose();
+                if (disposing)
+                {
+                    // Unsubscribe from events to prevent memory leaks
+                    if (_packageManager != null)
+                    {
+                        if (_downloadProgressHandler != null)
+                            _packageManager.DownloadProgressReported -= _downloadProgressHandler;
+                        if (_extractionProgressHandler != null)
+                            _packageManager.ExtractionProgressReported -= _extractionProgressHandler;
+                        if (_packageCompletionHandler != null)
+                            _packageManager.PackageInstallationCompleted -= _packageCompletionHandler;
+                        
+                        _packageManager.Dispose();
+                    }
+                }
                 _disposed = true;
             }
         }

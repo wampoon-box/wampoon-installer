@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using PWAMP.Installer.Neo.Core;
-using PWAMP.Installer.Neo.Core.Paths;
-using PWAMP.Installer.Neo.Helpers.Logging;
+using Wampoon.Installer.Core;
+using Wampoon.Installer.Core.Paths;
+using Wampoon.Installer.Helpers.Logging;
 
-namespace PWAMP.Installer.Neo.Helpers.Common
+namespace Wampoon.Installer.Helpers.Common
 {
     public abstract class BaseConfigHelper
     {

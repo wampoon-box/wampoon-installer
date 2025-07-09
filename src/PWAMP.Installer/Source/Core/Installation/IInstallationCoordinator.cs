@@ -2,7 +2,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace PWAMP.Installer.Neo.Core.Installation
+namespace Wampoon.Installer.Core.Installation
 {
     public interface IInstallationCoordinator
     {
