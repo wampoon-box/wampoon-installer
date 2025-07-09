@@ -80,7 +80,8 @@ namespace PWAMP.Installer.Neo.Core
                     using (var contentStream = await response.Content.ReadAsStreamAsync())
                     using (var fileStream = new FileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.None, InstallerConstants.FileStreamBufferSize, true))
                     {
-                        var buffer = new byte[InstallerConstants.DownloadBufferSize];
+                        var bufferSize = GetOptimalBufferSize(totalBytes);
+                        var buffer = new byte[bufferSize];
                         int bytesRead;
 
                         while ((bytesRead = await contentStream.ReadAsync(buffer, 0, buffer.Length, cancellationToken)) > 0)
@@ -242,7 +243,7 @@ namespace PWAMP.Installer.Neo.Core
                 using (var md5 = System.Security.Cryptography.MD5.Create())
                 using (var stream = File.OpenRead(filePath))
                 {
-                    var hashBytes = await Task.Run(() => md5.ComputeHash(stream), cancellationToken);
+                    var hashBytes = await ComputeHashAsync(md5, stream, cancellationToken);
                     var actualChecksum = BitConverter.ToString(hashBytes).Replace("-", "").ToLowerInvariant();
                     return string.Equals(expectedChecksum, actualChecksum, StringComparison.OrdinalIgnoreCase);
                 }
@@ -274,6 +275,43 @@ namespace PWAMP.Installer.Neo.Core
             {
                 return false;
             }
+        }
+
+        private int GetOptimalBufferSize(long totalBytes)
+        {
+            // Adaptive buffer sizing based on file size
+            const long TenMB = 10 * 1024 * 1024;
+            const long HundredMB = 100 * 1024 * 1024;
+
+            if (totalBytes >= HundredMB)
+            {
+                // 1MB buffer for files >= 100MB
+                return InstallerConstants.HugeDownloadBufferSize;
+            }
+            else if (totalBytes >= TenMB)
+            {
+                // 256KB buffer for files >= 10MB
+                return InstallerConstants.LargeDownloadBufferSize;
+            }
+            else
+            {
+                // 64KB buffer for smaller files
+                return InstallerConstants.DownloadBufferSize;
+            }
+        }
+
+        private async Task<byte[]> ComputeHashAsync(System.Security.Cryptography.HashAlgorithm hashAlgorithm, Stream stream, CancellationToken cancellationToken)
+        {
+            var buffer = new byte[InstallerConstants.DownloadBufferSize];
+            int bytesRead;
+            
+            while ((bytesRead = await stream.ReadAsync(buffer, 0, buffer.Length, cancellationToken)) > 0)
+            {
+                hashAlgorithm.TransformBlock(buffer, 0, bytesRead, buffer, 0);
+            }
+            
+            hashAlgorithm.TransformFinalBlock(buffer, 0, 0);
+            return hashAlgorithm.Hash;
         }
 
         private string FormatBytes(double bytes)

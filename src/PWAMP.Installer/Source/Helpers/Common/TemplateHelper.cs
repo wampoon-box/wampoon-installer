@@ -11,14 +11,14 @@ namespace PWAMP.Installer.Neo.Helpers.Common
             if (!File.Exists(templatePath))
                 throw new FileNotFoundException($"Template file not found: {templatePath}");
 
-            var templateContent = await Task.Run(() => File.ReadAllText(templatePath));
+            var templateContent = File.ReadAllText(templatePath);
             var modifiedContent = AddVersionToConfigFile(templateContent);
             
             var targetDirectory = Path.GetDirectoryName(targetPath);
             if (!Directory.Exists(targetDirectory))
                 Directory.CreateDirectory(targetDirectory);
             
-            await Task.Run(() => File.WriteAllText(targetPath, modifiedContent));
+            File.WriteAllText(targetPath, modifiedContent);
         }
 
         public static string AddVersionToConfigFile(string templateContent)

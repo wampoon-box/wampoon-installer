@@ -14,9 +14,11 @@ namespace PWAMP.Installer.Neo.Core
         public const int ProgressReportFrequency = 20; // Report every 1/20th of items
         public const double ProgressReportPercentageThreshold = 10.0; // Report every 10% for downloads
         
-        // Buffer sizes
-        public const int FileStreamBufferSize = 8192;
-        public const int DownloadBufferSize = 8192;
+        // Buffer sizes - Optimized for modern file downloads
+        public const int FileStreamBufferSize = 65536; // 64KB
+        public const int DownloadBufferSize = 65536; // 64KB
+        public const int LargeDownloadBufferSize = 262144; // 256KB for files > 10MB
+        public const int HugeDownloadBufferSize = 1048576; // 1MB for files > 100MB
         
         // Validation
         public const long MinimumDiskSpace = 500L * 1024L * 1024L; // 500MB

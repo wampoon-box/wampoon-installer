@@ -68,101 +68,98 @@ namespace PWAMP.Installer.Neo.Core
                         PercentComplete = 5
                     });
 
-                    await Task.Run(() => Directory.Delete(extractPath, true), cancellationToken);
+                    Directory.Delete(extractPath, true);
                 }
 
                 Directory.CreateDirectory(extractPath);
 
-                await Task.Run(async () =>
+                using (var archive = ZipFile.OpenRead(archivePath))
                 {
-                    using (var archive = ZipFile.OpenRead(archivePath))
+                    var totalEntries = archive.Entries.Count;
+                    var extractedEntries = 0;
+
+                    OnProgressReported(new InstallationProgressEventArgs
                     {
-                        var totalEntries = archive.Entries.Count;
-                        var extractedEntries = 0;
+                        PackageName = package.Name,
+                        CurrentOperation = $"Extracting {totalEntries} files...",
+                        Stage = InstallationStage.Extracting,
+                        PercentComplete = 10,
+                        TotalSteps = totalEntries,
+                        CompletedSteps = 0
+                    });
 
-                        OnProgressReported(new InstallationProgressEventArgs
+                    var rootDirName = GetRootDirectoryName(archive);
+                    var shouldFlattenRoot = !string.IsNullOrEmpty(rootDirName) && 
+                                           ShouldFlattenRootDirectory(archive, rootDirName);
+
+                    foreach (var entry in archive.Entries)
+                    {
+                        cancellationToken.ThrowIfCancellationRequested();
+
+                        if (string.IsNullOrEmpty(entry.Name))
+                            continue;
+
+                        var destinationPath = GetDestinationPath(entry.FullName, extractPath, shouldFlattenRoot ? rootDirName : null);
+                        
+                        // Validate destination path to prevent path traversal attacks
+                        if (!IsPathSafe(destinationPath, extractPath))
                         {
-                            PackageName = package.Name,
-                            CurrentOperation = $"Extracting {totalEntries} files...",
-                            Stage = InstallationStage.Extracting,
-                            PercentComplete = 10,
-                            TotalSteps = totalEntries,
-                            CompletedSteps = 0
-                        });
+                            OnProgressReported(new InstallationProgressEventArgs
+                            {
+                                PackageName = package.Name,
+                                CurrentOperation = $"Skipping unsafe path: {entry.FullName}",
+                                Stage = InstallationStage.Extracting
+                            });
+                            continue;
+                        }
+                        
+                        var destinationDir = Path.GetDirectoryName(destinationPath);
+                        if (!Directory.Exists(destinationDir))
+                            Directory.CreateDirectory(destinationDir);
 
-                        var rootDirName = GetRootDirectoryName(archive);
-                        var shouldFlattenRoot = !string.IsNullOrEmpty(rootDirName) && 
-                                               ShouldFlattenRootDirectory(archive, rootDirName);
-
-                        foreach (var entry in archive.Entries)
+                        if (entry.FullName.EndsWith("/") || entry.FullName.EndsWith("\\"))
                         {
-                            cancellationToken.ThrowIfCancellationRequested();
-
-                            if (string.IsNullOrEmpty(entry.Name))
-                                continue;
-
-                            var destinationPath = GetDestinationPath(entry.FullName, extractPath, shouldFlattenRoot ? rootDirName : null);
-                            
-                            // Validate destination path to prevent path traversal attacks
-                            if (!IsPathSafe(destinationPath, extractPath))
+                            if (!Directory.Exists(destinationPath))
+                                Directory.CreateDirectory(destinationPath);
+                        }
+                        else
+                        {
+                            try
+                            {
+                                entry.ExtractToFile(destinationPath, overwrite: true);
+                            }
+                            catch (UnauthorizedAccessException)
                             {
                                 OnProgressReported(new InstallationProgressEventArgs
                                 {
                                     PackageName = package.Name,
-                                    CurrentOperation = $"Skipping unsafe path: {entry.FullName}",
+                                    CurrentOperation = $"Permission issue with: {Path.GetFileName(destinationPath)}",
                                     Stage = InstallationStage.Extracting
-                                });
-                                continue;
-                            }
-                            
-                            var destinationDir = Path.GetDirectoryName(destinationPath);
-                            if (!Directory.Exists(destinationDir))
-                                Directory.CreateDirectory(destinationDir);
-
-                            if (entry.FullName.EndsWith("/") || entry.FullName.EndsWith("\\"))
-                            {
-                                if (!Directory.Exists(destinationPath))
-                                    Directory.CreateDirectory(destinationPath);
-                            }
-                            else
-                            {
-                                try
-                                {
-                                    entry.ExtractToFile(destinationPath, overwrite: true);
-                                }
-                                catch (UnauthorizedAccessException)
-                                {
-                                    OnProgressReported(new InstallationProgressEventArgs
-                                    {
-                                        PackageName = package.Name,
-                                        CurrentOperation = $"Permission issue with: {Path.GetFileName(destinationPath)}",
-                                        Stage = InstallationStage.Extracting
-                                    });
-                                }
-                            }
-
-                            extractedEntries++;
-                            
-                            // Only report at 25%, 50%, 75% intervals
-                            var progress = 10 + (extractedEntries * 80 / totalEntries);
-                            var currentQuarter = progress / 25;
-                            var lastQuarter = (10 + ((extractedEntries - 1) * 80 / totalEntries)) / 25;
-                            
-                            if (currentQuarter > lastQuarter && progress >= 25)
-                            {
-                                OnProgressReported(new InstallationProgressEventArgs
-                                {
-                                    PackageName = package.Name,
-                                    CurrentOperation = $"Extracting... ({progress}%)",
-                                    Stage = InstallationStage.Extracting,
-                                    PercentComplete = progress,
-                                    TotalSteps = totalEntries,
-                                    CompletedSteps = extractedEntries
                                 });
                             }
                         }
+
+                        extractedEntries++;
+                        
+                        // Only report at 25%, 50%, 75% intervals
+                        var progress = 10 + (extractedEntries * 80 / totalEntries);
+                        var currentQuarter = progress / 25;
+                        var lastQuarter = (10 + ((extractedEntries - 1) * 80 / totalEntries)) / 25;
+                        
+                        if (currentQuarter > lastQuarter && progress >= 25)
+                        {
+                            OnProgressReported(new InstallationProgressEventArgs
+                            {
+                                PackageName = package.Name,
+                                CurrentOperation = $"Extracting... ({progress}%)",
+                                Stage = InstallationStage.Extracting,
+                                PercentComplete = progress,
+                                TotalSteps = totalEntries,
+                                CompletedSteps = extractedEntries
+                            });
+                        }
                     }
-                }, cancellationToken);
+                }
 
                 OnProgressReported(new InstallationProgressEventArgs
                 {
@@ -264,34 +261,33 @@ namespace PWAMP.Installer.Neo.Core
             return Path.Combine(extractPath, relativePath);
         }
 
-        private async Task ValidateExtraction(InstallablePackage package, string extractPath, CancellationToken cancellationToken)
+        private Task ValidateExtraction(InstallablePackage package, string extractPath, CancellationToken cancellationToken)
         {
-            await Task.Run(() =>
+            if (!Directory.Exists(extractPath))
+                throw new DirectoryNotFoundException($"Extract directory not found: {extractPath}");
+
+            var extractedFiles = Directory.GetFiles(extractPath, "*", SearchOption.AllDirectories);
+            if (extractedFiles.Length == 0)
+                throw new InvalidOperationException("No files were extracted from the archive");
+
+            switch (package.Type)
             {
-                if (!Directory.Exists(extractPath))
-                    throw new DirectoryNotFoundException($"Extract directory not found: {extractPath}");
-
-                var extractedFiles = Directory.GetFiles(extractPath, "*", SearchOption.AllDirectories);
-                if (extractedFiles.Length == 0)
-                    throw new InvalidOperationException("No files were extracted from the archive");
-
-                switch (package.Type)
-                {
-                    case PackageType.Apache:
-                        ValidateApacheExtraction(extractPath);
-                        break;
-                    case PackageType.MariaDB:
-                    case PackageType.MySQL:
-                        ValidateDatabaseExtraction(extractPath);
-                        break;
-                    case PackageType.PHP:
-                        ValidatePhpExtraction(extractPath);
-                        break;
-                    case PackageType.PhpMyAdmin:
-                        ValidatePhpMyAdminExtraction(extractPath);
-                        break;
-                }
-            }, cancellationToken);
+                case PackageType.Apache:
+                    ValidateApacheExtraction(extractPath);
+                    break;
+                case PackageType.MariaDB:
+                case PackageType.MySQL:
+                    ValidateDatabaseExtraction(extractPath);
+                    break;
+                case PackageType.PHP:
+                    ValidatePhpExtraction(extractPath);
+                    break;
+                case PackageType.PhpMyAdmin:
+                    ValidatePhpMyAdminExtraction(extractPath);
+                    break;
+            }
+            
+            return Task.CompletedTask;
         }
 
         private void ValidateApacheExtraction(string extractPath)

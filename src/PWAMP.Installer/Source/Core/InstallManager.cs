@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using PWAMP.Installer.Neo.Core.Events;
+using PWAMP.Installer.Neo.Core.Installation;
 using PWAMP.Installer.Neo.Core.Paths;
-using PWAMP.Installer.Neo.Helpers;
 using PWAMP.Installer.Neo.Helpers.Common;
 
 namespace PWAMP.Installer.Neo.Core
@@ -16,6 +16,8 @@ namespace PWAMP.Installer.Neo.Core
         public event EventHandler<EventArgs> InstallationCompleted;
 
         private readonly PackageManager _packageManager;
+        private readonly IInstallationCoordinator _installationCoordinator;
+        private readonly IInstallationValidator _installationValidator;
         private readonly List<string> _selectedPackages;
         private int _totalSteps;
         private int _currentStep;
@@ -26,6 +28,7 @@ namespace PWAMP.Installer.Neo.Core
         {
             _packageManager = new PackageManager();
             _selectedPackages = new List<string>();
+            _installationValidator = new InstallationValidator();
         }
 
         public async Task InstallAsync(InstallOptions options, CancellationToken cancellationToken = default)
@@ -36,27 +39,40 @@ namespace PWAMP.Installer.Neo.Core
                 _totalSteps = CalculateTotalSteps(options);
                 _selectedPackages.Clear();
 
-                // Initialize path resolver
+                // Initialize path resolver and installation coordinator
                 _pathResolver = PathResolverFactory.CreatePathResolver(options.InstallPath);
+                var packageInstaller = new PackageInstaller(_packageManager, _pathResolver);
+                var installationCoordinator = new InstallationCoordinator(packageInstaller, _pathResolver);
 
                 ReportProgress("Starting PWAMP installation...", 0, "Initialization");
 
                 // Validate installation directory
-                await ValidateInstallationPathAsync(options.InstallPath);
+                await _installationValidator.ValidateInstallationPathAsync(options.InstallPath);
+                ReportProgress($"Installation path validated: {options.InstallPath}", GetProgressPercentage(), "Validation");
 
                 // Create base directories
                 await CreateBaseDirectoriesAsync();
 
                 // Phase 1: Install all selected packages
-                await InstallPackagesAsync(options, cancellationToken);
+                var installProgress = new Progress<string>(message => 
+                    ReportProgress(message, GetProgressPercentage(), "Package Installation"));
+                await installationCoordinator.ExecuteInstallationAsync(options, installProgress, cancellationToken);
+                
+                // Track selected packages for configuration
+                TrackSelectedPackages(options);
 
-                //FIXME: uncomment the previous line and remove the following:
-                //_selectedPackages.Add(PackageNames.Apache);
                 // Phase 2: Configure all installed packages
-                await ConfigurePackagesAsync(cancellationToken);
+                var configProgress = new Progress<string>(message => 
+                    ReportProgress(message, GetProgressPercentage(), "Package Configuration"));
+                await installationCoordinator.ExecuteConfigurationAsync(_selectedPackages.ToArray(), configProgress, cancellationToken);
 
                 // Final validation
-                await ValidateInstallationAsync(options);
+                var isValid = await _installationValidator.ValidateCompleteInstallationAsync(options);
+                if (!isValid)
+                {
+                    throw new Exception("Installation validation failed");
+                }
+                ReportProgress("Installation validation completed", GetProgressPercentage(), "Final Validation");
 
                 ReportProgress("PWAMP installation completed successfully!", 100, "Completed");
                 InstallationCompleted?.Invoke(this, EventArgs.Empty);
@@ -73,19 +89,12 @@ namespace PWAMP.Installer.Neo.Core
             }
         }
 
-        private async Task ValidateInstallationPathAsync(string installPath)
+        private void TrackSelectedPackages(InstallOptions options)
         {
-            ReportProgress("Validating installation path...", GetProgressPercentage(), "Validation");
-            
-            try
-            {
-                await FileHelper.CreateDirectoryIfNotExistsAsync(installPath);
-                ReportProgress($"Installation path validated: {installPath}", GetProgressPercentage(), "Validation");
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"Cannot create installation directory: {ex.Message}");
-            }
+            if (options.InstallApache) _selectedPackages.Add(PackageNames.Apache);
+            if (options.InstallMariaDB) _selectedPackages.Add(PackageNames.MariaDB);
+            if (options.InstallPHP) _selectedPackages.Add(PackageNames.PHP);
+            if (options.InstallPhpMyAdmin) _selectedPackages.Add(PackageNames.PhpMyAdmin);
         }
 
         private async Task CreateBaseDirectoriesAsync()
@@ -104,149 +113,6 @@ namespace PWAMP.Installer.Neo.Core
             }
             
             ReportProgress("Base directories created", GetProgressPercentage(), "Directory Creation");
-        }
-
-        private async Task InstallPackagesAsync(InstallOptions options, CancellationToken cancellationToken)
-        {
-            ReportProgress("Installing selected packages...", GetProgressPercentage(), "Package Installation");
-
-            if (options.InstallApache)
-            {
-                cancellationToken.ThrowIfCancellationRequested();
-                await InstallApacheAsync(options.InstallPath, cancellationToken);
-                _selectedPackages.Add("apache");
-            }
-            
-            if (options.InstallMariaDB)
-            {
-                cancellationToken.ThrowIfCancellationRequested();
-                await InstallMariaDBAsync(options.InstallPath, cancellationToken);
-                _selectedPackages.Add("mariadb");
-            }
-
-            if (options.InstallPHP)
-            {
-                cancellationToken.ThrowIfCancellationRequested();
-                await InstallPHPAsync(options.InstallPath, cancellationToken);
-                _selectedPackages.Add("php");
-            }
-
-            if (options.InstallPhpMyAdmin)
-            {
-                cancellationToken.ThrowIfCancellationRequested();
-                await InstallPhpMyAdminAsync(options.InstallPath, cancellationToken);
-                _selectedPackages.Add("phpmyadmin");
-            }
-
-            ReportProgress("Package installation completed", GetProgressPercentage(), "Package Installation");
-        }
-
-        private async Task ConfigurePackagesAsync(CancellationToken cancellationToken)
-        {
-            ReportProgress("Configuring installed packages...", GetProgressPercentage(), "Package Configuration");
-
-            foreach (var package in _selectedPackages)
-            {
-                cancellationToken.ThrowIfCancellationRequested();
-                await ConfigurePackageAsync(package);
-            }
-
-            ReportProgress("Package configuration completed", GetProgressPercentage(), "Package Configuration");
-        }
-
-        private async Task ConfigurePackageAsync(string packageName)
-        {
-            var progress = new Progress<string>(message => 
-                ReportProgress(message, GetProgressPercentage(), $"{packageName} Configuration"));
-
-            switch (packageName.ToLower())
-            {
-                case PackageNames.Apache:
-                    await ApacheConfigHelper.ConfigureApacheAsync(_pathResolver, progress);
-                    break;
-                case PackageNames.MariaDB:
-                    await MariaDBConfigHelper.ConfigureMariaDBAsync(_pathResolver, progress);
-                    break;
-                case PackageNames.PHP:
-                    await PHPConfigHelper.ConfigurePHPAsync(_pathResolver, progress);
-                    break;
-                case PackageNames.PhpMyAdmin:
-                    await PhpMyAdminConfigHelper.ConfigurePhpMyAdminAsync(_pathResolver, progress);
-                    break;
-            }
-        }
-
-        private async Task InstallApacheAsync(string installPath, CancellationToken cancellationToken)
-        {
-            _currentStep++;
-            ReportProgress("Installing Apache HTTP Server...", GetProgressPercentage(), "Apache Installation");
-            
-            var progress = new Progress<string>(message => 
-                ReportProgress(message, GetProgressPercentage(), "Apache Installation"));
-            
-            await _packageManager.DownloadAndExtractPackageAsync(PackageNames.Apache, installPath, progress, cancellationToken);
-            
-            // Handle Apache24 nested folder - move contents to parent apache folder
-            var apacheInstallPath = _pathResolver.GetPackageDirectory(PackageNames.Apache);
-            var apache24Path = System.IO.Path.Combine(apacheInstallPath, "Apache24");
-            
-            if (System.IO.Directory.Exists(apache24Path))
-            {
-                ((IProgress<string>)progress).Report("Moving Apache24 contents to parent folder...");
-                await FileHelper.MoveDirectoryContentsAsync(apache24Path, apacheInstallPath);
-                System.IO.Directory.Delete(apache24Path, true);
-                ((IProgress<string>)progress).Report("Apache24 folder structure normalized");
-            }
-        }
-
-        private async Task InstallMariaDBAsync(string installPath, CancellationToken cancellationToken)
-        {
-            _currentStep++;
-            ReportProgress("Installing MariaDB Database...", GetProgressPercentage(), "MariaDB Installation");
-            
-            var progress = new Progress<string>(message => 
-                ReportProgress(message, GetProgressPercentage(), "MariaDB Installation"));
-            
-            await _packageManager.DownloadAndExtractPackageAsync(PackageNames.MariaDB, installPath, progress, cancellationToken);
-        }
-
-        private async Task InstallPHPAsync(string installPath, CancellationToken cancellationToken)
-        {
-            _currentStep++;
-            ReportProgress("Installing PHP Scripting Language...", GetProgressPercentage(), "PHP Installation");
-            
-            var progress = new Progress<string>(message => 
-                ReportProgress(message, GetProgressPercentage(), "PHP Installation"));
-            
-            await _packageManager.DownloadAndExtractPackageAsync(PackageNames.PHP, installPath, progress, cancellationToken);
-        }
-
-        private async Task InstallPhpMyAdminAsync(string installPath, CancellationToken cancellationToken)
-        {
-            _currentStep++;
-            ReportProgress("Installing phpMyAdmin Database Manager...", GetProgressPercentage(), "phpMyAdmin Installation");
-            
-            var progress = new Progress<string>(message => 
-                ReportProgress(message, GetProgressPercentage(), "phpMyAdmin Installation"));
-            
-            await _packageManager.DownloadAndExtractPackageAsync(PackageNames.PhpMyAdmin, installPath, progress, cancellationToken);
-        }
-
-        private async Task ValidateInstallationAsync(InstallOptions options)
-        {
-            ReportProgress("Validating installation...", GetProgressPercentage(), "Final Validation");
-            
-            var selectedPackages = options.GetSelectedPackages();
-            foreach (var package in selectedPackages)
-            {
-                var isValid = await FileHelper.ValidatePackageConfigurationAsync(options.InstallPath, package);
-                if (!isValid)
-                {
-                    throw new Exception($"Installation validation failed for {package}");
-                }
-            }
-            
-            ReportProgress("Installation validation completed", GetProgressPercentage(), "Final Validation");
         }
 
         private int CalculateTotalSteps(InstallOptions options)
