@@ -1,6 +1,7 @@
 src/packages/
 
 #src/
+installer-scripts/
 installer-scripts/tests/
 installer-scripts/logs/
 installer-scripts/temp/

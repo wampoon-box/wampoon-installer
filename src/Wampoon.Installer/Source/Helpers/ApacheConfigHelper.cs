@@ -23,15 +23,15 @@ namespace Wampoon.Installer.Helpers
 
         private class ApacheConfigHelperImpl : BaseConfigHelper
         {
-            protected override string PackageName => PackageNames.Apache;
+            protected override string PackageName => AppSettings.PackageNames.Apache;
             protected override string DisplayName => "Apache HTTP Server";
-            protected override string BinaryFileName => PackageNames.ApacheFiles.HttpdExe;
-            protected override string TemplateFileName => PackageNames.ApacheFiles.Templates.HttpdConf;
-            protected override string ConfigFileName => PackageNames.ApacheFiles.HttpdConf;
+            protected override string BinaryFileName => AppSettings.ApacheFiles.HttpdExe;
+            protected override string TemplateFileName => AppSettings.ApacheFiles.Templates.HttpdConf;
+            protected override string ConfigFileName => AppSettings.ApacheFiles.HttpdConf;
 
             protected override async Task CreatePackageSpecificDirectoriesAsync(IPathResolver pathResolver, string packageDir, IProgress<string> logger)
             {
-                var confDir = pathResolver.GetSubdirectoryPath(PackageNames.Apache, "conf");
+                var confDir = pathResolver.GetSubdirectoryPath(AppSettings.PackageNames.Apache, "conf");
                 await FileHelper.CreateDirectoryIfNotExistsAsync(confDir);
                 
                 // Create required Apache folders.
@@ -42,13 +42,13 @@ namespace Wampoon.Installer.Helpers
             protected override async Task ConfigureAdditionalTemplatesAsync(IPathResolver pathResolver, IProgress<string> logger)
             {
                 // Copy the custom path file.
-                var templateCustomPath = TemplateHelper.GetTemplatePath(PackageNames.ApacheFiles.Templates.PwampCustomPathConf);
-                var customConfTargetPath = pathResolver.GetConfigPath(PackageNames.Apache, PackageNames.ApacheFiles.PwampCustomPathConf);
+                var templateCustomPath = TemplateHelper.GetTemplatePath(AppSettings.ApacheFiles.Templates.WampoonCustomPathConf);
+                var customConfTargetPath = pathResolver.GetConfigPath(AppSettings.PackageNames.Apache, AppSettings.ApacheFiles.WampoonCustomPathConf);
                 await TemplateHelper.CopyTemplateWithVersionAsync(templateCustomPath, customConfTargetPath);
 
                 // Copy the vhosts file.
-                var templateVhostsPath = TemplateHelper.GetTemplatePath(PackageNames.ApacheFiles.Templates.PwampVhostsConf);
-                var vHostsConfTargetPath = pathResolver.GetConfigPath(PackageNames.Apache, PackageNames.ApacheFiles.PwampVhostsConf);
+                var templateVhostsPath = TemplateHelper.GetTemplatePath(AppSettings.ApacheFiles.Templates.WampoonVhostsConf);
+                var vHostsConfTargetPath = pathResolver.GetConfigPath(AppSettings.PackageNames.Apache, AppSettings.ApacheFiles.WampoonVhostsConf);
                 await TemplateHelper.CopyTemplateWithVersionAsync(templateVhostsPath, vHostsConfTargetPath);
             }
         }

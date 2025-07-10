@@ -8,18 +8,18 @@ namespace Wampoon.Installer.Core.Paths.Configurations
     /// </summary>
     public class PhpMyAdminPathConfiguration : PackagePathConfiguration
     {
-        public override string PackageName => PackageNames.PhpMyAdmin;
+        public override string PackageName => AppSettings.PackageNames.PhpMyAdmin;
         public override string BinaryDirectory => "";
         public override string ConfigDirectory => "";
 
         protected override void InitializeConfiguration()
         {
             // Application files (phpMyAdmin doesn't have traditional binaries).
-            AddBinaryFile(PackageNames.PhpMyAdminFiles.IndexPhp, PackageNames.PhpMyAdminFiles.IndexPhp);
+            AddBinaryFile(AppSettings.PhpMyAdminFiles.IndexPhp, AppSettings.PhpMyAdminFiles.IndexPhp);
             
             // Configuration files.
-            AddConfigFile(PackageNames.PhpMyAdminFiles.ConfigIncPhp, PackageNames.PhpMyAdminFiles.ConfigIncPhp);
-            AddConfigFile(PackageNames.PhpMyAdminFiles.ConfigSampleIncPhp, PackageNames.PhpMyAdminFiles.ConfigSampleIncPhp);
+            AddConfigFile(AppSettings.PhpMyAdminFiles.ConfigIncPhp, AppSettings.PhpMyAdminFiles.ConfigIncPhp);
+            AddConfigFile(AppSettings.PhpMyAdminFiles.ConfigSampleIncPhp, AppSettings.PhpMyAdminFiles.ConfigSampleIncPhp);
             
             // Subdirectories.  
             AddSubdirectory("tmp", "tmp");

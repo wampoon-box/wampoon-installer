@@ -3,7 +3,7 @@ using System;
 namespace Wampoon.Installer.Core.Paths
 {
     /// <summary>
-    /// Provides centralized path resolution for PWAMP package installations.
+    /// Provides centralized path resolution for Wampoon package installations.
     /// </summary>
     public interface IPathResolver
     {

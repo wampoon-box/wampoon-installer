@@ -36,13 +36,13 @@ namespace Wampoon.Installer.Core.PackageDiscovery
         {
             switch (packageName.ToLower())
             {
-                case PackageNames.Apache:
+                case AppSettings.PackageNames.Apache:
                     return PackageType.Apache;
-                case PackageNames.MariaDB:
+                case AppSettings.PackageNames.MariaDB:
                     return PackageType.MariaDB;
-                case PackageNames.PHP:
+                case AppSettings.PackageNames.PHP:
                     return PackageType.PHP;
-                case PackageNames.PhpMyAdmin:
+                case AppSettings.PackageNames.PhpMyAdmin:
                     return PackageType.PhpMyAdmin;
                 default:
                     return null;
@@ -64,10 +64,10 @@ namespace Wampoon.Installer.Core.PackageDiscovery
 
             switch (packageName.ToLower())
             {
-                case PackageNames.Apache:
-                case PackageNames.MariaDB:
-                case PackageNames.PHP:
-                case PackageNames.PhpMyAdmin:
+                case AppSettings.PackageNames.Apache:
+                case AppSettings.PackageNames.MariaDB:
+                case AppSettings.PackageNames.PHP:
+                case AppSettings.PackageNames.PhpMyAdmin:
                     return true;
                 default:
                     return false;
@@ -83,15 +83,15 @@ namespace Wampoon.Installer.Core.PackageDiscovery
 
             switch (packageName.ToLower())
             {
-                case PackageNames.Apache:
+                case AppSettings.PackageNames.Apache:
                     return "apache";
-                case PackageNames.MariaDB:
+                case AppSettings.PackageNames.MariaDB:
                     return "mariadb";
                 case "mysql":
                     return "mariadb"; // Map mysql to mariadb for legacy compatibility.
-                case PackageNames.PHP:
+                case AppSettings.PackageNames.PHP:
                     return "php";
-                case PackageNames.PhpMyAdmin:
+                case AppSettings.PackageNames.PhpMyAdmin:
                     return "phpmyadmin";
                 default:
                     return packageName.ToLower();

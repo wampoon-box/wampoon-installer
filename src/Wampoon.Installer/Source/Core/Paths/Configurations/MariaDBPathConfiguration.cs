@@ -8,19 +8,19 @@ namespace Wampoon.Installer.Core.Paths.Configurations
     /// </summary>
     public class MariaDBPathConfiguration : PackagePathConfiguration
     {
-        public override string PackageName => PackageNames.MariaDB;
+        public override string PackageName => AppSettings.PackageNames.MariaDB;
         public override string BinaryDirectory => "bin";
         public override string ConfigDirectory => "";
 
         protected override void InitializeConfiguration()
         {
             // Binary files.
-            AddBinaryFile(PackageNames.MariaDBFiles.MysqldExe, $"bin/{PackageNames.MariaDBFiles.MysqldExe}");
-            AddBinaryFile(PackageNames.MariaDBFiles.MysqlExe, $"bin/{PackageNames.MariaDBFiles.MysqlExe}");
+            AddBinaryFile(AppSettings.MariaDBFiles.MysqldExe, $"bin/{AppSettings.MariaDBFiles.MysqldExe}");
+            AddBinaryFile(AppSettings.MariaDBFiles.MysqlExe, $"bin/{AppSettings.MariaDBFiles.MysqlExe}");
             
             // Configuration files.
-            AddConfigFile(PackageNames.MariaDBFiles.MyIni, PackageNames.MariaDBFiles.MyIni);
-            AddConfigFile(PackageNames.MariaDBFiles.MyCnf, PackageNames.MariaDBFiles.MyCnf);
+            AddConfigFile(AppSettings.MariaDBFiles.MyIni, AppSettings.MariaDBFiles.MyIni);
+            AddConfigFile(AppSettings.MariaDBFiles.MyCnf, AppSettings.MariaDBFiles.MyCnf);
             
             // Subdirectories.  
             AddSubdirectory("bin", "bin");

@@ -47,17 +47,17 @@ namespace Wampoon.Installer.Core.Installation
 
             switch (packageName.ToLower())
             {
-                case PackageNames.Apache:
+                case AppSettings.PackageNames.Apache:
                     await ApacheConfigHelper.ConfigureApacheAsync(pathResolver, progress);
                     break;
-                case PackageNames.MariaDB:
+                case AppSettings.PackageNames.MariaDB:
                     await MariaDBConfigHelper.ConfigureMariaDBAsync(pathResolver, progress);
                     await MariaDBConfigHelper.InitializeMariaDBDataDirectoryAsync(pathResolver, progress);
                     break;
-                case PackageNames.PHP:
+                case AppSettings.PackageNames.PHP:
                     await PHPConfigHelper.ConfigurePHPAsync(pathResolver, progress);
                     break;
-                case PackageNames.PhpMyAdmin:
+                case AppSettings.PackageNames.PhpMyAdmin:
                     await PhpMyAdminConfigHelper.ConfigurePhpMyAdminAsync(pathResolver, progress);
                     break;
                 default:
@@ -77,10 +77,10 @@ namespace Wampoon.Installer.Core.Installation
                 
             switch (packageName.ToLower())
             {
-                case PackageNames.Apache:
-                case PackageNames.MariaDB:
-                case PackageNames.PHP:
-                case PackageNames.PhpMyAdmin:
+                case AppSettings.PackageNames.Apache:
+                case AppSettings.PackageNames.MariaDB:
+                case AppSettings.PackageNames.PHP:
+                case AppSettings.PackageNames.PhpMyAdmin:
                     return true;
                 default:
                     return false;
@@ -94,7 +94,7 @@ namespace Wampoon.Installer.Core.Installation
                 
             switch (packageName.ToLower())
             {
-                case PackageNames.Apache:
+                case AppSettings.PackageNames.Apache:
                     return true; // Needs Apache24 folder processing
                 default:
                     return false;
@@ -105,7 +105,7 @@ namespace Wampoon.Installer.Core.Installation
         {
             switch (packageName.ToLower())
             {
-                case PackageNames.Apache:
+                case AppSettings.PackageNames.Apache:
                     await ProcessApacheInstallationAsync(installPath, progress);
                     break;
                 default:
@@ -116,7 +116,7 @@ namespace Wampoon.Installer.Core.Installation
         private async Task ProcessApacheInstallationAsync(string installPath, IProgress<string> progress)
         {
             // Handle Apache24 nested folder - move contents to parent apache folder
-            var apacheInstallPath = _pathResolver.GetPackageDirectory(PackageNames.Apache);
+            var apacheInstallPath = _pathResolver.GetPackageDirectory(AppSettings.PackageNames.Apache);
             var apache24Path = Path.Combine(apacheInstallPath, "Apache24");
             
             if (Directory.Exists(apache24Path))
@@ -135,13 +135,13 @@ namespace Wampoon.Installer.Core.Installation
                 
             switch (packageName.ToLower())
             {
-                case PackageNames.Apache:
+                case AppSettings.PackageNames.Apache:
                     return "Apache HTTP Server";
-                case PackageNames.MariaDB:
+                case AppSettings.PackageNames.MariaDB:
                     return "MariaDB Database";
-                case PackageNames.PHP:
+                case AppSettings.PackageNames.PHP:
                     return "PHP Scripting Language";
-                case PackageNames.PhpMyAdmin:
+                case AppSettings.PackageNames.PhpMyAdmin:
                     return "phpMyAdmin Database Manager";
                 default:
                     return packageName;

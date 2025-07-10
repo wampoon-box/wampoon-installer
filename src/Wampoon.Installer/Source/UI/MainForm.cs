@@ -9,7 +9,7 @@ using Wampoon.Installer.Core;
 using Wampoon.Installer.Core.Events;
 using Wampoon.Installer.Core.PackageDiscovery;
 using Wampoon.Installer.Models;
-using Frostybee.Pwamp.UI;
+using Wampoon.Installer.UI;
 using Wampoon.Installer.Helpers;
 using Wampoon.Installer.Helpers.Logging;
 
@@ -160,7 +160,7 @@ namespace Wampoon.Installer.UI
                 {
                     saveFileDialog.Filter = "Text files (*.txt)|*.txt|All files (*.*)|*.*";
                     saveFileDialog.DefaultExt = "txt";
-                    saveFileDialog.FileName = $"PWAMP_Install_Log_{DateTime.Now:yyyyMMdd_HHmmss}.txt";
+                    saveFileDialog.FileName = $"Wampoon_Install_Log_{DateTime.Now:yyyyMMdd_HHmmss}.txt";
                     saveFileDialog.Title = "Save Installation Log";
 
                     if (saveFileDialog.ShowDialog() == DialogResult.OK)
@@ -312,7 +312,7 @@ namespace Wampoon.Installer.UI
             LogMessage("Quit button should now be visible", Color.Yellow);
             
             LogMessage("Installation completed successfully!", Color.Green);
-            MessageBox.Show("PWAMP installation completed successfully!", 
+            MessageBox.Show("Wampoon installation completed successfully!", 
                 "Installation Complete", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
@@ -447,10 +447,10 @@ namespace Wampoon.Installer.UI
                     // Run all package lookups in parallel for better performance.
                     var tasks = new[]
                     {
-                        _packageDiscoveryService.GetPackageByNameAsync(PackageNames.Apache),
-                        _packageDiscoveryService.GetPackageByNameAsync(PackageNames.MariaDB),
-                        _packageDiscoveryService.GetPackageByNameAsync(PackageNames.PHP),
-                        _packageDiscoveryService.GetPackageByNameAsync(PackageNames.PhpMyAdmin)
+                        _packageDiscoveryService.GetPackageByNameAsync(AppSettings.PackageNames.Apache),
+                        _packageDiscoveryService.GetPackageByNameAsync(AppSettings.PackageNames.MariaDB),
+                        _packageDiscoveryService.GetPackageByNameAsync(AppSettings.PackageNames.PHP),
+                        _packageDiscoveryService.GetPackageByNameAsync(AppSettings.PackageNames.PhpMyAdmin)
                     };
 
                     return await Task.WhenAll(tasks);
