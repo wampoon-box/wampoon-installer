@@ -3,7 +3,7 @@ using System;
 using System.Diagnostics;
 using System.Windows.Forms;
 
-namespace Frostybee.Pwamp.UI
+namespace Wampoon.Installer.UI
 {
     public partial class AboutForm : Form
     {

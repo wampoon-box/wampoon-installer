@@ -23,11 +23,11 @@ namespace Wampoon.Installer.Helpers
 
         private class PHPConfigHelperImpl : BaseConfigHelper
         {
-            protected override string PackageName => PackageNames.PHP;
+            protected override string PackageName => AppSettings.PackageNames.PHP;
             protected override string DisplayName => "PHP Scripting Language";
-            protected override string BinaryFileName => PackageNames.PHPFiles.PhpExe;
-            protected override string TemplateFileName => PackageNames.PHPFiles.Templates.PhpIni;
-            protected override string ConfigFileName => PackageNames.PHPFiles.PhpIni;
+            protected override string BinaryFileName => AppSettings.PHPFiles.PhpExe;
+            protected override string TemplateFileName => AppSettings.PHPFiles.Templates.PhpIni;
+            protected override string ConfigFileName => AppSettings.PHPFiles.PhpIni;
 
             protected override async Task CreatePackageSpecificDirectoriesAsync(IPathResolver pathResolver, string packageDir, IProgress<string> logger)
             {

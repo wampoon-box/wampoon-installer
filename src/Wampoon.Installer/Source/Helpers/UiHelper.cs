@@ -1,4 +1,4 @@
-﻿using Frostybee.Pwamp.UI;
+﻿using Wampoon.Installer.UI;
 using System;
 using System.Collections.Generic;
 using System.Linq;

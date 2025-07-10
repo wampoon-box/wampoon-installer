@@ -3,10 +3,10 @@
     DocumentRoot "${DOCROOT}"
 
     # Redirect only if user hits exactly '/'
-    #RedirectMatch "^/$" "/pwamp-dashboard"
+    #RedirectMatch "^/$" "/wampoon-dashboard"
     
 	Alias /phpmyadmin "${PWAMP_APPS_DIR}\phpmyadmin"
-	#Alias /pwamp-dashboard "${PWAMP_APPS_DIR}\pwamp-dashboard"
+	#Alias /wampoon-dashboard "${PWAMP_APPS_DIR}\wampoon-dashboard"
 
     <Directory "${PWAMP_APPS_DIR}\phpmyadmin">
 		Options Indexes FollowSymLinks
@@ -14,7 +14,7 @@
 		Require all granted
 	</Directory>
 
-	#<Directory "${PWAMP_APPS_DIR}\pwamp-dashboard">
+	#<Directory "${PWAMP_APPS_DIR}\wampoon-dashboard">
 	#	Options Indexes FollowSymLinks
 	#	AllowOverride All
 	#	Require all granted

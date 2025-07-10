@@ -29,11 +29,11 @@ namespace Wampoon.Installer.Helpers
 
         private class MariaDBConfigHelperImpl : BaseConfigHelper
         {
-            protected override string PackageName => PackageNames.MariaDB;
+            protected override string PackageName => AppSettings.PackageNames.MariaDB;
             protected override string DisplayName => "MariaDB Database";
-            protected override string BinaryFileName => PackageNames.MariaDBFiles.MysqldExe;
-            protected override string TemplateFileName => PackageNames.MariaDBFiles.Templates.MyIni;
-            protected override string ConfigFileName => PackageNames.MariaDBFiles.MyIni;
+            protected override string BinaryFileName => AppSettings.MariaDBFiles.MysqldExe;
+            protected override string TemplateFileName => AppSettings.MariaDBFiles.Templates.MyIni;
+            protected override string ConfigFileName => AppSettings.MariaDBFiles.MyIni;
 
             protected override async Task CreatePackageSpecificDirectoriesAsync(IPathResolver pathResolver, string packageDir, IProgress<string> logger)
             {
@@ -53,10 +53,10 @@ namespace Wampoon.Installer.Helpers
             {
                 logger?.Report("Initializing MariaDB data directory...");
                 
-                var packageDir = pathResolver.GetPackageDirectory(PackageNames.MariaDB);
+                var packageDir = pathResolver.GetPackageDirectory(AppSettings.PackageNames.MariaDB);
                 var binDir = Path.Combine(packageDir, "bin");
                 var dataDir = Path.Combine(packageDir, "data");
-                var installDbPath = Path.Combine(binDir, PackageNames.MariaDBFiles.MariaDbInstallDbExe);
+                var installDbPath = Path.Combine(binDir, AppSettings.MariaDBFiles.MariaDbInstallDbExe);
 
                 if (!File.Exists(installDbPath))
                 {

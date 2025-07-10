@@ -8,19 +8,19 @@ namespace Wampoon.Installer.Core.Paths.Configurations
     /// </summary>
     public class ApachePathConfiguration : PackagePathConfiguration
     {
-        public override string PackageName => PackageNames.Apache;
+        public override string PackageName => AppSettings.PackageNames.Apache;
         public override string BinaryDirectory => "bin";
         public override string ConfigDirectory => "conf";
 
         protected override void InitializeConfiguration()
         {
             // Binary files.
-            AddBinaryFile(PackageNames.ApacheFiles.HttpdExe, $"bin/{PackageNames.ApacheFiles.HttpdExe}");
+            AddBinaryFile(AppSettings.ApacheFiles.HttpdExe, $"bin/{AppSettings.ApacheFiles.HttpdExe}");
             
             // Configuration files.
-            AddConfigFile(PackageNames.ApacheFiles.HttpdConf, $"conf/{PackageNames.ApacheFiles.HttpdConf}");
-            AddConfigFile(PackageNames.ApacheFiles.PwampCustomPathConf, $"conf/{PackageNames.ApacheFiles.PwampCustomPathConf}");
-            AddConfigFile(PackageNames.ApacheFiles.PwampVhostsConf, $"conf/extra/{PackageNames.ApacheFiles.PwampVhostsConf}");
+            AddConfigFile(AppSettings.ApacheFiles.HttpdConf, $"conf/{AppSettings.ApacheFiles.HttpdConf}");
+            AddConfigFile(AppSettings.ApacheFiles.WampoonCustomPathConf, $"conf/{AppSettings.ApacheFiles.WampoonCustomPathConf}");
+            AddConfigFile(AppSettings.ApacheFiles.WampoonVhostsConf, $"conf/extra/{AppSettings.ApacheFiles.WampoonVhostsConf}");
             
             // Subdirectories.
             AddSubdirectory("conf", "conf");
@@ -30,7 +30,7 @@ namespace Wampoon.Installer.Core.Paths.Configurations
             AddSubdirectory("conf-extra", "conf/extra");
             
             // Alternative binary paths for Apache24 nested structure.
-            AddAlternativeBinaryPaths(PackageNames.ApacheFiles.HttpdExe, $"Apache24/bin/{PackageNames.ApacheFiles.HttpdExe}");
+            AddAlternativeBinaryPaths(AppSettings.ApacheFiles.HttpdExe, $"Apache24/bin/{AppSettings.ApacheFiles.HttpdExe}");
         }
     }
 }

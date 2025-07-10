@@ -133,10 +133,10 @@ namespace Wampoon.Installer.Core
 
         private void TrackSelectedPackages(InstallOptions options)
         {
-            if (options.InstallApache) _selectedPackages.Add(PackageNames.Apache);
-            if (options.InstallMariaDB) _selectedPackages.Add(PackageNames.MariaDB);
-            if (options.InstallPHP) _selectedPackages.Add(PackageNames.PHP);
-            if (options.InstallPhpMyAdmin) _selectedPackages.Add(PackageNames.PhpMyAdmin);
+            if (options.InstallApache) _selectedPackages.Add(AppSettings.PackageNames.Apache);
+            if (options.InstallMariaDB) _selectedPackages.Add(AppSettings.PackageNames.MariaDB);
+            if (options.InstallPHP) _selectedPackages.Add(AppSettings.PackageNames.PHP);
+            if (options.InstallPhpMyAdmin) _selectedPackages.Add(AppSettings.PackageNames.PhpMyAdmin);
         }
 
         private async Task CreateBaseDirectoriesAsync()

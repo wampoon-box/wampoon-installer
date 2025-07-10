@@ -6,7 +6,7 @@ using Wampoon.Installer.Helpers.Common;
 namespace Wampoon.Installer.Core.Paths
 {
     /// <summary>
-    /// Concrete implementation of IPathResolver that handles path resolution for PWAMP packages.    
+    /// Concrete implementation of IPathResolver that handles path resolution for Wampoon packages.    
     /// </summary>
     public class PackagePathResolver : IPathResolver
     {
@@ -16,7 +16,7 @@ namespace Wampoon.Installer.Core.Paths
         /// <summary>
         /// Initializes a new instance of the PackagePathResolver.
         /// </summary>
-        /// <param name="installPath">The base installation path for PWAMP</param>
+        /// <param name="installPath">The base installation path for Wampoon</param>
         /// <param name="packageConfigurations">Dictionary of package configurations by package name</param>
         public PackagePathResolver(string installPath, Dictionary<string, IPackagePathConfiguration> packageConfigurations)
         {

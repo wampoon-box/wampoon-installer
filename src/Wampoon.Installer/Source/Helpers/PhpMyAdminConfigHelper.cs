@@ -22,11 +22,11 @@ namespace Wampoon.Installer.Helpers
 
         private class PhpMyAdminConfigHelperImpl : BaseConfigHelper
         {
-            protected override string PackageName => PackageNames.PhpMyAdmin;
+            protected override string PackageName => AppSettings.PackageNames.PhpMyAdmin;
             protected override string DisplayName => "phpMyAdmin Database Manager";
-            protected override string BinaryFileName => PackageNames.PhpMyAdminFiles.IndexPhp;
-            protected override string TemplateFileName => PackageNames.PhpMyAdminFiles.Templates.ConfigIncPhp;
-            protected override string ConfigFileName => PackageNames.PhpMyAdminFiles.ConfigIncPhp;
+            protected override string BinaryFileName => AppSettings.PhpMyAdminFiles.IndexPhp;
+            protected override string TemplateFileName => AppSettings.PhpMyAdminFiles.Templates.ConfigIncPhp;
+            protected override string ConfigFileName => AppSettings.PhpMyAdminFiles.ConfigIncPhp;
 
             protected override async Task CreatePackageSpecificDirectoriesAsync(IPathResolver pathResolver, string packageDir, IProgress<string> logger)
             {

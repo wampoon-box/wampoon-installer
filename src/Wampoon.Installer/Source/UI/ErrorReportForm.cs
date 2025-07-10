@@ -6,7 +6,7 @@ using System.Text;
 using System.Windows.Forms;
 using Wampoon.Installer.Helpers;
 
-namespace Frostybee.Pwamp.UI
+namespace Wampoon.Installer.UI
 {
     public partial class ErrorReportForm : Form
     {

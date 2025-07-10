@@ -1,55 +1,60 @@
 namespace Wampoon.Installer.Core
 {
     /// <summary>
-    /// Centralized constants for PWAMP package names and file names.        
+    /// Centralized constants for WAMPoon package names and file names.        
     /// </summary>
-    public static class PackageNames
+    public static class AppSettings
     {
-        /// <summary>
-        /// Apache HTTP Server package identifier.
-        /// </summary>
-        public const string Apache = "apache";
 
-        /// <summary>
-        /// MariaDB Database Server package identifier.
-        /// </summary>
-        public const string MariaDB = "mariadb";
 
-        /// <summary>
-        /// PHP Scripting Language package identifier.
-        /// </summary>
-        public const string PHP = "php";
-
-        /// <summary>
-        /// phpMyAdmin Database Manager package identifier.
-        /// </summary>
-        public const string PhpMyAdmin = "phpmyadmin";
-
-        /// <summary>
-        /// Gets all available package names.
-        /// </summary>
-        /// <returns>Array of all package names</returns>
-        public static string[] GetAllPackageNames()
+        public static class PackageNames
         {
-            return new[] { Apache, MariaDB, PHP, PhpMyAdmin };
-        }
+            /// <summary>
+            /// Apache HTTP Server package identifier.
+            /// </summary>
+            public const string Apache = "apache";
 
-        /// <summary>
-        /// Validates if a package name is supported.
-        /// </summary>
-        /// <param name="packageName">The package name to validate</param>
-        /// <returns>True if the package is supported, false otherwise</returns>
-        public static bool IsValidPackageName(string packageName)
-        {
-            switch (packageName)
+            /// <summary>
+            /// MariaDB Database Server package identifier.
+            /// </summary>
+            public const string MariaDB = "mariadb";
+
+            /// <summary>
+            /// PHP Scripting Language package identifier.
+            /// </summary>
+            public const string PHP = "php";
+
+            /// <summary>
+            /// phpMyAdmin Database Manager package identifier.
+            /// </summary>
+            public const string PhpMyAdmin = "phpmyadmin";
+
+            /// <summary>
+            /// Gets all available package names.
+            /// </summary>
+            /// <returns>Array of all package names</returns>
+            public static string[] GetAllPackageNames()
             {
-                case Apache:
-                case MariaDB:
-                case PHP:
-                case PhpMyAdmin:
-                    return true;
-                default:
-                    return false;
+                return new[] { Apache, MariaDB, PHP, PhpMyAdmin };
+            }
+
+            /// <summary>
+            /// Validates if a package name is supported.
+            /// </summary>
+            /// <param name="packageName">The package name to validate</param>
+            /// <returns>True if the package is supported, false otherwise</returns>
+            public static bool IsValidPackageName(string packageName)
+            {
+                switch (packageName)
+                {
+                    case Apache:
+                    case MariaDB:
+                    case PHP:
+                    case PhpMyAdmin:
+                        return true;
+                    default:
+                        return false;
+                }
             }
         }
 
@@ -63,15 +68,15 @@ namespace Wampoon.Installer.Core
 
             // Configuration files.
             public const string HttpdConf = "httpd.conf";
-            public const string PwampCustomPathConf = "pwamp-custom-path.conf";
-            public const string PwampVhostsConf = "pwamp-vhosts.conf";
+            public const string WampoonCustomPathConf = "wampoon-custom-path.conf";
+            public const string WampoonVhostsConf = "wampoon-vhosts.conf";
 
             // Template names (used for TemplateHelper.GetTemplatePath)
             public static class Templates
             {
                 public const string HttpdConf = "httpd.conf";
-                public const string PwampCustomPathConf = "pwamp-custom-path.conf";
-                public const string PwampVhostsConf = "pwamp-vhosts.conf";
+                public const string WampoonCustomPathConf = "wampoon-custom-path.conf";
+                public const string WampoonVhostsConf = "wampoon-vhosts.conf";
             }
         }
 

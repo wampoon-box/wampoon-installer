@@ -23,22 +23,22 @@ namespace Wampoon.Installer.Core.Installation
 
             if (options.InstallApache)
             {
-                await InstallPackageAsync(PackageNames.Apache, options.InstallPath, progress, cancellationToken);
+                await InstallPackageAsync(AppSettings.PackageNames.Apache, options.InstallPath, progress, cancellationToken);
             }
 
             if (options.InstallMariaDB)
             {
-                await InstallPackageAsync(PackageNames.MariaDB, options.InstallPath, progress, cancellationToken);
+                await InstallPackageAsync(AppSettings.PackageNames.MariaDB, options.InstallPath, progress, cancellationToken);
             }
 
             if (options.InstallPHP)
             {
-                await InstallPackageAsync(PackageNames.PHP, options.InstallPath, progress, cancellationToken);
+                await InstallPackageAsync(AppSettings.PackageNames.PHP, options.InstallPath, progress, cancellationToken);
             }
 
             if (options.InstallPhpMyAdmin)
             {
-                await InstallPackageAsync(PackageNames.PhpMyAdmin, options.InstallPath, progress, cancellationToken);
+                await InstallPackageAsync(AppSettings.PackageNames.PhpMyAdmin, options.InstallPath, progress, cancellationToken);
             }
 
             progress?.Report("Package installation completed");

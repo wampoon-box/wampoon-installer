@@ -3,7 +3,7 @@ using System.Collections.Generic;
 namespace Wampoon.Installer.Core.Paths
 {
     /// <summary>
-    /// Defines the path configuration contract for a PWAMP package.    
+    /// Defines the path configuration contract for a Wampoon package.    
     /// </summary>
     public interface IPackagePathConfiguration
     {
