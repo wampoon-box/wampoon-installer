@@ -77,7 +77,7 @@ namespace Wampoon.Installer.UI
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
-            // _componentsGroup.
+            // _componentsGroup
             // 
             this._componentsGroup.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
@@ -97,7 +97,7 @@ namespace Wampoon.Installer.UI
             this._componentsGroup.TabStop = false;
             this._componentsGroup.Text = "📦 Select Components to Install";
             // 
-            // _apacheCheckBox.
+            // _apacheCheckBox
             // 
             this._apacheCheckBox.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(249)))), ((int)(((byte)(250)))), ((int)(((byte)(251)))));
             this._apacheCheckBox.Checked = true;
@@ -113,7 +113,7 @@ namespace Wampoon.Installer.UI
             this._apacheCheckBox.Text = "🌐 Apache HTTP Server";
             this._apacheCheckBox.UseVisualStyleBackColor = false;
             // 
-            // _mariadbCheckBox.
+            // _mariadbCheckBox
             // 
             this._mariadbCheckBox.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(249)))), ((int)(((byte)(250)))), ((int)(((byte)(251)))));
             this._mariadbCheckBox.Checked = true;
@@ -129,7 +129,7 @@ namespace Wampoon.Installer.UI
             this._mariadbCheckBox.Text = "🗄️ MariaDB Database Server";
             this._mariadbCheckBox.UseVisualStyleBackColor = false;
             // 
-            // _phpCheckBox.
+            // _phpCheckBox
             // 
             this._phpCheckBox.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(249)))), ((int)(((byte)(250)))), ((int)(((byte)(251)))));
             this._phpCheckBox.Checked = true;
@@ -145,7 +145,7 @@ namespace Wampoon.Installer.UI
             this._phpCheckBox.Text = "🐘 PHP Scripting Language";
             this._phpCheckBox.UseVisualStyleBackColor = false;
             // 
-            // _phpmyadminCheckBox.
+            // _phpmyadminCheckBox
             // 
             this._phpmyadminCheckBox.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(249)))), ((int)(((byte)(250)))), ((int)(((byte)(251)))));
             this._phpmyadminCheckBox.Checked = true;
@@ -161,15 +161,15 @@ namespace Wampoon.Installer.UI
             this._phpmyadminCheckBox.Text = "🔧 phpMyAdmin Database Manager";
             this._phpmyadminCheckBox.UseVisualStyleBackColor = false;
             // 
-            // _pathGroup.
+            // _pathGroup
             // 
             this._pathGroup.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this._pathGroup.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
             this._pathGroup.Controls.Add(this._installPathTextBox);
             this._pathGroup.Controls.Add(this._browseButton);
             this._pathGroup.Controls.Add(this._openFolderButton);
             this._pathGroup.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-            this._pathGroup.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
             this._pathGroup.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(71)))), ((int)(((byte)(85)))), ((int)(((byte)(105)))));
             this._pathGroup.Location = new System.Drawing.Point(20, 180);
             this._pathGroup.Name = "_pathGroup";
@@ -179,7 +179,7 @@ namespace Wampoon.Installer.UI
             this._pathGroup.TabStop = false;
             this._pathGroup.Text = "📁 Installation Directory:";
             // 
-            // _installPathTextBox.
+            // _installPathTextBox
             // 
             this._installPathTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
@@ -193,7 +193,7 @@ namespace Wampoon.Installer.UI
             this._installPathTextBox.TabIndex = 0;
             this._installPathTextBox.Text = "C:\\Wampoon";
             // 
-            // _browseButton.
+            // _browseButton
             // 
             this._browseButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this._browseButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(37)))), ((int)(((byte)(99)))), ((int)(((byte)(235)))));
@@ -210,7 +210,7 @@ namespace Wampoon.Installer.UI
             this._browseButton.UseVisualStyleBackColor = false;
             this._browseButton.Click += new System.EventHandler(this.BrowseButton_Click);
             // 
-            // _openFolderButton.
+            // _openFolderButton
             // 
             this._openFolderButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this._openFolderButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(79)))), ((int)(((byte)(70)))), ((int)(((byte)(229)))));
@@ -227,9 +227,9 @@ namespace Wampoon.Installer.UI
             this._openFolderButton.UseVisualStyleBackColor = false;
             this._openFolderButton.Click += new System.EventHandler(this.OpenFolderButton_Click);
             // 
-            // _installButton.
+            // _installButton
             // 
-            this._installButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(16)))), ((int)(((byte)(185)))), ((int)(((byte)(129)))));
+            this._installButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(26)))), ((int)(((byte)(165)))), ((int)(((byte)(119)))));
             this._installButton.Cursor = System.Windows.Forms.Cursors.Hand;
             this._installButton.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(16)))), ((int)(((byte)(185)))), ((int)(((byte)(129)))));
             this._installButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
@@ -243,7 +243,7 @@ namespace Wampoon.Installer.UI
             this._installButton.UseVisualStyleBackColor = false;
             this._installButton.Click += new System.EventHandler(this.InstallButton_Click);
             // 
-            // _cancelButton.
+            // _cancelButton
             // 
             this._cancelButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(38)))), ((int)(((byte)(127)))));
             this._cancelButton.Cursor = System.Windows.Forms.Cursors.Hand;
@@ -260,7 +260,7 @@ namespace Wampoon.Installer.UI
             this._cancelButton.UseVisualStyleBackColor = false;
             this._cancelButton.Click += new System.EventHandler(this.CancelButton_Click);
             // 
-            // _exportLogButton.
+            // _exportLogButton
             // 
             this._exportLogButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(6)))), ((int)(((byte)(182)))), ((int)(((byte)(212)))));
             this._exportLogButton.Cursor = System.Windows.Forms.Cursors.Hand;
@@ -276,7 +276,7 @@ namespace Wampoon.Installer.UI
             this._exportLogButton.UseVisualStyleBackColor = false;
             this._exportLogButton.Click += new System.EventHandler(this.ExportLogButton_Click);
             // 
-            // _quitButton.
+            // _quitButton
             // 
             this._quitButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(38)))), ((int)(((byte)(127)))));
             this._quitButton.Cursor = System.Windows.Forms.Cursors.Hand;
@@ -292,7 +292,7 @@ namespace Wampoon.Installer.UI
             this._quitButton.UseVisualStyleBackColor = false;
             this._quitButton.Click += new System.EventHandler(this.QuitButton_Click);
             // 
-            // _aboutButton.
+            // _aboutButton
             // 
             this._aboutButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(116)))), ((int)(((byte)(139)))));
             this._aboutButton.Cursor = System.Windows.Forms.Cursors.Hand;
@@ -308,7 +308,7 @@ namespace Wampoon.Installer.UI
             this._aboutButton.UseVisualStyleBackColor = false;
             this._aboutButton.Click += new System.EventHandler(this.AboutButton_Click);
             // 
-            // _progressLabel.
+            // _progressLabel
             // 
             this._progressLabel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
@@ -320,7 +320,7 @@ namespace Wampoon.Installer.UI
             this._progressLabel.TabIndex = 5;
             this._progressLabel.Text = "Ready to install";
             // 
-            // _progressBar.
+            // _progressBar
             // 
             this._progressBar.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
@@ -332,14 +332,14 @@ namespace Wampoon.Installer.UI
             this._progressBar.Style = System.Windows.Forms.ProgressBarStyle.Continuous;
             this._progressBar.TabIndex = 6;
             // 
-            // _logGroup.
+            // _logGroup
             // 
             this._logGroup.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this._logGroup.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
             this._logGroup.Controls.Add(this._logTextBox);
             this._logGroup.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-            this._logGroup.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
             this._logGroup.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(71)))), ((int)(((byte)(85)))), ((int)(((byte)(105)))));
             this._logGroup.Location = new System.Drawing.Point(7, 3);
             this._logGroup.Name = "_logGroup";
@@ -349,7 +349,7 @@ namespace Wampoon.Installer.UI
             this._logGroup.TabStop = false;
             this._logGroup.Text = "📜 Installation Log:";
             // 
-            // _logTextBox.
+            // _logTextBox
             // 
             this._logTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
@@ -364,7 +364,7 @@ namespace Wampoon.Installer.UI
             this._logTextBox.TabIndex = 0;
             this._logTextBox.Text = "";
             // 
-            // panel1.
+            // panel1
             // 
             this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
@@ -376,7 +376,7 @@ namespace Wampoon.Installer.UI
             this.panel1.Size = new System.Drawing.Size(919, 281);
             this.panel1.TabIndex = 7;
             // 
-            // MainForm.
+            // MainForm
             // 
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(242)))), ((int)(((byte)(247)))));
             this.ClientSize = new System.Drawing.Size(963, 661);

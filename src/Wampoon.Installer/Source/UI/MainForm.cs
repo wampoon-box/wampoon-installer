@@ -38,7 +38,6 @@ namespace Wampoon.Installer.UI
             _installManager.ProgressChanged += InstallManager_ProgressChanged;
             _installManager.ErrorOccurred += InstallManager_ErrorOccurred;
             _installManager.InstallationCompleted += InstallManager_InstallationCompleted;
-            _installManager.ExistingPackagesDetected += InstallManager_ExistingPackagesDetected;
             
             _packageRepository = new PackageRepository();
             _packageDiscoveryService = new PackageDiscoveryService(_packageRepository);
@@ -293,7 +292,7 @@ namespace Wampoon.Installer.UI
                     _progressBarTimer.Stop();
                     _progressBar.Value = 100;
                     _progressBar.Refresh();
-                    LogMessage("Final progress bar update applied", Color.Cyan);
+                    //LogMessage("Final progress bar update applied", Color.Cyan);
                 };
                 _progressBarTimer.Start();
             }
@@ -330,7 +329,7 @@ namespace Wampoon.Installer.UI
 
         private void Logger_LogMessage(object sender, LogEventArgs e)
         {
-            // Handle logger events and display them in the UI
+            // Handle logger events and display them in the UI.
             if (InvokeRequired)
             {
                 Invoke(new Action(() => Logger_LogMessage(sender, e)));
@@ -385,7 +384,6 @@ namespace Wampoon.Installer.UI
                 _installManager.ProgressChanged -= InstallManager_ProgressChanged;
                 _installManager.ErrorOccurred -= InstallManager_ErrorOccurred;
                 _installManager.InstallationCompleted -= InstallManager_InstallationCompleted;
-                _installManager.ExistingPackagesDetected -= InstallManager_ExistingPackagesDetected;
                 _installManager.Dispose();
             }
             
@@ -399,33 +397,6 @@ namespace Wampoon.Installer.UI
             base.OnFormClosing(e);
         }
 
-        private void InstallManager_ExistingPackagesDetected(object sender, ExistingPackagesEventArgs e)
-        {
-            if (InvokeRequired)
-            {
-                Invoke(new Action(() => InstallManager_ExistingPackagesDetected(sender, e)));
-                return;
-            }
-
-            var packageList = string.Join(", ", e.ExistingPackages);
-            var message = $"The following packages are already installed in the target directory:\n\n{packageList}\n\nDo you want to overwrite the existing packages and continue with the installation?";
-            
-            var result = MessageBox.Show(
-                message,
-                "Existing Packages Found",
-                MessageBoxButtons.YesNo,
-                MessageBoxIcon.Question);
-
-            if (result == DialogResult.Yes)
-            {
-                e.OverwriteRequested = true;
-                LogMessage($"User confirmed to overwrite existing packages: {packageList}", Color.Yellow);
-            }
-            else
-            {
-                LogMessage("Installation cancelled by user due to existing packages", Color.Yellow);
-            }
-        }
 
         private void SetDefaultComponentText()
         {
