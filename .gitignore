@@ -1,9 +1,4 @@
-src/PWAMP.Installer/Plan/
-
-src/PWAMP.Installer/PWAMP.Admin/
-src/Pwamp.Neo.Installer/Plan
-
-
+src/packages/
 
 #src/
 installer-scripts/tests/
@@ -14,8 +9,6 @@ installer-scripts/pwampp-bck/
 installer-scripts/notes.ps1
 packages/
 
-=======
-
 tests/
 logs/
 temp/
@@ -23,9 +16,7 @@ pwampp/
 pwampp-bck/
 notes.ps1
 
-packages/
-src/
-
+#src/
 apps/
 original-packages/
 

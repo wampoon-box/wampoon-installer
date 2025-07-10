@@ -1,0 +1,4 @@
+﻿Define SRVROOT "D:\Dev\my-repos\pwamp\pwamp-bundle\apps\apache"
+Define DOCROOT "D:\Dev\my-repos\pwamp\pwamp-bundle\htdocs"
+Define PWAMP_APPS_DIR "D:\Dev\my-repos\pwamp\pwamp-bundle\apps"
+

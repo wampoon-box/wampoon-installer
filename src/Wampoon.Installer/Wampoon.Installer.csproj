@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{C6FA9B2E-B88A-4385-B9D7-6839A89E9FF0}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>Wampoon.Installer</RootNamespace>
+    <AssemblyName>Wampoon-Installer</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <Deterministic>true</Deterministic>
+    <LangVersion>7.3</LangVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.IO.Compression" />
+    <Reference Include="System.IO.Compression.FileSystem" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Source\Core\ArchiveExtractor.cs" />
+    <Compile Include="Source\Enums\InstallerEnums.cs" />
+    <Compile Include="Source\Events\ExistingPackagesEventArgs.cs" />
+    <Compile Include="Source\Events\InstallErrorEventArgs.cs" />
+    <Compile Include="Source\Events\InstallProgressEventArgs.cs" />
+    <Compile Include="Source\Core\Installation\IInstallationCoordinator.cs" />
+    <Compile Include="Source\Core\Installation\InstallationCoordinator.cs" />
+    <Compile Include="Source\Core\Installation\IInstallationValidator.cs" />
+    <Compile Include="Source\Core\Installation\InstallationValidator.cs" />
+    <Compile Include="Source\Core\Installation\IPackageInstaller.cs" />
+    <Compile Include="Source\Core\Installation\PackageInstaller.cs" />
+    <Compile Include="Source\Core\InstallerConstants.cs" />
+    <Compile Include="Source\Core\InstallManager.cs" />
+    <Compile Include="Source\Core\InstallOptions.cs" />
+    <Compile Include="Source\Core\PackageDiscovery\IPackageDiscoveryService.cs" />
+    <Compile Include="Source\Core\PackageDiscovery\PackageDiscoveryService.cs" />
+    <Compile Include="Source\Core\PackageDownloader.cs" />
+    <Compile Include="Source\Core\PackageManager.cs" />
+    <Compile Include="Source\Core\PackageMetadata.cs" />
+    <Compile Include="Source\Core\PackageNames.cs" />
+    <Compile Include="Source\Core\PackageOperations\IPackageDownloadService.cs" />
+    <Compile Include="Source\Core\PackageOperations\PackageDownloadService.cs" />
+    <Compile Include="Source\Core\PackageOperations\IPackageExtractionService.cs" />
+    <Compile Include="Source\Core\PackageOperations\PackageExtractionService.cs" />
+    <Compile Include="Source\Core\PackageRepository.cs" />
+    <Compile Include="Source\Core\Paths\Configurations\ApachePathConfiguration.cs" />
+    <Compile Include="Source\Core\Paths\Configurations\MariaDBPathConfiguration.cs" />
+    <Compile Include="Source\Core\Paths\Configurations\PhpMyAdminPathConfiguration.cs" />
+    <Compile Include="Source\Core\Paths\Configurations\PHPPathConfiguration.cs" />
+    <Compile Include="Source\Core\Paths\IPackagePathConfiguration.cs" />
+    <Compile Include="Source\Core\Paths\IPathResolver.cs" />
+    <Compile Include="Source\Core\Paths\PackagePathConfiguration.cs" />
+    <Compile Include="Source\Core\Paths\PackagePathResolver.cs" />
+    <Compile Include="Source\Core\Paths\PathResolverFactory.cs" />
+    <Compile Include="Source\Events\InstallerEvents.cs" />
+    <Compile Include="Source\Helpers\ApacheConfigHelper.cs" />
+    <Compile Include="Source\Helpers\AppConstants.cs" />
+    <Compile Include="Source\Helpers\Common\BaseConfigHelper.cs" />
+    <Compile Include="Source\Helpers\Common\FileHelper.cs" />
+    <Compile Include="Source\Helpers\Common\TemplateHelper.cs" />
+    <Compile Include="Source\Helpers\Logging\EventBasedLogger.cs" />
+    <Compile Include="Source\Helpers\Logging\ILogger.cs" />
+    <Compile Include="Source\Helpers\Logging\LogEventArgs.cs" />
+    <Compile Include="Source\Helpers\Logging\LoggerFactory.cs" />
+    <Compile Include="Source\Helpers\Logging\LogLevel.cs" />
+    <Compile Include="Source\Helpers\Logging\ProgressToLoggerAdapter.cs" />
+    <Compile Include="Source\Helpers\MariaDBConfigHelper.cs" />
+    <Compile Include="Source\Helpers\PHPConfigHelper.cs" />
+    <Compile Include="Source\Helpers\PhpMyAdminConfigHelper.cs" />
+    <Compile Include="Source\Helpers\UiHelper.cs" />
+    <Compile Include="Source\Models\InstallablePackage.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Source\UI\AboutForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Source\UI\AboutForm.Designer.cs">
+      <DependentUpon>AboutForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\UI\ErrorReportForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Source\UI\ErrorReportForm.Designer.cs">
+      <DependentUpon>ErrorReportForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\UI\MainForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Source\UI\MainForm.Designer.cs">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </Compile>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <EmbeddedResource Include="Source\UI\AboutForm.resx">
+      <DependentUpon>AboutForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Source\UI\ErrorReportForm.resx">
+      <DependentUpon>ErrorReportForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Source\UI\MainForm.resx">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <None Include="config-templates\pwamp-custom-path.conf.template">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="config-templates\pwamp-vhosts.conf.template">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Data\packagesInfo.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Include="config-templates\httpd.conf.template">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="config-templates\my.ini.template">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="config-templates\php.ini.template">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="config-templates\config.inc.php.template">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
