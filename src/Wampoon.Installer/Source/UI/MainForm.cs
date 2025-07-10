@@ -28,9 +28,40 @@ namespace Wampoon.Installer.UI
         public MainForm()
         {
             InitializeComponent();
+            InitializeBanner();
             InitializeInstallManager();
         }
 
+
+        private void InitializeBanner()
+        {
+            try
+            {
+                // Create a simple icon using text since we don't have an image file
+                var bitmap = new Bitmap(40, 40);
+                using (var g = Graphics.FromImage(bitmap))
+                {
+                    g.FillEllipse(new SolidBrush(Color.White), 0, 0, 40, 40);
+                    using (var font = new Font("Segoe UI", 20, FontStyle.Bold))
+                    {
+                        g.DrawString("W", font, new SolidBrush(Color.FromArgb(37, 99, 235)), 8, 3);
+                    }
+                }
+                _bannerIcon.Image = bitmap;
+                
+                // Update banner title with version
+                var version = UiHelper.GetFormattedInstallerVersion();
+                if (!string.IsNullOrEmpty(version))
+                {
+                    _bannerTitle.Text = $"Wampoon Installer {version}";
+                }
+            }
+            catch
+            {
+                // If bitmap creation fails, hide the icon
+                _bannerIcon.Visible = false;
+            }
+        }
 
         private void InitializeInstallManager()
         {
@@ -52,7 +83,11 @@ namespace Wampoon.Installer.UI
             // This should now be fast since it loads from local file first.
             UpdateComponentVersions();
             
-            Text = AppConstants.APP_FULL_NAME;
+            // Update form title with version
+            var version = UiHelper.GetFormattedInstallerVersion();
+            Text = !string.IsNullOrEmpty(version) 
+                ? $"{AppConstants.APP_FULL_NAME} {version}" 
+                : AppConstants.APP_FULL_NAME;
         }
 
         private void BrowseButton_Click(object sender, EventArgs e)

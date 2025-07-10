@@ -79,7 +79,7 @@ namespace Wampoon.Installer.UI
         private string GenerateErrorReport()
         {
             var report = new StringBuilder();
-            report.AppendLine("Wampoon Control Panel Error Report");
+            report.AppendLine($"{AppConstants.APP_FULL_NAME} Error Report");
             report.AppendLine("====================================");
             report.AppendLine($"Timestamp: {DateTime.Now:yyyy-MM-dd HH:mm:ss}");
             report.AppendLine($"Exception Type: {_exception.GetType().Name}");

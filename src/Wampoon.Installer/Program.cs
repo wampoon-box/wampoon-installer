@@ -17,19 +17,19 @@ namespace Wampoon.Installer
         {
             // Set up global exception handlers before running the application.
             SetupGlobalExceptionHandlers();
-
+            //
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            
+
             try
             {
                 Application.Run(new MainForm());
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"An unexpected error occurred: {ex.Message}", 
-                    $"{AppConstants.APP_FULL_NAME} Error", 
-                    MessageBoxButtons.OK, 
+                MessageBox.Show($"An unexpected error occurred: {ex.Message}",
+                    $"{AppConstants.APP_FULL_NAME} Error",
+                    MessageBoxButtons.OK,
                     MessageBoxIcon.Error);
             }
         }
