@@ -11,6 +11,7 @@ using Wampoon.Installer.Core.PackageDiscovery;
 using Wampoon.Installer.Models;
 using Frostybee.Pwamp.UI;
 using Wampoon.Installer.Helpers;
+using Wampoon.Installer.Helpers.Logging;
 
 namespace Wampoon.Installer.UI
 {
@@ -41,6 +42,13 @@ namespace Wampoon.Installer.UI
             
             _packageRepository = new PackageRepository();
             _packageDiscoveryService = new PackageDiscoveryService(_packageRepository);
+            
+            // Subscribe to logger events to display messages to users
+            var logger = LoggerFactory.Default as EventBasedLogger;
+            if (logger != null)
+            {
+                logger.LogMessage += Logger_LogMessage;
+            }
             
             // This should now be fast since it loads from local file first.
             UpdateComponentVersions();
@@ -318,6 +326,35 @@ namespace Wampoon.Installer.UI
             _logTextBox.SelectionColor = color;
             _logTextBox.AppendText($"{message}\n");
             _logTextBox.ScrollToCaret();
+        }
+
+        private void Logger_LogMessage(object sender, LogEventArgs e)
+        {
+            // Handle logger events and display them in the UI
+            if (InvokeRequired)
+            {
+                Invoke(new Action(() => Logger_LogMessage(sender, e)));
+                return;
+            }
+
+            Color messageColor;
+            switch (e.Level)
+            {
+                case LogLevel.Error:
+                    messageColor = Color.Red;
+                    break;
+                case LogLevel.Warning:
+                    messageColor = Color.Orange;
+                    break;
+                case LogLevel.Info:
+                    messageColor = Color.White;
+                    break;
+                default:
+                    messageColor = Color.White;
+                    break;
+            }
+
+            LogMessage(e.Message, messageColor);
         }
 
         protected override void OnFormClosing(FormClosingEventArgs e)

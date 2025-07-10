@@ -6,6 +6,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Reflection;
 using Wampoon.Installer.Models;
+using Wampoon.Installer.Helpers.Logging;
 using Newtonsoft.Json;
 
 namespace Wampoon.Installer.Core
@@ -13,6 +14,7 @@ namespace Wampoon.Installer.Core
     public class PackageRepository : IDisposable
     {
         private readonly HttpClient _httpClient;
+        private readonly ILogger _logger;
         private List<InstallablePackage> _packages;
         private bool _disposed = false;
 
@@ -20,6 +22,7 @@ namespace Wampoon.Installer.Core
         {
             _httpClient = new HttpClient();
             _httpClient.Timeout = InstallerConstants.HttpShortTimeout;
+            _logger = LoggerFactory.Default;
         }
 
         public async Task<List<InstallablePackage>> GetAvailablePackagesAsync()
@@ -33,15 +36,19 @@ namespace Wampoon.Installer.Core
             // If local file didn't have valid packages, try remote manifest.
             if (_packages == null || !_packages.Any())
             {
-                try
-                {
-                    _packages = await LoadPackagesFromManifestAsync();
-                }
-                catch
-                {
-                    // If both fail, use fallback.
-                    _packages = GetFallbackPackages();
-                }
+                // TODO: Re-enable remote manifest loading when web server is ready
+                // try
+                // {
+                //     _packages = await LoadPackagesFromManifestAsync();
+                // }
+                // catch
+                // {
+                //     // If both fail, use fallback.
+                //     _packages = GetFallbackPackages();
+                // }
+                
+                // Temporarily use fallback packages directly
+                _packages = GetFallbackPackages();
             }
 
             return _packages;
@@ -114,12 +121,19 @@ namespace Wampoon.Installer.Core
                     {
                         return MergeWithMetadata(packages);
                     }
+                    else
+                    {
+                        _logger.LogWarning("Local packages file is empty or contains invalid data. Falling back to embedded package information.");
+                    }
+                }
+                else
+                {
+                    _logger.LogWarning("Local packages file not found. Ensure that the packagesInfo.json file exists in Data/ folder. Falling back to embedded package information.");
                 }
             }
             catch (Exception ex)
             {
-                // Log the error if logging is available.
-                System.Diagnostics.Debug.WriteLine($"Error loading packages from local file: {ex.Message}");
+                _logger.LogError("Error loading packages from local file. Falling back to embedded package information.", ex);
             }
 
             // Fallback to minimal package list if JSON loading fails.
