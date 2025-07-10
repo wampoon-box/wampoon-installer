@@ -55,6 +55,30 @@ namespace Wampoon.Installer.Core
                     ArchiveFormat = "zip",
                     Dependencies = new List<PackageType> { PackageType.PHP, PackageType.MariaDB }
                 }
+            },
+            {
+                PackageType.WampoonDashboard, new PackageMetadataInfo
+                {
+                    Type = PackageType.WampoonDashboard,
+                    ServerName = "Wampoon Dashboard",
+                    EstimatedSize = 5000000,
+                    Description = "Wampoon Dashboard - Web-based management interface for Wampoon.",
+                    InstallPath = "apps/wampoon-dashboard",
+                    ArchiveFormat = "zip",
+                    Dependencies = new List<PackageType>()
+                }
+            },
+            {
+                PackageType.WampoonControlPanel, new PackageMetadataInfo
+                {
+                    Type = PackageType.WampoonControlPanel,
+                    ServerName = "Wampoon Control Panel",
+                    EstimatedSize = 3000000,
+                    Description = "Wampoon Control Panel - Desktop control panel for managing Wampoon services.",
+                    InstallPath = "wampoon-control-panel",
+                    ArchiveFormat = "zip",
+                    Dependencies = new List<PackageType>()
+                }
             }
         };
 

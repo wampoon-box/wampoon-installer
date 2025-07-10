@@ -81,6 +81,8 @@ namespace Wampoon.Installer.Core.Installation
                 case AppSettings.PackageNames.MariaDB:
                 case AppSettings.PackageNames.PHP:
                 case AppSettings.PackageNames.PhpMyAdmin:
+                case AppSettings.PackageNames.Dashboard:
+                case AppSettings.PackageNames.ControlPanel:
                     return true;
                 default:
                     return false;
@@ -143,6 +145,10 @@ namespace Wampoon.Installer.Core.Installation
                     return "PHP Scripting Language";
                 case AppSettings.PackageNames.PhpMyAdmin:
                     return "phpMyAdmin Database Manager";
+                case AppSettings.PackageNames.Dashboard:
+                    return "Wampoon Dashboard";
+                case AppSettings.PackageNames.ControlPanel:
+                    return "Wampoon Control Panel";
                 default:
                     return packageName;
             }

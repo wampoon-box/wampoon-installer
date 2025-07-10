@@ -166,6 +166,8 @@ namespace Wampoon.Installer.Core
             if (options.InstallMariaDB) packageCount++;
             if (options.InstallPHP) packageCount++;
             if (options.InstallPhpMyAdmin) packageCount++;
+            if (options.InstallDashboard) packageCount++;
+            if (options.InstallControlPanel) packageCount++;
             
             steps += packageCount * 2; // Each package has install + configure step.
             
@@ -214,6 +216,8 @@ namespace Wampoon.Installer.Core
             if (options.InstallMariaDB) count++;
             if (options.InstallPHP) count++;
             if (options.InstallPhpMyAdmin) count++;
+            if (options.InstallDashboard) count++;
+            if (options.InstallControlPanel) count++;
             return count;
         }
 

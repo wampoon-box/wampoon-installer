@@ -26,5 +26,20 @@
     "Version": "5.2.2",
     "DownloadUrl": "https://files.phpmyadmin.net/snapshots/phpMyAdmin-5.2+snapshot-all-languages.zip",
     "Checksum": ""
+  },
+  {
+    "PackageID": 6,
+    "Name": "wampoon-dashboard",
+    "Version": "0.1.1",
+    "DownloadUrl": "https://github.com/wampoon-box/wampoon-dashboard/releases/latest/download/wampoon-dashboard.zip",
+    "Checksum": ""
+  }
+  ,
+  {
+    "PackageID": 7,
+    "Name": "Wampoon Control Panel",
+    "Version": "0.1.0",
+    "DownloadUrl": "https://github.com/wampoon-box/wampoon-control/releases/latest/download/wampoon-control.zip",
+    "Checksum": ""
   }
 ] 

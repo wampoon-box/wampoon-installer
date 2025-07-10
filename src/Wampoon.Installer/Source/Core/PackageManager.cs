@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Wampoon.Installer.Core.PackageDiscovery;
@@ -84,9 +85,16 @@ namespace Wampoon.Installer.Core
             // Download package.
             var downloadedPath = await DownloadPackageAsync(packageName, downloadDir, logger, cancellationToken);
 
-            // Extract to apps folder.
-            var extractPath = Path.Combine(installPath, "apps", _packageDiscoveryService.GetPackageDirectoryName(packageName));
+            // Extract to appropriate folder based on package type.
+            var extractPath = GetPackageExtractionPath(packageName, installPath);
             var extractedPath = await ExtractPackageAsync(packageName, downloadedPath, extractPath, logger, cancellationToken);
+            
+            // Special handling for control panel - move files from temp to install directory
+            if (packageName.Equals(AppSettings.PackageNames.ControlPanel, StringComparison.OrdinalIgnoreCase))
+            {
+                await MoveControlPanelFilesToInstallDirectory(extractedPath, installPath, logger);
+                extractedPath = installPath;
+            }
 
             // Clean up downloaded archive to save space.
             try
@@ -111,6 +119,69 @@ namespace Wampoon.Installer.Core
             return extractedPath;
         }
 
+        private string GetPackageExtractionPath(string packageName, string installPath)
+        {
+            // Control panel extracts to temp folder first, then files will be moved to install directory
+            if (packageName.Equals(AppSettings.PackageNames.ControlPanel, StringComparison.OrdinalIgnoreCase))
+            {
+                return Path.Combine(installPath, "temp", _packageDiscoveryService.GetPackageDirectoryName(packageName));
+            }
+            
+            // All other packages extract to apps folder
+            return Path.Combine(installPath, "apps", _packageDiscoveryService.GetPackageDirectoryName(packageName));
+        }
+
+        private async Task MoveControlPanelFilesToInstallDirectory(string tempPath, string installPath, IProgress<string> logger)
+        {
+            try
+            {
+                logger?.Report("Moving control panel files to install directory...");
+                
+                // Move all files and directories from temp to install directory
+                var files = Directory.GetFiles(tempPath, "*", SearchOption.AllDirectories);
+                var directories = Directory.GetDirectories(tempPath, "*", SearchOption.AllDirectories);
+                
+                // Create directory structure first
+                foreach (var dir in directories)
+                {
+                    var relativePath = dir.Substring(tempPath.Length + 1);
+                    var targetDir = Path.Combine(installPath, relativePath);
+                    Directory.CreateDirectory(targetDir);
+                }
+                
+                // Move all files
+                foreach (var file in files)
+                {
+                    var relativePath = file.Substring(tempPath.Length + 1);
+                    var targetFile = Path.Combine(installPath, relativePath);
+                    
+                    // Ensure target directory exists
+                    var targetDir = Path.GetDirectoryName(targetFile);
+                    if (!Directory.Exists(targetDir))
+                        Directory.CreateDirectory(targetDir);
+                    
+                    if (File.Exists(targetFile))
+                        File.Delete(targetFile);
+                    File.Move(file, targetFile);
+                }
+                
+                // Clean up temp directory
+                Directory.Delete(tempPath, true);
+                
+                // Also clean up the temp parent directory if it's empty
+                var tempParent = Path.GetDirectoryName(tempPath);
+                if (Directory.Exists(tempParent) && !Directory.EnumerateFileSystemEntries(tempParent).Any())
+                {
+                    Directory.Delete(tempParent);
+                }
+                
+                logger?.Report("Control panel files moved successfully");
+            }
+            catch (Exception ex)
+            {
+                logger?.Report($"Warning: Could not move all control panel files: {ex.Message}");
+            }
+        }
 
         public void Dispose()
         {
