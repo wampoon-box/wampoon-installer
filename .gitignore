@@ -1,4 +1,5 @@
 src/PWAMP.Installer/Plan/
+
 src/PWAMP.Installer/PWAMP.Admin/
 src/Pwamp.Neo.Installer/Plan
 
@@ -12,6 +13,18 @@ installer-scripts/pwampp/
 installer-scripts/pwampp-bck/
 installer-scripts/notes.ps1
 packages/
+
+=======
+
+tests/
+logs/
+temp/
+pwampp/
+pwampp-bck/
+notes.ps1
+
+packages/
+src/
 
 apps/
 original-packages/
@@ -64,5 +77,9 @@ CodeCoverage/
 # NUnit
 *.VisualState.xml
 TestResult.xml
+
 nunit-*.xml
 .claude/
+
+nunit-*.xml
+
