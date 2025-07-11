@@ -1,4 +1,4 @@
 ﻿Define SRVROOT "C:\wampoon\apps\apache"
 Define DOCROOT "C:\wampoon\htdocs"
-Define PWAMP_APPS_DIR "C:\wampoon\apps"
+Define WAMPOON_APPS_DIR "C:\wampoon\apps"
 

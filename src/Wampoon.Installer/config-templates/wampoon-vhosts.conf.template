@@ -5,16 +5,16 @@
     # Redirect only if user hits exactly '/'
     RedirectMatch "^/$" "/wampoon-dashboard"
     
-	Alias /phpmyadmin "${PWAMP_APPS_DIR}/phpmyadmin"
-	Alias /wampoon-dashboard "${PWAMP_APPS_DIR}/wampoon-dashboard"
+	Alias /phpmyadmin "${WAMPOON_APPS_DIR}/phpmyadmin"
+	Alias /wampoon-dashboard "${WAMPOON_APPS_DIR}/wampoon-dashboard"
 
-    <Directory "${PWAMP_APPS_DIR}/phpmyadmin">
+    <Directory "${WAMPOON_APPS_DIR}/phpmyadmin">
 		Options Indexes FollowSymLinks
 		AllowOverride All
 		Require all granted
 	</Directory>
 
-	<Directory "${PWAMP_APPS_DIR}/wampoon-dashboard">
+	<Directory "${WAMPOON_APPS_DIR}/wampoon-dashboard">
 		Options Indexes FollowSymLinks
 		AllowOverride All
 		Require all granted
