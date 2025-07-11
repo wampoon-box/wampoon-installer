@@ -9,6 +9,8 @@ namespace Wampoon.Installer.Core
         public bool InstallMariaDB { get; set; }
         public bool InstallPHP { get; set; }
         public bool InstallPhpMyAdmin { get; set; }
+        public bool InstallDashboard { get; set; }
+        public bool InstallControlPanel { get; set; }
 
         public InstallOptions()
         {
@@ -17,16 +19,20 @@ namespace Wampoon.Installer.Core
             InstallMariaDB = true;
             InstallPHP = true;
             InstallPhpMyAdmin = true;
+            InstallDashboard = true;
+            InstallControlPanel = true;
         }
 
         public string[] GetSelectedPackages()
         {
             var packages = new System.Collections.Generic.List<string>();
             
-            if (InstallApache) packages.Add("apache");
-            if (InstallMariaDB) packages.Add("mariadb");
-            if (InstallPHP) packages.Add("php");
-            if (InstallPhpMyAdmin) packages.Add("phpmyadmin");
+            if (InstallApache) packages.Add(AppSettings.PackageNames.Apache);
+            if (InstallMariaDB) packages.Add(AppSettings.PackageNames.MariaDB);
+            if (InstallPHP) packages.Add(AppSettings.PackageNames.PHP);
+            if (InstallPhpMyAdmin) packages.Add(AppSettings.PackageNames.PhpMyAdmin);
+            if (InstallDashboard) packages.Add(AppSettings.PackageNames.Dashboard);
+            if (InstallControlPanel) packages.Add(AppSettings.PackageNames.ControlPanel);
             
             return packages.ToArray();
         }

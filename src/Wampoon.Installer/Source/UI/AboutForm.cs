@@ -18,9 +18,26 @@ namespace Wampoon.Installer.UI
         {
             Text = $"About {AppConstants.APP_NAME}";
             appNameLabel.Text = AppConstants.APP_NAME;
-            //appVersionLabel.Text = $"Version {AppConstants.APP_VERSION}";
+            
+            // Display the current installer version
+            var version = UiHelper.GetInstallerVersion();
+            appVersionLabel.Text = $"Version {version}";
+            
             copyrightLabel.Text = "Copyright © 2025 - frostybee";
             descriptionLabel.Text = "An installer for setting up WAMPoon, a local development environment with Apache HTTP Server, MariaDB, PHP, and phpMyAdmin.";
+            
+            // Load license and credits information
+            LoadCreditsAndLicense();
+        }
+
+        private void LoadCreditsAndLicense()
+        {
+            // License information
+            licenseLabel.Text = "Licensed under the MIT License";
+            
+            // Dependencies and credits
+            dependenciesLabel.Text = "Dependencies: Newtonsoft.Json by James Newton-King\n" +
+                                   "Special thanks to the open-source community";
         }
 
         private void GitHubRepoButton_Click(object sender, EventArgs e)
@@ -46,6 +63,20 @@ namespace Wampoon.Installer.UI
             catch (Exception ex)
             {
                 MessageBox.Show($"Failed to open GitHub Issues: {ex.Message}\n\nYou can visit Issues manually at: {AppConstants.GITHUB_REPO_URI}/issues", 
+                    "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+        }
+
+        private void ViewLicenseButton_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                var licenseUrl = $"{AppConstants.GITHUB_REPO_URI}/blob/main/LICENSE";
+                Process.Start(licenseUrl);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Failed to open license: {ex.Message}\n\nYou can view the license manually at: {AppConstants.GITHUB_REPO_URI}/blob/main/LICENSE", 
                     "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }

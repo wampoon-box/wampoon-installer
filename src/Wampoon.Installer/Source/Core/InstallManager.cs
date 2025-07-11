@@ -16,7 +16,6 @@ namespace Wampoon.Installer.Core
         public event EventHandler<InstallProgressEventArgs> ProgressChanged;
         public event EventHandler<InstallErrorEventArgs> ErrorOccurred;
         public event EventHandler<EventArgs> InstallationCompleted;
-        public event EventHandler<ExistingPackagesEventArgs> ExistingPackagesDetected;
 
         private readonly PackageManager _packageManager;
         private readonly IInstallationCoordinator _installationCoordinator;
@@ -68,25 +67,10 @@ namespace Wampoon.Installer.Core
                 await _installationValidator.ValidateInstallationPathAsync(options.InstallPath);
                 ReportProgress($"Installation path validated: {options.InstallPath}", GetProgressPercentage(), "Validation");
 
-                // Check for existing packages.
-                var selectedPackages = options.GetSelectedPackages();
-                var existingPackages = await CheckForExistingPackagesAsync(options.InstallPath, selectedPackages);
-                
-                if (existingPackages.Length > 0)
-                {
-                    // Notify caller about existing packages and wait for confirmation.
-                    var existingPackagesEventArgs = new ExistingPackagesEventArgs(existingPackages);
-                    ExistingPackagesDetected?.Invoke(this, existingPackagesEventArgs);
-                    
-                    // If the caller doesn't set OverwriteRequested to true, cancel the installation.
-                    if (!existingPackagesEventArgs.OverwriteRequested)
-                    {
-                        ReportProgress("Installation cancelled due to existing packages", 0, "Cancelled");
-                        return;
-                    }
-                    
-                    ReportProgress($"Continuing with installation - overwriting existing packages: {string.Join(", ", existingPackages)}", GetProgressPercentage(), "Validation");
-                }
+                // Ensure installation directory is empty to prevent data loss.
+                await ValidateEmptyInstallationDirectoryAsync(options.InstallPath);
+                ReportProgress("Installation directory verified as empty", GetProgressPercentage(), "Validation");
+
 
                 // Create base directories.
                 await CreateBaseDirectoriesAsync();
@@ -166,6 +150,8 @@ namespace Wampoon.Installer.Core
             if (options.InstallMariaDB) packageCount++;
             if (options.InstallPHP) packageCount++;
             if (options.InstallPhpMyAdmin) packageCount++;
+            if (options.InstallDashboard) packageCount++;
+            if (options.InstallControlPanel) packageCount++;
             
             steps += packageCount * 2; // Each package has install + configure step.
             
@@ -214,6 +200,8 @@ namespace Wampoon.Installer.Core
             if (options.InstallMariaDB) count++;
             if (options.InstallPHP) count++;
             if (options.InstallPhpMyAdmin) count++;
+            if (options.InstallDashboard) count++;
+            if (options.InstallControlPanel) count++;
             return count;
         }
 
@@ -328,31 +316,27 @@ namespace Wampoon.Installer.Core
             }
         }
 
-        private async Task<string[]> CheckForExistingPackagesAsync(string installPath, string[] selectedPackages)
+
+        private async Task ValidateEmptyInstallationDirectoryAsync(string installPath)
         {
-            var existingPackages = new List<string>();
-            var appsDirectory = Path.Combine(installPath, "apps");
-            
-            if (!Directory.Exists(appsDirectory))
+            await Task.Run(() =>
             {
-                return existingPackages.ToArray();
-            }
-            
-            foreach (var packageName in selectedPackages)
-            {
-                var packagePath = Path.Combine(appsDirectory, packageName);
-                if (Directory.Exists(packagePath))
+                if (!Directory.Exists(installPath))
                 {
-                    // Check if the package has its key binary files to confirm it's actually installed.
-                    var packageExists = await FileHelper.ValidatePackagePrerequisitesAsync(installPath, packageName);
-                    if (packageExists)
-                    {
-                        existingPackages.Add(packageName);
-                    }
+                    return;
                 }
-            }
-            
-            return existingPackages.ToArray();
+
+                var files = Directory.GetFiles(installPath, "*", SearchOption.AllDirectories);
+                var directories = Directory.GetDirectories(installPath, "*", SearchOption.AllDirectories);
+
+                if (files.Length > 0 || directories.Length > 0)
+                {
+                    throw new InvalidOperationException(
+                        $"The installation directory '{installPath}' is not empty. " +
+                        "To prevent accidental data loss, Wampoon can only be installed in an empty directory. " +
+                        "Please choose an empty directory or manually clean the current directory before proceeding.");
+                }
+            });
         }
 
         public void Dispose()

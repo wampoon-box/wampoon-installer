@@ -41,6 +41,16 @@ namespace Wampoon.Installer.Core.Installation
                 await InstallPackageAsync(AppSettings.PackageNames.PhpMyAdmin, options.InstallPath, progress, cancellationToken);
             }
 
+            if (options.InstallDashboard)
+            {
+                await InstallPackageAsync(AppSettings.PackageNames.Dashboard, options.InstallPath, progress, cancellationToken);
+            }
+
+            if (options.InstallControlPanel)
+            {
+                await InstallPackageAsync(AppSettings.PackageNames.ControlPanel, options.InstallPath, progress, cancellationToken);
+            }
+
             progress?.Report("Package installation completed");
         }
 

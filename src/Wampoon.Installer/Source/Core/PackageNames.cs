@@ -30,12 +30,22 @@ namespace Wampoon.Installer.Core
             public const string PhpMyAdmin = "phpmyadmin";
 
             /// <summary>
+            /// Wampoon Dashboard package identifier.
+            /// </summary>
+            public const string Dashboard = "wampoon-dashboard";
+
+            /// <summary>
+            /// Wampoon Control Panel package identifier.
+            /// </summary>
+            public const string ControlPanel = "wampoon-control-panel";
+
+            /// <summary>
             /// Gets all available package names.
             /// </summary>
             /// <returns>Array of all package names</returns>
             public static string[] GetAllPackageNames()
             {
-                return new[] { Apache, MariaDB, PHP, PhpMyAdmin };
+                return new[] { Apache, MariaDB, PHP, PhpMyAdmin, Dashboard, ControlPanel };
             }
 
             /// <summary>
@@ -51,6 +61,8 @@ namespace Wampoon.Installer.Core
                     case MariaDB:
                     case PHP:
                     case PhpMyAdmin:
+                    case Dashboard:
+                    case ControlPanel:
                         return true;
                     default:
                         return false;

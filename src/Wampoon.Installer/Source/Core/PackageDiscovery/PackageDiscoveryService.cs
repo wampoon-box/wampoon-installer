@@ -44,6 +44,10 @@ namespace Wampoon.Installer.Core.PackageDiscovery
                     return PackageType.PHP;
                 case AppSettings.PackageNames.PhpMyAdmin:
                     return PackageType.PhpMyAdmin;
+                case AppSettings.PackageNames.Dashboard:
+                    return PackageType.WampoonDashboard;
+                case AppSettings.PackageNames.ControlPanel:
+                    return PackageType.WampoonControlPanel;
                 default:
                     return null;
             }
@@ -68,6 +72,8 @@ namespace Wampoon.Installer.Core.PackageDiscovery
                 case AppSettings.PackageNames.MariaDB:
                 case AppSettings.PackageNames.PHP:
                 case AppSettings.PackageNames.PhpMyAdmin:
+                case AppSettings.PackageNames.Dashboard:
+                case AppSettings.PackageNames.ControlPanel:
                     return true;
                 default:
                     return false;
@@ -93,6 +99,10 @@ namespace Wampoon.Installer.Core.PackageDiscovery
                     return "php";
                 case AppSettings.PackageNames.PhpMyAdmin:
                     return "phpmyadmin";
+                case AppSettings.PackageNames.Dashboard:
+                    return "wampoon-dashboard";
+                case AppSettings.PackageNames.ControlPanel:
+                    return "wampoon-control-panel";
                 default:
                     return packageName.ToLower();
             }
