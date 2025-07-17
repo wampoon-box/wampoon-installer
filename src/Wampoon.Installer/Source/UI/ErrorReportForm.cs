@@ -52,6 +52,7 @@ namespace Wampoon.Installer.UI
             }
             catch (Exception ex)
             {
+                ErrorLogHelper.LogExceptionInfo(ex);
                 MessageBox.Show($"Failed to copy to clipboard: {ex.Message}", "Error", 
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
@@ -66,6 +67,7 @@ namespace Wampoon.Installer.UI
             }
             catch (Exception ex)
             {
+                ErrorLogHelper.LogExceptionInfo(ex);
                 MessageBox.Show($"Failed to open GitHub: {ex.Message}\n\nYou can report this issue manually at: {AppConstants.GITHUB_REPO_URI}/issues", 
                     "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }

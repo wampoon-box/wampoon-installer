@@ -27,6 +27,7 @@ namespace Wampoon.Installer
             }
             catch (Exception ex)
             {
+                ErrorLogHelper.LogExceptionInfo(ex);
                 MessageBox.Show($"An unexpected error occurred: {ex.Message}",
                     $"{AppConstants.APP_FULL_NAME} Error",
                     MessageBoxButtons.OK,
@@ -52,6 +53,7 @@ namespace Wampoon.Installer
         {
             try
             {
+                ErrorLogHelper.LogExceptionInfo(e.Exception);
                 UiHelper.ShowErrorReport(e.Exception, "UI Thread Exception");
 
                 DialogResult result = MessageBox.Show(
@@ -68,6 +70,7 @@ namespace Wampoon.Installer
             catch
             {
                 // Fallback if error reporting fails.
+                try { ErrorLogHelper.LogExceptionInfo(e.Exception); } catch { }
                 MessageBox.Show($"A critical error occurred: {e.Exception.Message}", "Fatal Error",
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
                 Application.Exit();
@@ -81,11 +84,13 @@ namespace Wampoon.Installer
 
             try
             {
+                ErrorLogHelper.LogExceptionInfo(ex);
                 UiHelper.ShowErrorReport(ex, "Non-UI Thread Exception - Application will close");
             }
             catch
             {
                 // Fallback if error reporting fails.
+                try { ErrorLogHelper.LogExceptionInfo(ex); } catch { }
                 MessageBox.Show($"A fatal error occurred: {ex.Message}\n\nThe application will now close.",
                     "Fatal Error", MessageBoxButtons.OK, MessageBoxIcon.Stop);
             }
@@ -102,11 +107,13 @@ namespace Wampoon.Installer
 
             try
             {
+                ErrorLogHelper.LogExceptionInfo(e.Exception.GetBaseException());
                 UiHelper.ShowErrorReport(e.Exception.GetBaseException(), "Unobserved Task Exception");
             }
             catch
             {
                 // Fallback if error reporting fails.
+                try { ErrorLogHelper.LogExceptionInfo(e.Exception.GetBaseException()); } catch { }
                 MessageBox.Show($"An error occurred in a background task: {e.Exception.GetBaseException().Message}",
                     "Background Task Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }

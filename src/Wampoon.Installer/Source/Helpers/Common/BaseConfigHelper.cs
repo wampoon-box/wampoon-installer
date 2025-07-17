@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Wampoon.Installer.Core;
 using Wampoon.Installer.Core.Paths;
 using Wampoon.Installer.Helpers.Logging;
+using Wampoon.Installer.Helpers;
 
 namespace Wampoon.Installer.Helpers.Common
 {
@@ -51,6 +52,7 @@ namespace Wampoon.Installer.Helpers.Common
             }
             catch (Exception ex)
             {
+                ErrorLogHelper.LogExceptionInfo(ex);
                 progressReporter?.Report($"✗ {DisplayName} configuration failed: {ex.Message}");
                 throw;
             }
@@ -216,6 +218,7 @@ namespace Wampoon.Installer.Helpers.Common
             }
             catch (Exception ex)
             {
+                ErrorLogHelper.LogExceptionInfo(ex);
                 progressReporter?.Report($"Error listing directory contents: {ex.Message}");
             }
             await Task.CompletedTask;

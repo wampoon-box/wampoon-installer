@@ -31,7 +31,7 @@ namespace Wampoon.Installer.Helpers
             }
             catch (Exception ex)
             {
-                //LogExceptionInfo(ex);
+                ErrorLogHelper.LogExceptionInfo(ex);
                 MessageBox.Show($"An error occurred while displaying the error report: {ex.Message}",
                     "Error Report Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }

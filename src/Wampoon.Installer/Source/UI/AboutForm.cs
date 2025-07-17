@@ -48,6 +48,7 @@ namespace Wampoon.Installer.UI
             }
             catch (Exception ex)
             {
+                ErrorLogHelper.LogExceptionInfo(ex);
                 MessageBox.Show($"Failed to open GitHub repository: {ex.Message}\n\nYou can visit the repository manually at: {AppConstants.GITHUB_REPO_URI}", 
                     "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
@@ -62,6 +63,7 @@ namespace Wampoon.Installer.UI
             }
             catch (Exception ex)
             {
+                ErrorLogHelper.LogExceptionInfo(ex);
                 MessageBox.Show($"Failed to open GitHub Issues: {ex.Message}\n\nYou can visit Issues manually at: {AppConstants.GITHUB_REPO_URI}/issues", 
                     "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
@@ -76,6 +78,7 @@ namespace Wampoon.Installer.UI
             }
             catch (Exception ex)
             {
+                ErrorLogHelper.LogExceptionInfo(ex);
                 MessageBox.Show($"Failed to open license: {ex.Message}\n\nYou can view the license manually at: {AppConstants.GITHUB_REPO_URI}/blob/main/LICENSE", 
                     "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }

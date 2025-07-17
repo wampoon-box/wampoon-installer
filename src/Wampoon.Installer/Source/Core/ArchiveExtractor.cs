@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Wampoon.Installer.Events;
 using Wampoon.Installer.Models;
+using Wampoon.Installer.Helpers;
 
 namespace Wampoon.Installer.Core
 {
@@ -45,6 +46,7 @@ namespace Wampoon.Installer.Core
             }
             catch (Exception ex)
             {
+                ErrorLogHelper.LogExceptionInfo(ex);
                 throw new InvalidOperationException($"Failed to validate archive: {archivePath}. Error: {ex.Message}", ex);
             }
 
@@ -183,6 +185,7 @@ namespace Wampoon.Installer.Core
             }
             catch (Exception ex)
             {
+                ErrorLogHelper.LogExceptionInfo(ex);
                 OnProgressReported(new InstallationProgressEventArgs
                 {
                     PackageName = package.Name,

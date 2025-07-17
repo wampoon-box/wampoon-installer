@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Wampoon.Installer.Events;
 using Wampoon.Installer.Models;
+using Wampoon.Installer.Helpers;
 
 namespace Wampoon.Installer.Core
 {
@@ -164,6 +165,7 @@ namespace Wampoon.Installer.Core
                     }
                     catch (Exception ex)
                     {
+                        ErrorLogHelper.LogExceptionInfo(ex);
                         if (File.Exists(filePath))
                         {
                             try { File.Delete(filePath); } catch { }
@@ -176,6 +178,7 @@ namespace Wampoon.Installer.Core
             }
             catch (Exception ex)
             {
+                ErrorLogHelper.LogExceptionInfo(ex);
                 if (File.Exists(filePath))
                 {
                     try { File.Delete(filePath); } catch { }
