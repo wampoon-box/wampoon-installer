@@ -1260,7 +1260,7 @@ bcmath.scale = 0
 
 [browscap]
 ; https://php.net/browscap
-browscap = "extra/browscap.ini"
+;browscap = "extra/browscap.ini"
 
 [Session]
 ; Handler used to store/retrieve data.

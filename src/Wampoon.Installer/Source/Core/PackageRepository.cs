@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Reflection;
 using Wampoon.Installer.Models;
 using Wampoon.Installer.Helpers.Logging;
+using Wampoon.Installer.Helpers;
 using Newtonsoft.Json;
 
 namespace Wampoon.Installer.Core
@@ -22,6 +23,7 @@ namespace Wampoon.Installer.Core
         {
             _httpClient = new HttpClient();
             _httpClient.Timeout = InstallerConstants.HttpShortTimeout;
+            _httpClient.DefaultRequestHeaders.Add("User-Agent", AppConstants.USER_AGENT);
             _logger = LoggerFactory.Default;
         }
 

@@ -20,7 +20,7 @@ namespace Wampoon.Installer.Core
         {
             _httpClient = new HttpClient();
             _httpClient.Timeout = InstallerConstants.HttpClientTimeout;
-            _httpClient.DefaultRequestHeaders.Add("User-Agent", "Wampoon-Installer/1.0");
+            _httpClient.DefaultRequestHeaders.Add("User-Agent", AppConstants.USER_AGENT);
         }
 
         public async Task<string> DownloadPackageAsync(InstallablePackage package, string downloadDirectory, CancellationToken cancellationToken = default)
