@@ -435,7 +435,7 @@ max_input_time = 60
 
 ; Maximum amount of memory a script may consume
 ; https://php.net/memory-limit
-memory_limit = 128M
+memory_limit = 512M
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; Error handling and logging ;
@@ -744,7 +744,7 @@ default_charset = "UTF-8"
 ;include_path = ".:/php/includes"
 ;
 ; Windows: "\path1;\path2"
-;include_path = ".;c:\php\includes"
+include_path = "."
 ;
 ; PHP's default setting for include_path is ".;/path/to/php/pear"
 ; https://php.net/include-path
@@ -766,7 +766,7 @@ user_dir =
 ; https://php.net/extension-dir
 ;extension_dir = "./"
 ; On windows:
-extension_dir = "D:\Dev\my-repos\pwamp\pwamp-bundle\apps\php\ext"
+extension_dir = "./ext"
 
 ; Directory where the temporary files should be placed.
 ; Defaults to the system default (see sys_get_temp_dir)
@@ -847,11 +847,11 @@ file_uploads = On
 ; Temporary directory for HTTP uploaded files (will use system default if not
 ; specified).
 ; https://php.net/upload-tmp-dir
-;upload_tmp_dir =
+upload_tmp_dir = "./tmp"
 
 ; Maximum allowed size for uploaded files.
 ; https://php.net/upload-max-filesize
-upload_max_filesize = 2M
+upload_max_filesize = 256M
 
 ; Maximum number of files that can be uploaded via a single request
 max_file_uploads = 20
@@ -918,7 +918,7 @@ default_socket_timeout = 60
 ;   extension folders as well as the separate PECL DLL download.
 ;   Be sure to appropriately set the extension_dir directive.
 ;
-;extension=bz2
+extension=bz2
 extension=curl
 ;extension=ffi
 ;extension=ftp
@@ -926,18 +926,18 @@ extension=fileinfo
 extension=gd
 extension=gettext
 ;extension=gmp
-;extension=intl
+extension=intl
 ;extension=ldap
 extension=mbstring
 ;extension=exif      ; Must be after mbstring as it depends on it
 extension=mysqli
 ;extension=odbc
-;extension=openssl
+extension=openssl
 ;extension=pdo_firebird
 extension=pdo_mysql
 ;extension=pdo_odbc
 ;extension=pdo_pgsql
-;extension=pdo_sqlite
+extension=pdo_sqlite
 ;extension=pgsql
 ;extension=shmop
 
@@ -945,13 +945,13 @@ extension=pdo_mysql
 ; See https://www.php.net/manual/en/snmp.installation.php
 ;extension=snmp
 
-;extension=soap
+extension=soap
 ;extension=sockets
 ;extension=sodium
-;extension=sqlite3
+extension=sqlite3
 ;extension=tidy
 ;extension=xsl
-;extension=zip
+extension=zip
 
 ;zend_extension=opcache
 
@@ -1260,7 +1260,7 @@ bcmath.scale = 0
 
 [browscap]
 ; https://php.net/browscap
-;browscap = extra/browscap.ini
+browscap = "extra/browscap.ini"
 
 [Session]
 ; Handler used to store/retrieve data.
@@ -1273,7 +1273,7 @@ session.save_handler = files
 ;
 ; The path can be defined as:
 ;
-;     session.save_path = "N;/path"
+session.save_path = "tmp"
 ;
 ; where N is an integer.  Instead of storing all the session files in
 ; /path, what this will do is use subdirectories N-levels deep, and
@@ -1822,7 +1822,7 @@ ldap.max_links = -1
 [curl]
 ; A default value for the CURLOPT_CAINFO option. This is required to be an
 ; absolute path.
-;curl.cainfo =
+curl.cainfo = "../apache/bin/curl-ca-bundle.crt"
 
 [openssl]
 ; The location of a Certificate Authority (CA) file on the local filesystem
