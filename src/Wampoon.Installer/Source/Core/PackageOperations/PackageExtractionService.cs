@@ -2,6 +2,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Wampoon.Installer.Events;
+using Wampoon.Installer.Helpers;
 using Wampoon.Installer.Models;
 
 namespace Wampoon.Installer.Core.PackageOperations
@@ -47,6 +48,7 @@ namespace Wampoon.Installer.Core.PackageOperations
             }
             catch (Exception ex)
             {
+                ErrorLogHelper.LogExceptionInfo(ex);
                 progress?.Report($"✗ Failed to extract {package.Name}: {ex.Message}");
                 throw;
             }

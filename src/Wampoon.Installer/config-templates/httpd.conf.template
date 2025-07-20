@@ -256,6 +256,7 @@ ServerName localhost:80
 # documents. By default, all requests are taken from this directory, but
 # symbolic links and aliases may be used to point to other locations.
 #
+# The ${DOCROOT} contains the absolute path to the "/htdocs" directory. 
 DocumentRoot "${DOCROOT}"
 <Directory "${DOCROOT}">
     #
@@ -546,9 +547,11 @@ SSLRandomSeed connect builtin
 # PID file
 PidFile "${SRVROOT}/logs/httpd.pid"
 
-# PHP configuration
+# PHP 8.x Configuration
 PHPIniDir "../php"
-AddHandler application/x-httpd-php .php .html .htm
 LoadModule php_module "../php/php8apache2_4.dll"
+AddHandler application/x-httpd-php .php .html .htm
 AddType application/x-httpd-php .php
 DirectoryIndex index.php index.html index.htm
+
+LoadFile "../php/libsodium.dll"

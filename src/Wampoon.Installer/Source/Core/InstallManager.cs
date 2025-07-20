@@ -8,6 +8,7 @@ using Wampoon.Installer.Core.Installation;
 using Wampoon.Installer.Core.Paths;
 using Wampoon.Installer.Helpers.Common;
 using Wampoon.Installer.Events;
+using Wampoon.Installer.Helpers;
 
 namespace Wampoon.Installer.Core
 {
@@ -110,6 +111,7 @@ namespace Wampoon.Installer.Core
             }
             catch (Exception ex)
             {
+                ErrorLogHelper.LogExceptionInfo(ex);
                 ReportError($"Installation failed: {ex.Message}", ex);
                 throw;
             }
@@ -310,6 +312,7 @@ namespace Wampoon.Installer.Core
                 }
                 catch (Exception ex)
                 {
+                    ErrorLogHelper.LogExceptionInfo(ex);
                     // Log the error but don't fail the installation.
                     ReportProgress($"Warning: Could not fully clean up downloads folder: {ex.Message}", GetProgressPercentage(), "Cleanup");
                 }

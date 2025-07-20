@@ -7,6 +7,7 @@ using Wampoon.Installer.Core.PackageDiscovery;
 using Wampoon.Installer.Core.PackageOperations;
 using Wampoon.Installer.Models;
 using Wampoon.Installer.Events;
+using Wampoon.Installer.Helpers;
 
 namespace Wampoon.Installer.Core
 {
@@ -179,6 +180,7 @@ namespace Wampoon.Installer.Core
             }
             catch (Exception ex)
             {
+                ErrorLogHelper.LogExceptionInfo(ex);
                 logger?.Report($"Warning: Could not move all control panel files: {ex.Message}");
             }
         }

@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using Wampoon.Installer.Helpers.Common;
+using Wampoon.Installer.Helpers;
 
 namespace Wampoon.Installer.Core.Installation
 {
@@ -19,6 +20,7 @@ namespace Wampoon.Installer.Core.Installation
             }
             catch (Exception ex)
             {
+                ErrorLogHelper.LogExceptionInfo(ex);
                 throw new Exception($"Cannot create installation directory: {ex.Message}", ex);
             }
         }

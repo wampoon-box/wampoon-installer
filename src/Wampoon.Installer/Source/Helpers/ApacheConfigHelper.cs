@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Wampoon.Installer.Helpers.Common;
 using Wampoon.Installer.Core;
@@ -50,6 +51,53 @@ namespace Wampoon.Installer.Helpers
                 var templateVhostsPath = TemplateHelper.GetTemplatePath(AppSettings.ApacheFiles.Templates.WampoonVhostsConf);
                 var vHostsConfTargetPath = pathResolver.GetConfigPath(AppSettings.PackageNames.Apache, AppSettings.ApacheFiles.WampoonVhostsConf);
                 await TemplateHelper.CopyTemplateWithVersionAsync(templateVhostsPath, vHostsConfTargetPath);
+
+                // Download curl certificate bundle.
+                await DownloadCurlCertificateAsync(pathResolver, logger);
+            }
+
+            private async Task DownloadCurlCertificateAsync(IPathResolver pathResolver, IProgress<string> logger)
+            {
+                const string curlCertUrl = "https://curl.se/ca/cacert.pem";
+                const string targetFileName = "curl-ca-bundle.crt";
+                
+                try
+                {
+                    logger?.Report("Downloading curl certificate bundle...");
+                    
+                    // Get the Apache bin directory path.
+                    var apacheBinDir = pathResolver.GetSubdirectoryPath(AppSettings.PackageNames.Apache, "bin");
+                    var targetPath = Path.Combine(apacheBinDir, targetFileName);
+                    
+                    // Ensure the bin directory exists.
+                    await FileHelper.CreateDirectoryIfNotExistsAsync(apacheBinDir);
+                    
+                    // Download the certificate file.
+                    using (var httpClient = new HttpClient())
+                    {
+                        httpClient.Timeout = TimeSpan.FromMinutes(5);
+                        httpClient.DefaultRequestHeaders.Add("User-Agent", AppConstants.USER_AGENT);
+                        
+                        using (var response = await httpClient.GetAsync(curlCertUrl))
+                        {
+                            response.EnsureSuccessStatusCode();
+                            
+                            var content = await response.Content.ReadAsByteArrayAsync();
+                            using (var fileStream = new FileStream(targetPath, FileMode.Create, FileAccess.Write))
+                            {
+                                await fileStream.WriteAsync(content, 0, content.Length);
+                            }
+                        }
+                    }
+                    
+                    logger?.Report($"✓ Curl certificate bundle downloaded to: {targetPath}");
+                }
+                catch (Exception ex)
+                {
+                    ErrorLogHelper.LogExceptionInfo(ex);
+                    logger?.Report($"✗ Failed to download curl certificate bundle: {ex.Message}");
+                    throw;
+                }
             }
         }
     }

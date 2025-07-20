@@ -16,8 +16,8 @@
   {
     "PackageID": 4,
     "Name": "PHP Runtime",
-    "Version": "8.4.9",
-    "DownloadUrl": "https://windows.php.net/downloads/releases/archives/php-8.4.9-Win32-vs17-x64.zip",
+    "Version": "8.4.10",
+    "DownloadUrl": "https://windows.php.net/downloads/releases/php-8.4.10-Win32-vs17-x64.zip",
     "Checksum": ""
   },
   {

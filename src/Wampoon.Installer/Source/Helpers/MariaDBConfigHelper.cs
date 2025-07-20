@@ -110,6 +110,7 @@ namespace Wampoon.Installer.Helpers
                 }
                 catch (Exception ex)
                 {
+                    ErrorLogHelper.LogExceptionInfo(ex);
                     logger?.Report($"Error initializing MariaDB data directory: {ex.Message}");
                     throw;
                 }

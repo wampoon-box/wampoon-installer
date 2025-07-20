@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Reflection;
 using Wampoon.Installer.Models;
 using Wampoon.Installer.Helpers.Logging;
+using Wampoon.Installer.Helpers;
 using Newtonsoft.Json;
 
 namespace Wampoon.Installer.Core
@@ -22,6 +23,7 @@ namespace Wampoon.Installer.Core
         {
             _httpClient = new HttpClient();
             _httpClient.Timeout = InstallerConstants.HttpShortTimeout;
+            _httpClient.DefaultRequestHeaders.Add("User-Agent", AppConstants.USER_AGENT);
             _logger = LoggerFactory.Default;
         }
 
@@ -205,8 +207,8 @@ namespace Wampoon.Installer.Core
                 {
                     PackageID = PackageType.PHP,
                     Name = "PHP Runtime",
-                    Version = new Version(8, 4, 9),
-                    DownloadUrl = new Uri("https://windows.php.net/downloads/releases/archives/php-8.4.9-Win32-vs17-x64.zip"),
+                    Version = new Version(8, 4, 10),
+                    DownloadUrl = new Uri("https://windows.php.net/downloads/releases/php-8.4.10-Win32-vs17-x64.zip"),
                     Type = PackageType.PHP,
                     ServerName = "PHP",
                     EstimatedSize = 35 * 1024 * 1024,

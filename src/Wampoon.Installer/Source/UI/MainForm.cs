@@ -155,6 +155,7 @@ namespace Wampoon.Installer.UI
             }
             catch (Exception ex)
             {
+                ErrorLogHelper.LogExceptionInfo(ex);
                 LogMessage($"Installation failed: {ex.Message}", Color.Red);
                 MessageBox.Show($"Installation failed: {ex.Message}", 
                     "Installation Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -207,6 +208,7 @@ namespace Wampoon.Installer.UI
             }
             catch (Exception ex)
             {
+                ErrorLogHelper.LogExceptionInfo(ex);
                 MessageBox.Show($"Failed to export log: {ex.Message}", 
                     "Export Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
@@ -237,6 +239,7 @@ namespace Wampoon.Installer.UI
             }
             catch (Exception ex)
             {
+                ErrorLogHelper.LogExceptionInfo(ex);
                 MessageBox.Show($"Failed to open directory: {ex.Message}", 
                     "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
@@ -333,6 +336,7 @@ namespace Wampoon.Installer.UI
             }
             catch (Exception ex)
             {
+                ErrorLogHelper.LogExceptionInfo(ex);
                 LogMessage($"Progress bar update error: {ex.Message}", Color.Red);
             }
             _progressLabel.Text = "Installation Completed Successfully";
@@ -490,6 +494,7 @@ namespace Wampoon.Installer.UI
             }
             catch (Exception ex)
             {
+                ErrorLogHelper.LogExceptionInfo(ex);
                 // Log error but don't show to user as this is not critical.
                 System.Diagnostics.Debug.WriteLine($"Error updating component versions: {ex.Message}");
                 // UI will keep the default text if version loading fails.

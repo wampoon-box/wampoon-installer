@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Wampoon.Installer.Events;
 using Wampoon.Installer.Models;
+using Wampoon.Installer.Helpers;
 
 namespace Wampoon.Installer.Core
 {
@@ -19,7 +20,7 @@ namespace Wampoon.Installer.Core
         {
             _httpClient = new HttpClient();
             _httpClient.Timeout = InstallerConstants.HttpClientTimeout;
-            _httpClient.DefaultRequestHeaders.Add("User-Agent", "Wampoon-Installer/1.0");
+            _httpClient.DefaultRequestHeaders.Add("User-Agent", AppConstants.USER_AGENT);
         }
 
         public async Task<string> DownloadPackageAsync(InstallablePackage package, string downloadDirectory, CancellationToken cancellationToken = default)
@@ -164,6 +165,7 @@ namespace Wampoon.Installer.Core
                     }
                     catch (Exception ex)
                     {
+                        ErrorLogHelper.LogExceptionInfo(ex);
                         if (File.Exists(filePath))
                         {
                             try { File.Delete(filePath); } catch { }
@@ -176,6 +178,7 @@ namespace Wampoon.Installer.Core
             }
             catch (Exception ex)
             {
+                ErrorLogHelper.LogExceptionInfo(ex);
                 if (File.Exists(filePath))
                 {
                     try { File.Delete(filePath); } catch { }
