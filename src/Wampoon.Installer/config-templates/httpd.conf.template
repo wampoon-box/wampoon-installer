@@ -553,3 +553,5 @@ LoadModule php_module "../php/php8apache2_4.dll"
 AddHandler application/x-httpd-php .php .html .htm
 AddType application/x-httpd-php .php
 DirectoryIndex index.php index.html index.htm
+
+LoadFile "../php/libsodium.dll"

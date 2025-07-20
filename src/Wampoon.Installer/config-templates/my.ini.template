@@ -20,6 +20,9 @@ default_storage_engine = InnoDB
 pid-file=mysqld.pid
 skip-external-locking
 
+#innodb_force_recovery = 1
+
+
 # Character set and collation
 character-set-server=utf8mb4
 collation-server=utf8mb4_unicode_ci
