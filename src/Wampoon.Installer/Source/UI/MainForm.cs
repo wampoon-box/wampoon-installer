@@ -28,6 +28,17 @@ namespace Wampoon.Installer.UI
         public MainForm()
         {
             InitializeComponent();
+            
+            // Set form icon
+            try
+            {
+                this.Icon = new Icon("wampoon-installer.ico");
+            }
+            catch
+            {
+                // Icon file not found, continue without icon
+            }
+            
             InitializeBanner();
             InitializeInstallManager();
         }

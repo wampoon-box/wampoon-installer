@@ -56,6 +56,7 @@ namespace Wampoon.Installer.UI
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this._componentsGroup = new System.Windows.Forms.GroupBox();
             this._apacheCheckBox = new System.Windows.Forms.CheckBox();
             this._mariadbCheckBox = new System.Windows.Forms.CheckBox();
