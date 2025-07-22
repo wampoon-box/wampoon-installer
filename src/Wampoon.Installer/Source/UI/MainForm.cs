@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
@@ -135,6 +136,25 @@ namespace Wampoon.Installer.UI
                 {
                     MessageBox.Show("Please specify an installation directory.", 
                         "Invalid Path", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                // Show confirmation dialog.
+                var selectedComponents = new List<string>();
+                if (_apacheCheckBox.Checked) selectedComponents.Add("Apache HTTP Server");
+                if (_mariadbCheckBox.Checked) selectedComponents.Add("MariaDB Database Server");
+                if (_phpCheckBox.Checked) selectedComponents.Add("PHP Scripting Language");
+                if (_phpmyadminCheckBox.Checked) selectedComponents.Add("phpMyAdmin Database Manager");
+                if (_xdebugCheckBox.Checked) selectedComponents.Add("Xdebug PHP Extension");
+
+                var componentsText = string.Join("\n• ", selectedComponents);
+                var confirmationMessage = $"Are you sure you want to install the following components?\n\n• {componentsText}\n\nInstallation Path: {_installPathTextBox.Text}";
+                
+                var confirmResult = MessageBox.Show(confirmationMessage, 
+                    "Confirm Installation", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                
+                if (confirmResult != DialogResult.Yes)
+                {
                     return;
                 }
 
