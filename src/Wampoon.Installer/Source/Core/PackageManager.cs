@@ -93,7 +93,7 @@ namespace Wampoon.Installer.Core
             // Special handling for control panel - move files from temp to install directory
             if (packageName.Equals(AppSettings.PackageNames.ControlPanel, StringComparison.OrdinalIgnoreCase))
             {
-                await MoveControlPanelFilesToInstallDirectory(extractedPath, installPath, logger);
+                await MoveControlPanelFilesToInstallDirectoryAsync(extractedPath, installPath, logger);
                 extractedPath = installPath;
             }
 
@@ -145,15 +145,17 @@ namespace Wampoon.Installer.Core
             return Path.Combine(installPath, "apps", _packageDiscoveryService.GetPackageDirectoryName(packageName));
         }
 
-        private void MoveControlPanelFilesToInstallDirectory(string tempPath, string installPath, IProgress<string> logger)
+        private async Task MoveControlPanelFilesToInstallDirectoryAsync(string tempPath, string installPath, IProgress<string> logger)
         {
-            try
+            await Task.Run(() =>
             {
-                logger?.Report("Moving control panel files to install directory...");
-                
-                // Move all files and directories from temp to install directory
-                var files = Directory.GetFiles(tempPath, "*", SearchOption.AllDirectories);
-                var directories = Directory.GetDirectories(tempPath, "*", SearchOption.AllDirectories);
+                try
+                {
+                    logger?.Report("Moving control panel files to install directory...");
+                    
+                    // Move all files and directories from temp to install directory
+                    var files = Directory.GetFiles(tempPath, "*", SearchOption.AllDirectories);
+                    var directories = Directory.GetDirectories(tempPath, "*", SearchOption.AllDirectories);
                 
                 // Create directory structure first
                 foreach (var dir in directories)
@@ -194,8 +196,9 @@ namespace Wampoon.Installer.Core
             catch (Exception ex)
             {
                 ErrorLogHelper.LogExceptionInfo(ex);
-                logger?.Report($"Warning: Could not move all control panel files: {ex.Message}");
-            }
+                    logger?.Report($"Warning: Could not move all control panel files: {ex.Message}");
+                }
+            });
         }
 
         public void Dispose()

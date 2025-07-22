@@ -68,9 +68,9 @@ namespace Wampoon.Installer.Core.Installation
             }
         }
 
-        public async Task<bool> ValidateAsync(string packageName, string installPath)
+        public Task<bool> ValidateAsync(string packageName, string installPath)
         {
-            return await FileHelper.ValidatePackageConfigurationAsync(installPath, packageName);
+            return Task.FromResult(FileHelper.ValidatePackageConfiguration(installPath, packageName));
         }
 
         public bool CanInstall(string packageName)

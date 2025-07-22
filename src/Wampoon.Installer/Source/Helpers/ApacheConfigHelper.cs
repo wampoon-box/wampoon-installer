@@ -45,12 +45,12 @@ namespace Wampoon.Installer.Helpers
                 // Copy the custom path file.
                 var templateCustomPath = TemplateHelper.GetTemplatePath(AppSettings.ApacheFiles.Templates.WampoonCustomPathConf);
                 var customConfTargetPath = pathResolver.GetConfigPath(AppSettings.PackageNames.Apache, AppSettings.ApacheFiles.WampoonCustomPathConf);
-                await TemplateHelper.CopyTemplateWithVersionAsync(templateCustomPath, customConfTargetPath);
+                TemplateHelper.CopyTemplateWithVersion(templateCustomPath, customConfTargetPath);
 
                 // Copy the vhosts file.
                 var templateVhostsPath = TemplateHelper.GetTemplatePath(AppSettings.ApacheFiles.Templates.WampoonVhostsConf);
                 var vHostsConfTargetPath = pathResolver.GetConfigPath(AppSettings.PackageNames.Apache, AppSettings.ApacheFiles.WampoonVhostsConf);
-                await TemplateHelper.CopyTemplateWithVersionAsync(templateVhostsPath, vHostsConfTargetPath);
+                TemplateHelper.CopyTemplateWithVersion(templateVhostsPath, vHostsConfTargetPath);
 
                 // Download curl certificate bundle.
                 await DownloadCurlCertificateAsync(pathResolver, logger);

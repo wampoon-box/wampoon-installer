@@ -57,7 +57,6 @@ namespace Wampoon.Installer.UI
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this._componentsGroup = new System.Windows.Forms.GroupBox();
             this._apacheCheckBox = new System.Windows.Forms.CheckBox();
             this._mariadbCheckBox = new System.Windows.Forms.CheckBox();
@@ -178,12 +177,12 @@ namespace Wampoon.Installer.UI
             // _xdebugCheckBox
             // 
             this._xdebugCheckBox.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(249)))), ((int)(((byte)(250)))), ((int)(((byte)(251)))));
-            this._xdebugCheckBox.Checked = false;
-            this._xdebugCheckBox.CheckState = System.Windows.Forms.CheckState.Unchecked;
+            this._xdebugCheckBox.Checked = true;
+            this._xdebugCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
             this._xdebugCheckBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this._xdebugCheckBox.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
             this._xdebugCheckBox.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(55)))), ((int)(((byte)(65)))), ((int)(((byte)(81)))));
-            this._xdebugCheckBox.Location = new System.Drawing.Point(180, 136);
+            this._xdebugCheckBox.Location = new System.Drawing.Point(17, 132);
             this._xdebugCheckBox.Name = "_xdebugCheckBox";
             this._xdebugCheckBox.Padding = new System.Windows.Forms.Padding(10);
             this._xdebugCheckBox.Size = new System.Drawing.Size(308, 43);

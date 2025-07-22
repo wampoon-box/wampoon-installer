@@ -25,14 +25,14 @@ namespace Wampoon.Installer.Core.Installation
             }
         }
 
-        public async Task<bool> ValidatePackageInstallationAsync(string packageName, string installPath)
+        public Task<bool> ValidatePackageInstallationAsync(string packageName, string installPath)
         {
             if (string.IsNullOrWhiteSpace(packageName))
             {
-                return false;
+                return Task.FromResult(false);
             }
 
-            return await FileHelper.ValidatePackageConfigurationAsync(installPath, packageName);
+            return Task.FromResult(FileHelper.ValidatePackageConfiguration(installPath, packageName));
         }
 
         public async Task<bool> ValidateCompleteInstallationAsync(InstallOptions options)

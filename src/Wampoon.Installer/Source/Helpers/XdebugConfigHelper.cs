@@ -84,11 +84,13 @@ namespace Wampoon.Installer.Helpers
 
             private async Task InstallXdebugDllAsync(IPathResolver pathResolver, IProgress<string> logger)
             {
-                logger?.Report("Installing Xdebug DLL...");
+                await Task.Run(() =>
+                {
+                    logger?.Report("Installing Xdebug DLL...");
 
-                var installPath = Path.GetDirectoryName(pathResolver.GetAppsDirectory()); // Get root install path
-                var phpExtDir = pathResolver.GetSubdirectoryPath(AppSettings.PackageNames.PHP, "ext");
-                var downloadsDir = Path.Combine(installPath, "downloads");
+                    var installPath = Path.GetDirectoryName(pathResolver.GetAppsDirectory()); // Get root install path
+                    var phpExtDir = pathResolver.GetSubdirectoryPath(AppSettings.PackageNames.PHP, "ext");
+                    var downloadsDir = Path.Combine(installPath, "downloads");
                 
                 logger?.Report($"DEBUG: Looking for Xdebug DLL in: {downloadsDir}");
                 logger?.Report($"DEBUG: Downloads directory exists: {Directory.Exists(downloadsDir)}");
@@ -147,41 +149,45 @@ namespace Wampoon.Installer.Helpers
                 }
                 catch (Exception cleanupEx)
                 {
-                    // Don't fail if cleanup fails, just log it
-                    logger?.Report($"Note: Could not clean up download files: {cleanupEx.Message}");
-                }
+                        // Don't fail if cleanup fails, just log it
+                        logger?.Report($"Note: Could not clean up download files: {cleanupEx.Message}");
+                    }
+                });
             }
 
             private async Task UpdatePhpIniForXdebugAsync(IPathResolver pathResolver, IProgress<string> logger)
             {
-                logger?.Report("Updating php.ini for Xdebug...");
-
-                var phpIniPath = pathResolver.GetConfigPath(AppSettings.PackageNames.PHP, AppSettings.PHPFiles.PhpIni);
-
-                // Read the current php.ini content
-                var phpIniContent = File.ReadAllText(phpIniPath);
-
-                // Check if Xdebug is already configured
-                if (phpIniContent.Contains("zend_extension") && phpIniContent.Contains("xdebug"))
+                await Task.Run(() =>
                 {
-                    logger?.Report("✓ Xdebug already configured in php.ini");
-                    return;
-                }
+                    logger?.Report("Updating php.ini for Xdebug...");
 
-                // Add Xdebug configuration to php.ini
-                var xdebugConfig = Environment.NewLine + Environment.NewLine +
-                    "; Xdebug Configuration" + Environment.NewLine +
-                    "zend_extension=php_xdebug.dll" + Environment.NewLine +
-                    "xdebug.mode=debug,develop" + Environment.NewLine +
-                    "xdebug.start_with_request=yes" + Environment.NewLine +
-                    "xdebug.client_port=9003" + Environment.NewLine;
-                    //"xdebug.client_host=127.0.0.1" + Environment.NewLine +
-                    //"xdebug.log_level=0" + Environment.NewLine;
+                    var phpIniPath = pathResolver.GetConfigPath(AppSettings.PackageNames.PHP, AppSettings.PHPFiles.PhpIni);
 
-                var updatedContent = phpIniContent + xdebugConfig;
-                File.WriteAllText(phpIniPath, updatedContent);
+                    // Read the current php.ini content
+                    var phpIniContent = File.ReadAllText(phpIniPath);
 
-                logger?.Report("✓ php.ini updated with Xdebug configuration");
+                    // Check if Xdebug is already configured
+                    if (phpIniContent.Contains("zend_extension") && phpIniContent.Contains("xdebug"))
+                    {
+                        logger?.Report("✓ Xdebug already configured in php.ini");
+                        return;
+                    }
+
+                    // Add Xdebug configuration to php.ini
+                    var xdebugConfig = Environment.NewLine + Environment.NewLine +
+                        "; Xdebug Configuration" + Environment.NewLine +
+                        "zend_extension=php_xdebug.dll" + Environment.NewLine +
+                        "xdebug.mode=debug,develop" + Environment.NewLine +
+                        "xdebug.start_with_request=yes" + Environment.NewLine +
+                        "xdebug.client_port=9003" + Environment.NewLine;
+                        //"xdebug.client_host=127.0.0.1" + Environment.NewLine +
+                        //"xdebug.log_level=0" + Environment.NewLine;
+
+                    var updatedContent = phpIniContent + xdebugConfig;
+                    File.WriteAllText(phpIniPath, updatedContent);
+
+                    logger?.Report("✓ php.ini updated with Xdebug configuration");
+                });
             }
         }
     }
