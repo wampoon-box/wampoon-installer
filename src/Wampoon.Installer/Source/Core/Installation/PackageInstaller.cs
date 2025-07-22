@@ -60,6 +60,9 @@ namespace Wampoon.Installer.Core.Installation
                 case AppSettings.PackageNames.PhpMyAdmin:
                     await PhpMyAdminConfigHelper.ConfigurePhpMyAdminAsync(pathResolver, progress);
                     break;
+                case AppSettings.PackageNames.Xdebug:
+                    await XdebugConfigHelper.ConfigureXdebugAsync(pathResolver, progress);
+                    break;
                 default:
                     throw new ArgumentException($"Configuration not supported for package '{packageName}'");
             }
@@ -83,6 +86,7 @@ namespace Wampoon.Installer.Core.Installation
                 case AppSettings.PackageNames.PhpMyAdmin:
                 case AppSettings.PackageNames.Dashboard:
                 case AppSettings.PackageNames.ControlPanel:
+                case AppSettings.PackageNames.Xdebug:
                     return true;
                 default:
                     return false;
@@ -149,6 +153,8 @@ namespace Wampoon.Installer.Core.Installation
                     return "Wampoon Dashboard";
                 case AppSettings.PackageNames.ControlPanel:
                     return "Wampoon Control Panel";
+                case AppSettings.PackageNames.Xdebug:
+                    return "Xdebug PHP Extension";
                 default:
                     return packageName;
             }

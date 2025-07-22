@@ -97,11 +97,18 @@ namespace Wampoon.Installer.Core
                 extractedPath = installPath;
             }
 
-            // Clean up downloaded archive to save space.
+            // Clean up downloaded archive to save space (but keep DLL files for Xdebug)
             try
             {
-                File.Delete(downloadedPath);
-                logger?.Report($"Cleaned up download file: {Path.GetFileName(downloadedPath)}");
+                if (!packageName.Equals(AppSettings.PackageNames.Xdebug, StringComparison.OrdinalIgnoreCase))
+                {
+                    File.Delete(downloadedPath);
+                    logger?.Report($"Cleaned up download file: {Path.GetFileName(downloadedPath)}");
+                }
+                else
+                {
+                    logger?.Report($"Keeping Xdebug DLL file: {Path.GetFileName(downloadedPath)}");
+                }
             }
             catch
             {
@@ -128,11 +135,17 @@ namespace Wampoon.Installer.Core
                 return Path.Combine(installPath, "temp", _packageDiscoveryService.GetPackageDirectoryName(packageName));
             }
             
+            // Xdebug extracts to temp folder for processing by config helper
+            if (packageName.Equals(AppSettings.PackageNames.Xdebug, StringComparison.OrdinalIgnoreCase))
+            {
+                return Path.Combine(installPath, "temp", _packageDiscoveryService.GetPackageDirectoryName(packageName));
+            }
+            
             // All other packages extract to apps folder
             return Path.Combine(installPath, "apps", _packageDiscoveryService.GetPackageDirectoryName(packageName));
         }
 
-        private async Task MoveControlPanelFilesToInstallDirectory(string tempPath, string installPath, IProgress<string> logger)
+        private void MoveControlPanelFilesToInstallDirectory(string tempPath, string installPath, IProgress<string> logger)
         {
             try
             {

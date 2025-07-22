@@ -41,5 +41,13 @@
     "Version": "0.1.0",
     "DownloadUrl": "https://github.com/wampoon-box/wampoon-control/releases/latest/download/wampoon-control.zip",
     "Checksum": ""
-  }
+  },
+  {
+    "PackageID": 8,
+    "Name": "Xdebug",
+    "Version": "3.4.5",
+    "DownloadUrl": "https://xdebug.org/files/php_xdebug-3.4.5-8.4-ts-vs17-x86_64.dll",
+    "Checksum": ""
+  },
+  
 ] 

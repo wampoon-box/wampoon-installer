@@ -51,6 +51,11 @@ namespace Wampoon.Installer.Core.Installation
                 await InstallPackageAsync(AppSettings.PackageNames.ControlPanel, options.InstallPath, progress, cancellationToken);
             }
 
+            if (options.InstallXdebug)
+            {
+                await InstallPackageAsync(AppSettings.PackageNames.Xdebug, options.InstallPath, progress, cancellationToken);
+            }
+
             progress?.Report("Package installation completed");
         }
 

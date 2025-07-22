@@ -59,7 +59,8 @@ namespace Wampoon.Installer.Models
         PHP = 4,
         PhpMyAdmin = 5,
         WampoonDashboard = 6,
-        WampoonControlPanel = 7
+        WampoonControlPanel = 7,
+        Xdebug = 8
     }
 
     /// <summary>

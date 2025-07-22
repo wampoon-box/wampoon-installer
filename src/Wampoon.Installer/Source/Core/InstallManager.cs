@@ -123,6 +123,7 @@ namespace Wampoon.Installer.Core
             if (options.InstallMariaDB) _selectedPackages.Add(AppSettings.PackageNames.MariaDB);
             if (options.InstallPHP) _selectedPackages.Add(AppSettings.PackageNames.PHP);
             if (options.InstallPhpMyAdmin) _selectedPackages.Add(AppSettings.PackageNames.PhpMyAdmin);
+            if (options.InstallXdebug) _selectedPackages.Add(AppSettings.PackageNames.Xdebug);
         }
 
         private async Task CreateBaseDirectoriesAsync()
@@ -154,6 +155,7 @@ namespace Wampoon.Installer.Core
             if (options.InstallPhpMyAdmin) packageCount++;
             if (options.InstallDashboard) packageCount++;
             if (options.InstallControlPanel) packageCount++;
+            if (options.InstallXdebug) packageCount++;
             
             steps += packageCount * 2; // Each package has install + configure step.
             
@@ -204,6 +206,7 @@ namespace Wampoon.Installer.Core
             if (options.InstallPhpMyAdmin) count++;
             if (options.InstallDashboard) count++;
             if (options.InstallControlPanel) count++;
+            if (options.InstallXdebug) count++;
             return count;
         }
 

@@ -35,7 +35,7 @@ namespace Wampoon.Installer.Helpers.Common
             return exists;
         }
 
-        public static async Task<bool> ValidatePackagePrerequisitesAsync(string installPath, string packageName)
+        public static bool ValidatePackagePrerequisites(string installPath, string packageName)
         {
             switch (packageName.ToLower())
             {
@@ -62,7 +62,7 @@ namespace Wampoon.Installer.Helpers.Common
             }
         }
 
-        public static async Task<bool> ValidatePackageConfigurationAsync(string installPath, string packageName)
+        public static bool ValidatePackageConfiguration(string installPath, string packageName)
         {
             switch (packageName.ToLower())
             {

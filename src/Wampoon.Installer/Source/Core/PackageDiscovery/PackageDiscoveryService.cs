@@ -48,6 +48,8 @@ namespace Wampoon.Installer.Core.PackageDiscovery
                     return PackageType.WampoonDashboard;
                 case AppSettings.PackageNames.ControlPanel:
                     return PackageType.WampoonControlPanel;
+                case AppSettings.PackageNames.Xdebug:
+                    return PackageType.Xdebug;
                 default:
                     return null;
             }
@@ -74,6 +76,7 @@ namespace Wampoon.Installer.Core.PackageDiscovery
                 case AppSettings.PackageNames.PhpMyAdmin:
                 case AppSettings.PackageNames.Dashboard:
                 case AppSettings.PackageNames.ControlPanel:
+                case AppSettings.PackageNames.Xdebug:
                     return true;
                 default:
                     return false;
@@ -103,6 +106,8 @@ namespace Wampoon.Installer.Core.PackageDiscovery
                     return "wampoon-dashboard";
                 case AppSettings.PackageNames.ControlPanel:
                     return "wampoon-control-panel";
+                case AppSettings.PackageNames.Xdebug:
+                    return "xdebug";
                 default:
                     return packageName.ToLower();
             }

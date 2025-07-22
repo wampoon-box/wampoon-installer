@@ -27,10 +27,10 @@ namespace Wampoon.Installer.Core
             _logger = LoggerFactory.Default;
         }
 
-        public async Task<List<InstallablePackage>> GetAvailablePackagesAsync()
+        public Task<List<InstallablePackage>> GetAvailablePackagesAsync()
         {
             if (_packages != null)
-                return _packages;
+                return Task.FromResult(_packages);
 
             // Try local file first for faster startup.
             _packages = LoadPackagesFromLocalFile();
@@ -53,7 +53,7 @@ namespace Wampoon.Installer.Core
                 _packages = GetFallbackPackages();
             }
 
-            return _packages;
+            return Task.FromResult(_packages);
         }
 
         private async Task<List<InstallablePackage>> LoadPackagesFromManifestAsync()

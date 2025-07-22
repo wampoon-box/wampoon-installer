@@ -24,6 +24,12 @@ namespace Wampoon.Installer.Core
             if (!File.Exists(archivePath))
                 throw new FileNotFoundException($"Archive file not found: {archivePath}");
 
+            // Handle DLL files (like Xdebug) specially - just copy them
+            if (package.ArchiveFormat?.ToLower() == "dll" || archivePath.EndsWith(".dll", StringComparison.OrdinalIgnoreCase))
+            {
+                return await HandleDllPackageAsync(package, archivePath, extractPath, cancellationToken);
+            }
+
             // Validate ZIP file integrity before attempting extraction.
             try
             {
@@ -203,6 +209,83 @@ namespace Wampoon.Installer.Core
             }
         }
 
+        private async Task<string> HandleDllPackageAsync(InstallablePackage package, string dllPath, string extractPath, CancellationToken cancellationToken)
+        {
+            try
+            {
+                OnProgressReported(new InstallationProgressEventArgs
+                {
+                    PackageName = package.Name,
+                    CurrentOperation = "Preparing DLL installation...",
+                    Stage = InstallationStage.Extracting,
+                    PercentComplete = 10
+                });
+
+                // Create the extract directory if it doesn't exist
+                if (Directory.Exists(extractPath))
+                {
+                    Directory.Delete(extractPath, true);
+                }
+                Directory.CreateDirectory(extractPath);
+
+                OnProgressReported(new InstallationProgressEventArgs
+                {
+                    PackageName = package.Name,
+                    CurrentOperation = "Copying DLL file...",
+                    Stage = InstallationStage.Extracting,
+                    PercentComplete = 50
+                });
+
+                // Copy the DLL file to the extract path
+                var fileName = Path.GetFileName(dllPath);
+                var destinationPath = Path.Combine(extractPath, fileName);
+                
+                await Task.Run(() => File.Copy(dllPath, destinationPath, overwrite: true), cancellationToken);
+
+                OnProgressReported(new InstallationProgressEventArgs
+                {
+                    PackageName = package.Name,
+                    CurrentOperation = "Validating DLL file...",
+                    Stage = InstallationStage.Validating,
+                    PercentComplete = 90
+                });
+
+                // Validate the copied file
+                if (!File.Exists(destinationPath))
+                {
+                    throw new InvalidOperationException("Failed to copy DLL file to destination");
+                }
+
+                OnProgressReported(new InstallationProgressEventArgs
+                {
+                    PackageName = package.Name,
+                    CurrentOperation = "DLL installation completed",
+                    Stage = InstallationStage.Completed,
+                    PercentComplete = 100
+                });
+
+                return extractPath;
+            }
+            catch (Exception ex)
+            {
+                ErrorLogHelper.LogExceptionInfo(ex);
+                OnProgressReported(new InstallationProgressEventArgs
+                {
+                    PackageName = package.Name,
+                    CurrentOperation = $"DLL installation failed: {ex.Message}",
+                    Stage = InstallationStage.Failed,
+                    PercentComplete = 0
+                });
+
+                if (Directory.Exists(extractPath))
+                {
+                    try { Directory.Delete(extractPath, true); } catch { }
+                }
+
+                throw new InvalidOperationException($"Failed to install DLL {package.Name}: {ex.Message}", ex);
+            }
+        }
+
         private string GetRootDirectoryName(ZipArchive archive)
         {
             string rootDir = null;
@@ -288,6 +371,9 @@ namespace Wampoon.Installer.Core
                 case PackageType.PhpMyAdmin:
                     ValidatePhpMyAdminExtraction(extractPath);
                     break;
+                case PackageType.Xdebug:
+                    ValidateXdebugExtraction(extractPath);
+                    break;
             }
             
             return Task.CompletedTask;
@@ -331,6 +417,13 @@ namespace Wampoon.Installer.Core
                 if (!FileExists(extractPath, file))
                     throw new InvalidOperationException($"phpMyAdmin validation failed: {file} not found");
             }
+        }
+
+        private void ValidateXdebugExtraction(string extractPath)
+        {
+            var dllFiles = Directory.GetFiles(extractPath, "*.dll", SearchOption.AllDirectories);
+            if (dllFiles.Length == 0)
+                throw new InvalidOperationException("Xdebug validation failed: No DLL file found");
         }
 
         private bool FileExists(string basePath, string fileName)

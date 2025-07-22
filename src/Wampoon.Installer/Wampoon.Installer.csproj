@@ -105,6 +105,7 @@
     <Compile Include="Source\Helpers\PHPConfigHelper.cs" />
     <Compile Include="Source\Helpers\PhpMyAdminConfigHelper.cs" />
     <Compile Include="Source\Helpers\UiHelper.cs" />
+    <Compile Include="Source\Helpers\XdebugConfigHelper.cs" />
     <Compile Include="Source\Models\InstallablePackage.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Source\Helpers\Logging\ErrorLogHelper.cs" />

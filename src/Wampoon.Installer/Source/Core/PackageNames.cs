@@ -40,12 +40,17 @@ namespace Wampoon.Installer.Core
             public const string ControlPanel = "wampoon-control-panel";
 
             /// <summary>
+            /// Xdebug PHP Extension package identifier.
+            /// </summary>
+            public const string Xdebug = "xdebug";
+
+            /// <summary>
             /// Gets all available package names.
             /// </summary>
             /// <returns>Array of all package names</returns>
             public static string[] GetAllPackageNames()
             {
-                return new[] { Apache, MariaDB, PHP, PhpMyAdmin, Dashboard, ControlPanel };
+                return new[] { Apache, MariaDB, PHP, PhpMyAdmin, Dashboard, ControlPanel, Xdebug };
             }
 
             /// <summary>
@@ -63,6 +68,7 @@ namespace Wampoon.Installer.Core
                     case PhpMyAdmin:
                     case Dashboard:
                     case ControlPanel:
+                    case Xdebug:
                         return true;
                     default:
                         return false;
