@@ -37,13 +37,13 @@ namespace Wampoon.Installer.Helpers
                 {
                     logger?.Report("Configuring Xdebug PHP Extension...");
 
-                    // Validate that PHP is installed
+                    // Validate that PHP is installed.
                     await ValidatePhpInstallationAsync(pathResolver, logger);
 
-                    // Move Xdebug DLL to PHP ext directory
+                    // Move Xdebug DLL to PHP ext directory.
                     await InstallXdebugDllAsync(pathResolver, logger);
 
-                    // Update php.ini to enable Xdebug
+                    // Update php.ini to enable Xdebug.
                     await UpdatePhpIniForXdebugAsync(pathResolver, logger);
 
                     logger?.Report("✓ Xdebug configuration completed successfully");
@@ -54,7 +54,7 @@ namespace Wampoon.Installer.Helpers
                     logger?.Report($"⚠️ Xdebug installation failed: {ex.Message}");
                     logger?.Report("⚠️ Xdebug can be installed manually by downloading the DLL and placing it in PHP's ext directory");
                     logger?.Report("⚠️ Visit https://xdebug.org/download for manual installation instructions");
-                    // DO NOT throw - just log the error and continue
+                    // DO NOT throw - just log the error and continue.
                 }
             }
 
@@ -76,7 +76,7 @@ namespace Wampoon.Installer.Helpers
                     throw new Exception("PHP configuration file (php.ini) not found. Please ensure PHP is properly configured.");
                 }
 
-                // Ensure PHP ext directory exists
+                // Ensure PHP ext directory exists.
                 await FileHelper.CreateDirectoryIfNotExistsAsync(phpExtDir);
 
                 logger?.Report("✓ PHP installation validated");
@@ -88,68 +88,70 @@ namespace Wampoon.Installer.Helpers
                 {
                     logger?.Report("Installing Xdebug DLL...");
 
-                    var installPath = Path.GetDirectoryName(pathResolver.GetAppsDirectory()); // Get root install path
+                    var installPath = Path.GetDirectoryName(pathResolver.GetAppsDirectory()); // Get root install path.
                     var phpExtDir = pathResolver.GetSubdirectoryPath(AppSettings.PackageNames.PHP, "ext");
                     var downloadsDir = Path.Combine(installPath, "downloads");
-                
-                logger?.Report($"DEBUG: Looking for Xdebug DLL in: {downloadsDir}");
-                logger?.Report($"DEBUG: Downloads directory exists: {Directory.Exists(downloadsDir)}");
-                
-                if (Directory.Exists(downloadsDir))
-                {
-                    var allFiles = Directory.GetFiles(downloadsDir);
-                    logger?.Report($"DEBUG: Files in downloads directory: {string.Join(", ", allFiles.Select(Path.GetFileName))}");
-                }
-                
-                // Find the downloaded Xdebug DLL file (it's downloaded as a single file, not extracted)
-                var xdebugDllFiles = Directory.GetFiles(downloadsDir, "*xdebug*.dll", SearchOption.TopDirectoryOnly);
-                
-                if (xdebugDllFiles.Length == 0)
-                {
-                    throw new Exception($"Xdebug DLL file not found in downloads directory: {downloadsDir}");
-                }
 
-                var sourceDllPath = xdebugDllFiles[0];
-                var targetDllPath = Path.Combine(phpExtDir, "php_xdebug.dll");
 
-                // Copy the DLL to PHP's ext directory
-                File.Copy(sourceDllPath, targetDllPath, overwrite: true);
 
-                logger?.Report($"✓ Xdebug DLL copied from {sourceDllPath} to {targetDllPath}");
-                
-                // Clean up: delete the downloaded DLL file and remove downloads directory if empty
-                try
-                {
-                    File.Delete(sourceDllPath);
-                    logger?.Report($"✓ Cleaned up downloaded Xdebug DLL: {Path.GetFileName(sourceDllPath)}");
-                    
-                    // Remove downloads directory if it's empty
-                    if (Directory.Exists(downloadsDir) && !Directory.EnumerateFileSystemEntries(downloadsDir).Any())
+                    /*
+                     logger?.Report($"DEBUG: Looking for Xdebug DLL in: {downloadsDir}");
+                    logger?.Report($"DEBUG: Downloads directory exists: {Directory.Exists(downloadsDir)}");
+                     if (Directory.Exists(downloadsDir))
                     {
-                        Directory.Delete(downloadsDir);
-                        logger?.Report("✓ Removed empty downloads directory");
-                    }
-                    
-                    // Clean up temp/xdebug directory
-                    var rootInstallPath = Path.GetDirectoryName(pathResolver.GetAppsDirectory());
-                    var xdebugTempDir = Path.Combine(rootInstallPath, "temp", "xdebug");
-                    if (Directory.Exists(xdebugTempDir))
+                        var allFiles = Directory.GetFiles(downloadsDir);
+                        logger?.Report($"DEBUG: Files in downloads directory: {string.Join(", ", allFiles.Select(Path.GetFileName))}");
+                    }*/
+
+                    // Find the downloaded Xdebug DLL file (it's downloaded as a single file, not extracted).
+                    var xdebugDllFiles = Directory.GetFiles(downloadsDir, "*xdebug*.dll", SearchOption.TopDirectoryOnly);
+
+                    if (xdebugDllFiles.Length == 0)
                     {
-                        Directory.Delete(xdebugTempDir, true);
-                        logger?.Report("✓ Removed temp/xdebug directory");
+                        throw new Exception($"Xdebug DLL file not found in downloads directory: {downloadsDir}");
                     }
-                    
-                    // Remove temp directory if it's empty
-                    var tempDir = Path.Combine(rootInstallPath, "temp");
-                    if (Directory.Exists(tempDir) && !Directory.EnumerateFileSystemEntries(tempDir).Any())
+
+                    var sourceDllPath = xdebugDllFiles[0];
+                    var targetDllPath = Path.Combine(phpExtDir, "php_xdebug.dll");
+
+                    // Copy the DLL to PHP's ext directory.
+                    File.Copy(sourceDllPath, targetDllPath, overwrite: true);
+
+                    logger?.Report($"✓ Xdebug DLL copied from {sourceDllPath} to {targetDllPath}");
+
+                    // Clean up: delete the downloaded DLL file and remove downloads directory if empty.
+                    try
                     {
-                        Directory.Delete(tempDir);
-                        logger?.Report("✓ Removed empty temp directory");
+                        File.Delete(sourceDllPath);
+                        logger?.Report($"✓ Cleaned up downloaded Xdebug DLL: {Path.GetFileName(sourceDllPath)}");
+
+                        // Remove downloads directory if it's empty.
+                        if (Directory.Exists(downloadsDir) && !Directory.EnumerateFileSystemEntries(downloadsDir).Any())
+                        {
+                            Directory.Delete(downloadsDir);
+                            logger?.Report("✓ Removed empty downloads directory");
+                        }
+
+                        // Clean up temp/xdebug directory.
+                        var rootInstallPath = Path.GetDirectoryName(pathResolver.GetAppsDirectory());
+                        var xdebugTempDir = Path.Combine(rootInstallPath, "temp", "xdebug");
+                        if (Directory.Exists(xdebugTempDir))
+                        {
+                            Directory.Delete(xdebugTempDir, true);
+                            logger?.Report("✓ Removed temp/xdebug directory");
+                        }
+
+                        // Remove temp directory if it's empty.
+                        var tempDir = Path.Combine(rootInstallPath, "temp");
+                        if (Directory.Exists(tempDir) && !Directory.EnumerateFileSystemEntries(tempDir).Any())
+                        {
+                            Directory.Delete(tempDir);
+                            logger?.Report("✓ Removed empty temp directory");
+                        }
                     }
-                }
-                catch (Exception cleanupEx)
-                {
-                        // Don't fail if cleanup fails, just log it
+                    catch (Exception cleanupEx)
+                    {
+                        // Don't fail if cleanup fails, just log it.
                         logger?.Report($"Note: Could not clean up download files: {cleanupEx.Message}");
                     }
                 });
@@ -163,25 +165,25 @@ namespace Wampoon.Installer.Helpers
 
                     var phpIniPath = pathResolver.GetConfigPath(AppSettings.PackageNames.PHP, AppSettings.PHPFiles.PhpIni);
 
-                    // Read the current php.ini content
+                    // Read the current php.ini content.
                     var phpIniContent = File.ReadAllText(phpIniPath);
 
-                    // Check if Xdebug is already configured
+                    // Check if Xdebug is already configured.
                     if (phpIniContent.Contains("zend_extension") && phpIniContent.Contains("xdebug"))
                     {
                         logger?.Report("✓ Xdebug already configured in php.ini");
                         return;
                     }
 
-                    // Add Xdebug configuration to php.ini
+                    // Add Xdebug configuration to php.ini.
                     var xdebugConfig = Environment.NewLine + Environment.NewLine +
                         "; Xdebug Configuration" + Environment.NewLine +
                         "zend_extension=php_xdebug.dll" + Environment.NewLine +
                         "xdebug.mode=debug,develop" + Environment.NewLine +
                         "xdebug.start_with_request=yes" + Environment.NewLine +
                         "xdebug.client_port=9003" + Environment.NewLine;
-                        //"xdebug.client_host=127.0.0.1" + Environment.NewLine +
-                        //"xdebug.log_level=0" + Environment.NewLine;
+                    //"xdebug.client_host=127.0.0.1" + Environment.NewLine +
+                    //"xdebug.log_level=0" + Environment.NewLine;
 
                     var updatedContent = phpIniContent + xdebugConfig;
                     File.WriteAllText(phpIniPath, updatedContent);
