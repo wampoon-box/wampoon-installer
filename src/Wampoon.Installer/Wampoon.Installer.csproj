@@ -171,9 +171,7 @@
     <Content Include="Data\packagesInfo.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="wampoon-installer.ico">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
+    <Content Include="wampoon-installer.ico" />
     <None Include="config-templates\httpd.conf.template">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

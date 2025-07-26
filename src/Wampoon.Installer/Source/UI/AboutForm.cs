@@ -19,23 +19,23 @@ namespace Wampoon.Installer.UI
             Text = $"About {AppConstants.APP_NAME}";
             appNameLabel.Text = AppConstants.APP_NAME;
             
-            // Display the current installer version
-            var version = UiHelper.GetInstallerVersion();
+            // Display the current installer version.            
+            var version = UiHelper.GetFormattedInstallerVersion();
             appVersionLabel.Text = $"Version {version}";
             
             copyrightLabel.Text = "Copyright © 2025 - frostybee";
             descriptionLabel.Text = "An installer for setting up WAMPoon, a local development environment with Apache HTTP Server, MariaDB, PHP, and phpMyAdmin.";
             
-            // Load license and credits information
+            // Load license and credits information.
             LoadCreditsAndLicense();
         }
 
         private void LoadCreditsAndLicense()
         {
-            // License information
+            // License information.
             licenseLabel.Text = "Licensed under the MIT License";
             
-            // Dependencies and credits
+            // Dependencies and credits.
             dependenciesLabel.Text = "Dependencies: Newtonsoft.Json by James Newton-King\n" +
                                    "Special thanks to the open-source community";
         }

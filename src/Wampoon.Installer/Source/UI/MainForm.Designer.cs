@@ -57,6 +57,7 @@ namespace Wampoon.Installer.UI
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this._componentsGroup = new System.Windows.Forms.GroupBox();
             this._apacheCheckBox = new System.Windows.Forms.CheckBox();
             this._mariadbCheckBox = new System.Windows.Forms.CheckBox();
@@ -177,8 +178,6 @@ namespace Wampoon.Installer.UI
             // _xdebugCheckBox
             // 
             this._xdebugCheckBox.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(249)))), ((int)(((byte)(250)))), ((int)(((byte)(251)))));
-            this._xdebugCheckBox.Checked = true;
-            this._xdebugCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
             this._xdebugCheckBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this._xdebugCheckBox.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
             this._xdebugCheckBox.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(55)))), ((int)(((byte)(65)))), ((int)(((byte)(81)))));
@@ -468,6 +467,7 @@ namespace Wampoon.Installer.UI
             this.Controls.Add(this._progressLabel);
             this.Controls.Add(this._progressBar);
             this.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MinimumSize = new System.Drawing.Size(840, 736);
             this.Name = "MainForm";
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Show;
