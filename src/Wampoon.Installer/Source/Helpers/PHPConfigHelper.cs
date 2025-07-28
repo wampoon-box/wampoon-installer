@@ -46,6 +46,9 @@ namespace Wampoon.Installer.Helpers
                 
                 // Update php.ini with correct extension_dir path.
                 await UpdatePhpIniExtensionDirAsync(pathResolver, logger);
+                
+                // Download curl certificate bundle.
+                await DownloadCurlCertificateAsync(pathResolver, logger);
             }
 
             private async Task DownloadBrowscapFileAsync(IPathResolver pathResolver, IProgress<string> logger)
@@ -154,6 +157,51 @@ namespace Wampoon.Installer.Helpers
             protected override string GetTemplateFilePattern()
             {
                 return "*.ini";
+            }
+
+            private async Task DownloadCurlCertificateAsync(IPathResolver pathResolver, IProgress<string> logger)
+            {
+                const string curlCertUrl = "https://curl.se/ca/cacert.pem";
+                const string targetFileName = "curl-ca-bundle.crt";
+                
+                try
+                {
+                    logger?.Report("Downloading curl certificate bundle...");
+                    
+                    // Get the PHP extras/ssl directory path.
+                    var phpExtrasDir = pathResolver.GetSubdirectoryPath(AppSettings.PackageNames.PHP, "extras");
+                    var sslDir = Path.Combine(phpExtrasDir, "ssl");
+                    var targetPath = Path.Combine(sslDir, targetFileName);
+                    
+                    // Ensure the ssl directory exists.
+                    await FileHelper.CreateDirectoryIfNotExistsAsync(sslDir);
+                    
+                    // Download the certificate file.
+                    using (var httpClient = new HttpClient())
+                    {
+                        httpClient.Timeout = TimeSpan.FromMinutes(5);
+                        httpClient.DefaultRequestHeaders.Add("User-Agent", AppConstants.USER_AGENT);
+                        
+                        using (var response = await httpClient.GetAsync(curlCertUrl))
+                        {
+                            response.EnsureSuccessStatusCode();
+                            
+                            var content = await response.Content.ReadAsByteArrayAsync();
+                            using (var fileStream = new FileStream(targetPath, FileMode.Create, FileAccess.Write))
+                            {
+                                await fileStream.WriteAsync(content, 0, content.Length);
+                            }
+                        }
+                    }
+                    
+                    logger?.Report($"✓ Curl certificate bundle downloaded to: {targetPath}");
+                }
+                catch (Exception ex)
+                {
+                    ErrorLogHelper.LogExceptionInfo(ex);
+                    logger?.Report($"✗ Failed to download curl certificate bundle: {ex.Message}");
+                    throw;
+                }
             }
         }
     }
