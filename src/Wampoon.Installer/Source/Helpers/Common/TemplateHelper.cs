@@ -6,7 +6,7 @@ namespace Wampoon.Installer.Helpers.Common
 {
     public static class TemplateHelper
     {
-        public static async Task CopyTemplateWithVersionAsync(string templatePath, string targetPath)
+        public static void CopyTemplateWithVersion(string templatePath, string targetPath)
         {
             if (!File.Exists(templatePath))
                 throw new FileNotFoundException($"Template file not found: {templatePath}");

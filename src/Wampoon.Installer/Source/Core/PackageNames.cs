@@ -40,12 +40,17 @@ namespace Wampoon.Installer.Core
             public const string ControlPanel = "wampoon-control-panel";
 
             /// <summary>
+            /// Xdebug PHP Extension package identifier.
+            /// </summary>
+            public const string Xdebug = "xdebug";
+
+            /// <summary>
             /// Gets all available package names.
             /// </summary>
             /// <returns>Array of all package names</returns>
             public static string[] GetAllPackageNames()
             {
-                return new[] { Apache, MariaDB, PHP, PhpMyAdmin, Dashboard, ControlPanel };
+                return new[] { Apache, MariaDB, PHP, PhpMyAdmin, Dashboard, ControlPanel, Xdebug };
             }
 
             /// <summary>
@@ -63,6 +68,7 @@ namespace Wampoon.Installer.Core
                     case PhpMyAdmin:
                     case Dashboard:
                     case ControlPanel:
+                    case Xdebug:
                         return true;
                     default:
                         return false;
@@ -80,15 +86,15 @@ namespace Wampoon.Installer.Core
 
             // Configuration files.
             public const string HttpdConf = "httpd.conf";
-            public const string WampoonCustomPathConf = "wampoon-custom-path.conf";
-            public const string WampoonVhostsConf = "wampoon-vhosts.conf";
+            public const string WampoonCustomPathConf = "httpd-wampoon-variables.conf";
+            public const string WampoonVhostsConf = "httpd-wampoon-vhosts.conf";
 
             // Template names (used for TemplateHelper.GetTemplatePath)
             public static class Templates
             {
                 public const string HttpdConf = "httpd.conf";
-                public const string WampoonCustomPathConf = "wampoon-custom-path.conf";
-                public const string WampoonVhostsConf = "wampoon-vhosts.conf";
+                public const string WampoonCustomPathConf = "httpd-wampoon-variables.conf";
+                public const string WampoonVhostsConf = "httpd-wampoon-vhosts.conf";
             }
         }
 

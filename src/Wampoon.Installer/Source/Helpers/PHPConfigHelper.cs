@@ -51,7 +51,7 @@ namespace Wampoon.Installer.Helpers
             private async Task DownloadBrowscapFileAsync(IPathResolver pathResolver, IProgress<string> logger)
             {
                 const string browscapUrl = "https://browscap.org/stream?q=Lite_PHP_BrowsCapINI";
-                const string targetFileName = "browscap.ini";
+                const string targetFileName = "lite_php_browscap.ini";
                 
                 try
                 {

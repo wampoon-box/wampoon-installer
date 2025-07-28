@@ -11,6 +11,7 @@ namespace Wampoon.Installer.Core
         public bool InstallPhpMyAdmin { get; set; }
         public bool InstallDashboard { get; set; }
         public bool InstallControlPanel { get; set; }
+        public bool InstallXdebug { get; set; }
 
         public InstallOptions()
         {
@@ -21,6 +22,7 @@ namespace Wampoon.Installer.Core
             InstallPhpMyAdmin = true;
             InstallDashboard = true;
             InstallControlPanel = true;
+            InstallXdebug = false;
         }
 
         public string[] GetSelectedPackages()
@@ -33,6 +35,7 @@ namespace Wampoon.Installer.Core
             if (InstallPhpMyAdmin) packages.Add(AppSettings.PackageNames.PhpMyAdmin);
             if (InstallDashboard) packages.Add(AppSettings.PackageNames.Dashboard);
             if (InstallControlPanel) packages.Add(AppSettings.PackageNames.ControlPanel);
+            if (InstallXdebug) packages.Add(AppSettings.PackageNames.Xdebug);
             
             return packages.ToArray();
         }

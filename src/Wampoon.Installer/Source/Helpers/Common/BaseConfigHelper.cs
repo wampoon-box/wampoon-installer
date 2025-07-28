@@ -164,7 +164,7 @@ namespace Wampoon.Installer.Helpers.Common
             var templatePath = TemplateHelper.GetTemplatePath(TemplateFileName);
             var targetPath = pathResolver.GetConfigPath(PackageName, ConfigFileName);
 
-            await TemplateHelper.CopyTemplateWithVersionAsync(templatePath, targetPath);
+            TemplateHelper.CopyTemplateWithVersion(templatePath, targetPath);
 
             await ConfigureAdditionalTemplatesAsync(pathResolver, progressReporter);
 
@@ -177,7 +177,7 @@ namespace Wampoon.Installer.Helpers.Common
             await Task.CompletedTask;
         }
 
-        protected virtual async Task<bool> ValidateConfigurationAsync(IPathResolver pathResolver, IProgress<string> progressReporter)
+        protected virtual Task<bool> ValidateConfigurationAsync(IPathResolver pathResolver, IProgress<string> progressReporter)
         {
             progressReporter?.Report($"Validating {DisplayName} configuration...");
 
@@ -189,7 +189,7 @@ namespace Wampoon.Installer.Helpers.Common
                 progressReporter?.Report($"✗ {DisplayName} configuration not found at: {configPath}");
             }
 
-            return isValid;
+            return Task.FromResult(isValid);
         }
 
         protected virtual string GetBinaryFilePattern()

@@ -19,7 +19,6 @@ namespace Wampoon.Installer.Core
         public event EventHandler<EventArgs> InstallationCompleted;
 
         private readonly PackageManager _packageManager;
-        private readonly IInstallationCoordinator _installationCoordinator;
         private readonly IInstallationValidator _installationValidator;
         private readonly List<string> _selectedPackages;
         private int _totalSteps;
@@ -123,6 +122,7 @@ namespace Wampoon.Installer.Core
             if (options.InstallMariaDB) _selectedPackages.Add(AppSettings.PackageNames.MariaDB);
             if (options.InstallPHP) _selectedPackages.Add(AppSettings.PackageNames.PHP);
             if (options.InstallPhpMyAdmin) _selectedPackages.Add(AppSettings.PackageNames.PhpMyAdmin);
+            if (options.InstallXdebug) _selectedPackages.Add(AppSettings.PackageNames.Xdebug);
         }
 
         private async Task CreateBaseDirectoriesAsync()
@@ -154,6 +154,7 @@ namespace Wampoon.Installer.Core
             if (options.InstallPhpMyAdmin) packageCount++;
             if (options.InstallDashboard) packageCount++;
             if (options.InstallControlPanel) packageCount++;
+            if (options.InstallXdebug) packageCount++;
             
             steps += packageCount * 2; // Each package has install + configure step.
             
@@ -204,6 +205,7 @@ namespace Wampoon.Installer.Core
             if (options.InstallPhpMyAdmin) count++;
             if (options.InstallDashboard) count++;
             if (options.InstallControlPanel) count++;
+            if (options.InstallXdebug) count++;
             return count;
         }
 
@@ -266,17 +268,19 @@ namespace Wampoon.Installer.Core
 
         private async Task CleanupDownloadsFolderAsync(string installPath)
         {
-            var downloadsPath = Path.Combine(installPath, "downloads");
-            
-            if (Directory.Exists(downloadsPath))
+            await Task.Run(() =>
             {
-                try
+                var downloadsPath = Path.Combine(installPath, "downloads");
+                
+                if (Directory.Exists(downloadsPath))
                 {
-                    ReportProgress("Cleaning up downloads folder...", GetProgressPercentage(), "Cleanup");
-                    
-                    // Delete all files and subdirectories in the downloads folder.
-                    var files = Directory.GetFiles(downloadsPath, "*", SearchOption.AllDirectories);
-                    var directories = Directory.GetDirectories(downloadsPath, "*", SearchOption.AllDirectories);
+                    try
+                    {
+                        ReportProgress("Cleaning up downloads folder...", GetProgressPercentage(), "Cleanup");
+                        
+                        // Delete all files and subdirectories in the downloads folder.
+                        var files = Directory.GetFiles(downloadsPath, "*", SearchOption.AllDirectories);
+                        var directories = Directory.GetDirectories(downloadsPath, "*", SearchOption.AllDirectories);
                     
                     // Delete all files.
                     foreach (var file in files)
@@ -314,9 +318,10 @@ namespace Wampoon.Installer.Core
                 {
                     ErrorLogHelper.LogExceptionInfo(ex);
                     // Log the error but don't fail the installation.
-                    ReportProgress($"Warning: Could not fully clean up downloads folder: {ex.Message}", GetProgressPercentage(), "Cleanup");
+                        ReportProgress($"Warning: Could not fully clean up downloads folder: {ex.Message}", GetProgressPercentage(), "Cleanup");
+                    }
                 }
-            }
+            });
         }
 
 

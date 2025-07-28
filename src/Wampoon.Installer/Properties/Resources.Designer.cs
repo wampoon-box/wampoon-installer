@@ -59,5 +59,15 @@ namespace Wampoon.Installer.Properties {
                 resourceCulture = value;
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] wampoon_installer {
+            get {
+                object obj = ResourceManager.GetObject("wampoon-installer", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
     }
 }

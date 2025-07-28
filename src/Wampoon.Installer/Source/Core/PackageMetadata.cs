@@ -79,6 +79,18 @@ namespace Wampoon.Installer.Core
                     ArchiveFormat = "zip",
                     Dependencies = new List<PackageType>()
                 }
+            },
+            {
+                PackageType.Xdebug, new PackageMetadataInfo
+                {
+                    Type = PackageType.Xdebug,
+                    ServerName = "Xdebug",
+                    EstimatedSize = 500000,
+                    Description = "Xdebug - PHP extension for debugging and profiling.",
+                    InstallPath = "apps/php/ext",
+                    ArchiveFormat = "dll",
+                    Dependencies = new List<PackageType> { PackageType.PHP }
+                }
             }
         };
 

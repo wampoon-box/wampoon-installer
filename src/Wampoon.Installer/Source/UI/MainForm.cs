@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
@@ -28,6 +29,17 @@ namespace Wampoon.Installer.UI
         public MainForm()
         {
             InitializeComponent();
+            
+            // Set form icon
+            try
+            {
+                this.Icon = new Icon("wampoon-installer.ico");
+            }
+            catch
+            {
+                // Icon file not found, continue without icon
+            }
+            
             InitializeBanner();
             InitializeInstallManager();
         }
@@ -112,7 +124,7 @@ namespace Wampoon.Installer.UI
             {
                 // Validate at least one component is selected.
                 if (!_apacheCheckBox.Checked && !_mariadbCheckBox.Checked && 
-                    !_phpCheckBox.Checked && !_phpmyadminCheckBox.Checked)
+                    !_phpCheckBox.Checked && !_phpmyadminCheckBox.Checked && !_xdebugCheckBox.Checked)
                 {
                     MessageBox.Show("Please select at least one component to install.", 
                         "No Components Selected", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -124,6 +136,25 @@ namespace Wampoon.Installer.UI
                 {
                     MessageBox.Show("Please specify an installation directory.", 
                         "Invalid Path", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                // Show confirmation dialog.
+                var selectedComponents = new List<string>();
+                if (_apacheCheckBox.Checked) selectedComponents.Add("Apache HTTP Server");
+                if (_mariadbCheckBox.Checked) selectedComponents.Add("MariaDB Database Server");
+                if (_phpCheckBox.Checked) selectedComponents.Add("PHP Scripting Language");
+                if (_phpmyadminCheckBox.Checked) selectedComponents.Add("phpMyAdmin Database Manager");
+                if (_xdebugCheckBox.Checked) selectedComponents.Add("Xdebug PHP Extension");
+
+                var componentsText = string.Join("\n• ", selectedComponents);
+                var confirmationMessage = $"Are you sure you want to install the following components?\n\n• {componentsText}\n\nInstallation Path: {_installPathTextBox.Text}";
+                
+                var confirmResult = MessageBox.Show(confirmationMessage, 
+                    "Confirm Installation", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                
+                if (confirmResult != DialogResult.Yes)
+                {
                     return;
                 }
 
@@ -143,7 +174,8 @@ namespace Wampoon.Installer.UI
                     InstallApache = _apacheCheckBox.Checked,
                     InstallMariaDB = _mariadbCheckBox.Checked,
                     InstallPHP = _phpCheckBox.Checked,
-                    InstallPhpMyAdmin = _phpmyadminCheckBox.Checked
+                    InstallPhpMyAdmin = _phpmyadminCheckBox.Checked,
+                    InstallXdebug = _xdebugCheckBox.Checked
                 };
 
                 // Start installation.
@@ -444,6 +476,7 @@ namespace Wampoon.Installer.UI
             _mariadbCheckBox.Text = "🗄️ MariaDB Database Server";
             _phpCheckBox.Text = "🐘 PHP Scripting Language";
             _phpmyadminCheckBox.Text = "🔧 phpMyAdmin Database Manager";
+            _xdebugCheckBox.Text = "🐛 Xdebug PHP Extension";
         }
 
         private async void UpdateComponentVersions()
@@ -460,7 +493,8 @@ namespace Wampoon.Installer.UI
                         _packageDiscoveryService.GetPackageByNameAsync(AppSettings.PackageNames.Apache),
                         _packageDiscoveryService.GetPackageByNameAsync(AppSettings.PackageNames.MariaDB),
                         _packageDiscoveryService.GetPackageByNameAsync(AppSettings.PackageNames.PHP),
-                        _packageDiscoveryService.GetPackageByNameAsync(AppSettings.PackageNames.PhpMyAdmin)
+                        _packageDiscoveryService.GetPackageByNameAsync(AppSettings.PackageNames.PhpMyAdmin),
+                        _packageDiscoveryService.GetPackageByNameAsync(AppSettings.PackageNames.Xdebug)
                     };
 
                     return await Task.WhenAll(tasks);
@@ -481,15 +515,16 @@ namespace Wampoon.Installer.UI
                 var mariadbPackage = packages[1];
                 var phpPackage = packages[2];
                 var phpmyadminPackage = packages[3];
+                var xdebugPackage = packages[4];
 
                 // Update UI on the main thread
                 if (InvokeRequired)
                 {
-                    Invoke(new Action(() => UpdateComponentTextWithVersions(apachePackage, mariadbPackage, phpPackage, phpmyadminPackage)));
+                    Invoke(new Action(() => UpdateComponentTextWithVersions(apachePackage, mariadbPackage, phpPackage, phpmyadminPackage, xdebugPackage)));
                 }
                 else
                 {
-                    UpdateComponentTextWithVersions(apachePackage, mariadbPackage, phpPackage, phpmyadminPackage);
+                    UpdateComponentTextWithVersions(apachePackage, mariadbPackage, phpPackage, phpmyadminPackage, xdebugPackage);
                 }
             }
             catch (Exception ex)
@@ -501,7 +536,7 @@ namespace Wampoon.Installer.UI
             }
         }
 
-        private void UpdateComponentTextWithVersions(InstallablePackage apachePackage, InstallablePackage mariadbPackage, InstallablePackage phpPackage, InstallablePackage phpmyadminPackage)
+        private void UpdateComponentTextWithVersions(InstallablePackage apachePackage, InstallablePackage mariadbPackage, InstallablePackage phpPackage, InstallablePackage phpmyadminPackage, InstallablePackage xdebugPackage)
         {
             if (apachePackage != null)
                 _apacheCheckBox.Text = $"🌐 Apache HTTP Server (v{apachePackage.Version})";
@@ -514,6 +549,9 @@ namespace Wampoon.Installer.UI
                 
             if (phpmyadminPackage != null)
                 _phpmyadminCheckBox.Text = $"🔧 phpMyAdmin Database Manager (v{phpmyadminPackage.Version})";
+                
+            if (xdebugPackage != null)
+                _xdebugCheckBox.Text = $"🐛 Xdebug PHP Extension (v{xdebugPackage.Version})";
         }
     }
 }
