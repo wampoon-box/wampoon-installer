@@ -2,8 +2,8 @@
   {
     "PackageID": 1,
     "Name": "Apache HTTP Server",
-    "Version": "2.4.63",
-    "DownloadUrl": "https://www.apachelounge.com/download/VS17/binaries/httpd-2.4.63-250207-win64-VS17.zip",
+    "Version": "2.4.65",
+    "DownloadUrl": "https://www.apachelounge.com/download/VS17/binaries/httpd-2.4.65-250724-Win64-VS17.zip",
     "Checksum": ""
   },
   {

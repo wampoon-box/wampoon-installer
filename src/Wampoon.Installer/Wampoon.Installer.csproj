@@ -147,10 +147,10 @@
     <EmbeddedResource Include="Source\UI\MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
-    <None Include="config-templates\wampoon-custom-path.conf.template">
+    <None Include="config-templates\httpd-wampoon-variables.conf.template">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="config-templates\wampoon-vhosts.conf.template">
+    <None Include="config-templates\httpd-wampoon-vhosts.conf.template">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Properties\Settings.settings">

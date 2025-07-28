@@ -86,15 +86,15 @@ namespace Wampoon.Installer.Core
 
             // Configuration files.
             public const string HttpdConf = "httpd.conf";
-            public const string WampoonCustomPathConf = "wampoon-custom-path.conf";
-            public const string WampoonVhostsConf = "wampoon-vhosts.conf";
+            public const string WampoonCustomPathConf = "httpd-wampoon-variables.conf";
+            public const string WampoonVhostsConf = "httpd-wampoon-vhosts.conf";
 
             // Template names (used for TemplateHelper.GetTemplatePath)
             public static class Templates
             {
                 public const string HttpdConf = "httpd.conf";
-                public const string WampoonCustomPathConf = "wampoon-custom-path.conf";
-                public const string WampoonVhostsConf = "wampoon-vhosts.conf";
+                public const string WampoonCustomPathConf = "httpd-wampoon-variables.conf";
+                public const string WampoonVhostsConf = "httpd-wampoon-vhosts.conf";
             }
         }
 
