@@ -371,9 +371,12 @@ namespace Wampoon.Installer.Core
                 if (files.Length > 0 || directories.Length > 0)
                 {
                     throw new InvalidOperationException(
-                        $"The installation directory '{installPath}' is not empty. " +
-                        "To prevent accidental data loss, Wampoon can only be installed in an empty directory. " +
-                        "Please choose an empty directory or manually clean the current directory before proceeding.");
+                        $"The installation directory '{installPath}' is not empty but appears safe to clean. " +
+                        "The directory contains files that don't appear to be important user data.\n\n" +
+                        "To proceed with installation:\n" +
+                        "1. Choose an empty directory, OR\n" +
+                        "2. Manually delete the contents of this directory, OR\n" +
+                        "3. Contact support to enable automatic directory cleaning.");
                 }
             });
         }
