@@ -91,6 +91,9 @@ namespace Wampoon.Installer.Core
                 // Clean up downloads folder.
                 await CleanupDownloadsFolderAsync(options.InstallPath);
 
+                // Copy LICENSE.md to installation directory.
+                await CopyLicenseFileAsync(options.InstallPath);
+
                 // Final validation.
                 var isValid = await _installationValidator.ValidateCompleteInstallationAsync(options);
                 if (!isValid)
@@ -324,6 +327,34 @@ namespace Wampoon.Installer.Core
             });
         }
 
+        private async Task CopyLicenseFileAsync(string installPath)
+        {
+            await Task.Run(() =>
+            {
+                try
+                {
+                    ReportProgress("Copying LICENSE.md file...", GetProgressPercentage(), "License Setup");
+                    
+                    var sourceLicensePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "config-templates", "LICENSE.md");
+                    var destinationLicensePath = Path.Combine(installPath, "LICENSE.md");
+                    
+                    if (File.Exists(sourceLicensePath))
+                    {
+                        File.Copy(sourceLicensePath, destinationLicensePath, true);
+                        ReportProgress("LICENSE.md file copied successfully", GetProgressPercentage(), "License Setup");
+                    }
+                    else
+                    {
+                        ReportProgress("Warning: LICENSE.md template file not found", GetProgressPercentage(), "License Setup");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    ErrorLogHelper.LogExceptionInfo(ex);
+                    ReportProgress($"Warning: Could not copy LICENSE.md file: {ex.Message}", GetProgressPercentage(), "License Setup");
+                }
+            });
+        }
 
         private async Task ValidateEmptyInstallationDirectoryAsync(string installPath)
         {
