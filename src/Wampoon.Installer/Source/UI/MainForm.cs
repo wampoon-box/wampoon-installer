@@ -83,7 +83,6 @@ namespace Wampoon.Installer.UI
             _packageSourceComboBox.Items.Add(new PackageSourceItem(PackageSource.Auto));
             _packageSourceComboBox.Items.Add(new PackageSourceItem(PackageSource.LocalOnly));
             _packageSourceComboBox.Items.Add(new PackageSourceItem(PackageSource.WebOnly));
-            _packageSourceComboBox.Items.Add(new PackageSourceItem(PackageSource.FallbackOnly));
 
             // Load user's preferred package source
             var userSettings = UserSettings.Instance;
@@ -598,7 +597,6 @@ namespace Wampoon.Installer.UI
                 // Save user preference
                 var userSettings = UserSettings.Instance;
                 userSettings.PackageSource = selectedItem.Source;
-                userSettings.Save();
                 
                 // Reload packages when source changes
                 _ = Task.Run(async () =>

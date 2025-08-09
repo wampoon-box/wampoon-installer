@@ -71,9 +71,6 @@ namespace Wampoon.Installer.Core
                     }
                     break;
 
-                case PackageSource.FallbackOnly:
-                    _packages = GetFallbackPackages();
-                    break;
 
                 case PackageSource.Auto:
                 default:

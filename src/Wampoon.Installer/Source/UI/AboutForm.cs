@@ -24,7 +24,7 @@ namespace Wampoon.Installer.UI
             appVersionLabel.Text = $"Version {version}";
             
             copyrightLabel.Text = "Copyright © 2025 - frostybee";
-            descriptionLabel.Text = "An installer for setting up WAMPoon, a local development environment with Apache HTTP Server, MariaDB, PHP, and phpMyAdmin.";
+            descriptionLabel.Text = "An installer for setting up Wampoon, a local development environment with Apache HTTP Server, MariaDB, PHP, and phpMyAdmin.";
             
             // Load license and credits information.
             LoadCreditsAndLicense();

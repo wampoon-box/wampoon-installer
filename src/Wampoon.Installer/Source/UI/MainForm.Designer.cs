@@ -206,7 +206,7 @@ namespace Wampoon.Installer.UI
             this._packageSourceGroup.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this._packageSourceGroup.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
             this._packageSourceGroup.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(71)))), ((int)(((byte)(85)))), ((int)(((byte)(105)))));
-            this._packageSourceGroup.Location = new System.Drawing.Point(20, 90);
+            this._packageSourceGroup.Location = new System.Drawing.Point(20, 84);
             this._packageSourceGroup.Name = "_packageSourceGroup";
             this._packageSourceGroup.Padding = new System.Windows.Forms.Padding(15);
             this._packageSourceGroup.Size = new System.Drawing.Size(810, 90);
@@ -466,13 +466,13 @@ namespace Wampoon.Installer.UI
             this._bannerPanel.Controls.Add(this._bannerSubtitle);
             this._bannerPanel.Location = new System.Drawing.Point(0, 0);
             this._bannerPanel.Name = "_bannerPanel";
-            this._bannerPanel.Size = new System.Drawing.Size(934, 80);
+            this._bannerPanel.Size = new System.Drawing.Size(934, 72);
             this._bannerPanel.TabIndex = 8;
             // 
             // _bannerIcon
             // 
             this._bannerIcon.BackColor = System.Drawing.Color.Transparent;
-            this._bannerIcon.Location = new System.Drawing.Point(30, 20);
+            this._bannerIcon.Location = new System.Drawing.Point(30, 14);
             this._bannerIcon.Name = "_bannerIcon";
             this._bannerIcon.Size = new System.Drawing.Size(40, 40);
             this._bannerIcon.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
@@ -485,11 +485,11 @@ namespace Wampoon.Installer.UI
             this._bannerTitle.BackColor = System.Drawing.Color.Transparent;
             this._bannerTitle.Font = new System.Drawing.Font("Segoe UI", 18F, System.Drawing.FontStyle.Bold);
             this._bannerTitle.ForeColor = System.Drawing.Color.White;
-            this._bannerTitle.Location = new System.Drawing.Point(85, 15);
+            this._bannerTitle.Location = new System.Drawing.Point(85, 7);
             this._bannerTitle.Name = "_bannerTitle";
-            this._bannerTitle.Size = new System.Drawing.Size(236, 32);
+            this._bannerTitle.Size = new System.Drawing.Size(232, 32);
             this._bannerTitle.TabIndex = 0;
-            this._bannerTitle.Text = "WAMPoon Installer";
+            this._bannerTitle.Text = "Wampoon Installer";
             // 
             // _bannerSubtitle
             // 
@@ -497,11 +497,11 @@ namespace Wampoon.Installer.UI
             this._bannerSubtitle.BackColor = System.Drawing.Color.Transparent;
             this._bannerSubtitle.Font = new System.Drawing.Font("Segoe UI", 10F);
             this._bannerSubtitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(219)))), ((int)(((byte)(234)))), ((int)(((byte)(254)))));
-            this._bannerSubtitle.Location = new System.Drawing.Point(87, 47);
+            this._bannerSubtitle.Location = new System.Drawing.Point(87, 39);
             this._bannerSubtitle.Name = "_bannerSubtitle";
-            this._bannerSubtitle.Size = new System.Drawing.Size(436, 19);
+            this._bannerSubtitle.Size = new System.Drawing.Size(434, 19);
             this._bannerSubtitle.TabIndex = 1;
-            this._bannerSubtitle.Text = "Local Web Development Stack - Apache, MariaDB, PHP, phpMyAdmin";
+            this._bannerSubtitle.Text = "Local Web Development Stack (Apache, MariaDB, PHP, phpMyAdmin)";
             // 
             // MainForm
             // 
@@ -525,7 +525,7 @@ namespace Wampoon.Installer.UI
             this.Name = "MainForm";
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Show;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "WAMPoon Installer";
+            this.Text = "Wampoon Installer";
             this._componentsGroup.ResumeLayout(false);
             this._packageSourceGroup.ResumeLayout(false);
             this._pathGroup.ResumeLayout(false);

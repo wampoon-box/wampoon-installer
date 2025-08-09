@@ -6,7 +6,7 @@ namespace Wampoon.Installer.Core
     public enum PackageSource
     {
         /// <summary>
-        /// Automatically determine source: Local file first, then web manifest, then fallback.
+        /// Automatically determine source: Local file first, then web manifest.
         /// </summary>
         Auto = 0,
         
@@ -18,12 +18,7 @@ namespace Wampoon.Installer.Core
         /// <summary>
         /// Use only web manifest from GitHub for latest packages.
         /// </summary>
-        WebOnly = 2,
-        
-        /// <summary>
-        /// Use hardcoded fallback packages only (emergency mode).
-        /// </summary>
-        FallbackOnly = 3
+        WebOnly = 2
     }
     
     /// <summary>
@@ -36,13 +31,11 @@ namespace Wampoon.Installer.Core
             switch (source)
             {
                 case PackageSource.Auto:
-                    return "🔄 Auto (Local → Web → Fallback)";
+                    return "🔄 Auto (Local → Web)";
                 case PackageSource.LocalOnly:
                     return "📁 Local File Only (Version Control)";
                 case PackageSource.WebOnly:
                     return "🌐 Web Manifest Only (Latest Versions)";
-                case PackageSource.FallbackOnly:
-                    return "⚠️ Fallback Only (Emergency Mode)";
                 default:
                     return source.ToString();
             }
@@ -53,13 +46,11 @@ namespace Wampoon.Installer.Core
             switch (source)
             {
                 case PackageSource.Auto:
-                    return "Tries local file first for fast startup, then web for updates, with fallback as safety net.";
+                    return "Tries local file first for fast startup, then web for updates.";
                 case PackageSource.LocalOnly:
                     return "Uses only the local packagesInfo.json file. Allows you to control exact package versions.";
                 case PackageSource.WebOnly:
                     return "Downloads package information from GitHub. Always gets the latest package versions.";
-                case PackageSource.FallbackOnly:
-                    return "Uses only embedded package information. Use when offline or having connectivity issues.";
                 default:
                     return "";
             }
