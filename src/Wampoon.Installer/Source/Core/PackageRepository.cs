@@ -27,33 +27,76 @@ namespace Wampoon.Installer.Core
             _logger = LoggerFactory.Default;
         }
 
-        public Task<List<InstallablePackage>> GetAvailablePackagesAsync()
+        public async Task<List<InstallablePackage>> GetAvailablePackagesAsync()
         {
-            if (_packages != null)
-                return Task.FromResult(_packages);
+            return await GetAvailablePackagesAsync(PackageSource.Auto);
+        }
 
-            // Try local file first for faster startup.
-            _packages = LoadPackagesFromLocalFile();
-            
-            // If local file didn't have valid packages, try remote manifest.
-            if (_packages == null || !_packages.Any())
+        public async Task<List<InstallablePackage>> GetAvailablePackagesAsync(PackageSource source)
+        {
+            // Reset packages if we're changing sources
+            if (_packages != null && source != PackageSource.Auto)
             {
-                // TODO: Re-enable remote manifest loading when web server is ready
-                // try
-                // {
-                //     _packages = await LoadPackagesFromManifestAsync();
-                // }
-                // catch
-                // {
-                //     // If both fail, use fallback.
-                //     _packages = GetFallbackPackages();
-                // }
-                
-                // Temporarily use fallback packages directly
-                _packages = GetFallbackPackages();
+                _packages = null;
             }
 
-            return Task.FromResult(_packages);
+            if (_packages != null)
+                return _packages;
+
+            switch (source)
+            {
+                case PackageSource.LocalOnly:
+                    _packages = LoadPackagesFromLocalFile();
+                    if (_packages == null || !_packages.Any())
+                    {
+                        _logger.LogWarning("Local packages file not available. Using fallback packages.");
+                        _packages = GetFallbackPackages();
+                    }
+                    break;
+
+                case PackageSource.WebOnly:
+                    try
+                    {
+                        _packages = await LoadPackagesFromManifestAsync();
+                        if (_packages == null || !_packages.Any())
+                        {
+                            _logger.LogWarning("Web manifest not available. Using fallback packages.");
+                            _packages = GetFallbackPackages();
+                        }
+                    }
+                    catch
+                    {
+                        _logger.LogError("Failed to load web manifest. Using fallback packages.");
+                        _packages = GetFallbackPackages();
+                    }
+                    break;
+
+                case PackageSource.FallbackOnly:
+                    _packages = GetFallbackPackages();
+                    break;
+
+                case PackageSource.Auto:
+                default:
+                    // Try local file first for faster startup.
+                    _packages = LoadPackagesFromLocalFile();
+                    
+                    // If local file didn't have valid packages, try remote manifest.
+                    if (_packages == null || !_packages.Any())
+                    {
+                        try
+                        {
+                            _packages = await LoadPackagesFromManifestAsync();
+                        }
+                        catch
+                        {
+                            // If both fail, use fallback.
+                            _packages = GetFallbackPackages();
+                        }
+                    }
+                    break;
+            }
+
+            return _packages;
         }
 
         private async Task<List<InstallablePackage>> LoadPackagesFromManifestAsync()
@@ -94,7 +137,7 @@ namespace Wampoon.Installer.Core
                 // Ignore config errors and use default.
             }
             
-            return "https://raw.githubusercontent.com/your-org/pwamp-packages/main/packages.json";
+            return "https://raw.githubusercontent.com/wampoon-box/wampoon-packages/refs/heads/main/packagesInfo.json";
         }
 
         private bool IsUrlAllowed(string url)
@@ -258,6 +301,34 @@ namespace Wampoon.Installer.Core
                     InstallPath = "wampoon-control-panel",
                     ArchiveFormat = "zip",
                     Dependencies = new List<PackageType>()
+                },
+                new InstallablePackage
+                {
+                    PackageID = PackageType.Xdebug,
+                    Name = "Xdebug",
+                    Version = new Version(3, 4, 5),
+                    DownloadUrl = new Uri("https://xdebug.org/files/php_xdebug-3.4.5-8.4-ts-vs17-x86_64.dll"),
+                    Type = PackageType.Xdebug,
+                    ServerName = "Xdebug",
+                    EstimatedSize = 1 * 1024 * 1024,
+                    Description = "Xdebug - PHP debugging and profiling extension.",
+                    InstallPath = "temp/xdebug",
+                    ArchiveFormat = "dll",
+                    Dependencies = new List<PackageType> { PackageType.PHP }
+                },
+                new InstallablePackage
+                {
+                    PackageID = PackageType.Composer,
+                    Name = "Composer",
+                    Version = new Version(2, 8, 10),
+                    DownloadUrl = new Uri("https://getcomposer.org/download/2.8.10/composer.phar"),
+                    Type = PackageType.Composer,
+                    ServerName = "Composer",
+                    EstimatedSize = 2 * 1024 * 1024,
+                    Description = "Composer - PHP dependency manager.",
+                    InstallPath = "apps/composer",
+                    ArchiveFormat = "phar",
+                    Dependencies = new List<PackageType> { PackageType.PHP }
                 }
             };
         }

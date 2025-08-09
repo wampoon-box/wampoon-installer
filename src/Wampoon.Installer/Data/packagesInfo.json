@@ -49,5 +49,13 @@
     "DownloadUrl": "https://xdebug.org/files/php_xdebug-3.4.5-8.4-ts-vs17-x86_64.dll",
     "Checksum": ""
   },
+  {
+    "PackageID": 9,
+    "Name": "Composer",
+    "Version": "2.8.10",
+    "DownloadUrl": "https://getcomposer.org/download/2.8.10/composer.phar",
+    "ArchiveFormat": "phar",
+    "Checksum": ""
+  },
   
 ] 

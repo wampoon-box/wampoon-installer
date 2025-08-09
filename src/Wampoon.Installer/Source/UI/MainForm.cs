@@ -41,6 +41,7 @@ namespace Wampoon.Installer.UI
             }
             
             InitializeBanner();
+            InitializePackageSourceSelection();
             InitializeInstallManager();
         }
 
@@ -73,6 +74,39 @@ namespace Wampoon.Installer.UI
                 // If bitmap creation fails, hide the icon
                 _bannerIcon.Visible = false;
             }
+        }
+
+        private void InitializePackageSourceSelection()
+        {
+            // Populate the combo box with package source options
+            _packageSourceComboBox.Items.Clear();
+            _packageSourceComboBox.Items.Add(new PackageSourceItem(PackageSource.Auto));
+            _packageSourceComboBox.Items.Add(new PackageSourceItem(PackageSource.LocalOnly));
+            _packageSourceComboBox.Items.Add(new PackageSourceItem(PackageSource.WebOnly));
+            _packageSourceComboBox.Items.Add(new PackageSourceItem(PackageSource.FallbackOnly));
+
+            // Load user's preferred package source
+            var userSettings = UserSettings.Instance;
+            var preferredSource = userSettings.PackageSource;
+            
+            // Find and select the preferred source
+            for (int i = 0; i < _packageSourceComboBox.Items.Count; i++)
+            {
+                var item = _packageSourceComboBox.Items[i] as PackageSourceItem;
+                if (item?.Source == preferredSource)
+                {
+                    _packageSourceComboBox.SelectedIndex = i;
+                    break;
+                }
+            }
+            
+            // Fallback to Auto if not found
+            if (_packageSourceComboBox.SelectedIndex == -1)
+            {
+                _packageSourceComboBox.SelectedIndex = 0;
+            }
+            
+            _packageSourceDescriptionLabel.Text = preferredSource.GetDescription();
         }
 
         private void InitializeInstallManager()
@@ -552,6 +586,64 @@ namespace Wampoon.Installer.UI
                 
             if (xdebugPackage != null)
                 _xdebugCheckBox.Text = $"🐛 Xdebug PHP Extension (v{xdebugPackage.Version})";
+        }
+
+        private void PackageSourceComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            var selectedItem = _packageSourceComboBox.SelectedItem as PackageSourceItem;
+            if (selectedItem != null)
+            {
+                _packageSourceDescriptionLabel.Text = selectedItem.Source.GetDescription();
+                
+                // Save user preference
+                var userSettings = UserSettings.Instance;
+                userSettings.PackageSource = selectedItem.Source;
+                userSettings.Save();
+                
+                // Reload packages when source changes
+                _ = Task.Run(async () =>
+                {
+                    try
+                    {
+                        await _packageRepository.GetAvailablePackagesAsync(selectedItem.Source);
+                        
+                        // Update UI on main thread
+                        if (!this.IsDisposed && this.IsHandleCreated)
+                        {
+                            this.Invoke((MethodInvoker)(() =>
+                            {
+                                UpdateComponentVersions();
+                            }));
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        // Log error but don't crash UI
+                        if (!this.IsDisposed && this.IsHandleCreated)
+                        {
+                            this.Invoke((MethodInvoker)(() =>
+                            {
+                                _packageSourceDescriptionLabel.Text = $"Error loading packages: {ex.Message}";
+                            }));
+                        }
+                    }
+                });
+            }
+        }
+
+        private class PackageSourceItem
+        {
+            public PackageSource Source { get; }
+
+            public PackageSourceItem(PackageSource source)
+            {
+                Source = source;
+            }
+
+            public override string ToString()
+            {
+                return Source.GetDisplayName();
+            }
         }
     }
 }

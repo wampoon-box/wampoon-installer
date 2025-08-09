@@ -56,6 +56,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Source\Core\ArchiveExtractor.cs" />
+    <Compile Include="Source\Core\PackageSource.cs" />
+    <Compile Include="Source\Core\UserSettings.cs" />
     <Compile Include="Source\Enums\InstallerEnums.cs" />
     <Compile Include="Source\Events\ExistingPackagesEventArgs.cs" />
     <Compile Include="Source\Events\InstallErrorEventArgs.cs" />

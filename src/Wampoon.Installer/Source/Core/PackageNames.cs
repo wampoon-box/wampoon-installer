@@ -45,12 +45,17 @@ namespace Wampoon.Installer.Core
             public const string Xdebug = "xdebug";
 
             /// <summary>
+            /// Composer Dependency Manager package identifier.
+            /// </summary>
+            public const string Composer = "composer";
+
+            /// <summary>
             /// Gets all available package names.
             /// </summary>
             /// <returns>Array of all package names</returns>
             public static string[] GetAllPackageNames()
             {
-                return new[] { Apache, MariaDB, PHP, PhpMyAdmin, Dashboard, ControlPanel, Xdebug };
+                return new[] { Apache, MariaDB, PHP, PhpMyAdmin, Dashboard, ControlPanel, Xdebug, Composer };
             }
 
             /// <summary>
@@ -69,6 +74,7 @@ namespace Wampoon.Installer.Core
                     case Dashboard:
                     case ControlPanel:
                     case Xdebug:
+                    case Composer:
                         return true;
                     default:
                         return false;

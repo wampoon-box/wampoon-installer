@@ -63,6 +63,10 @@ namespace Wampoon.Installer.Core.Installation
                 case AppSettings.PackageNames.Xdebug:
                     await XdebugConfigHelper.ConfigureXdebugAsync(pathResolver, progress);
                     break;
+                case AppSettings.PackageNames.Composer:
+                    // Composer doesn't require configuration - it's ready to use after installation
+                    progress?.Report("Composer configuration completed (no configuration needed)");
+                    break;
                 default:
                     throw new ArgumentException($"Configuration not supported for package '{packageName}'");
             }
@@ -87,6 +91,7 @@ namespace Wampoon.Installer.Core.Installation
                 case AppSettings.PackageNames.Dashboard:
                 case AppSettings.PackageNames.ControlPanel:
                 case AppSettings.PackageNames.Xdebug:
+                case AppSettings.PackageNames.Composer:
                     return true;
                 default:
                     return false;
@@ -155,6 +160,8 @@ namespace Wampoon.Installer.Core.Installation
                     return "Wampoon Control Panel";
                 case AppSettings.PackageNames.Xdebug:
                     return "Xdebug PHP Extension";
+                case AppSettings.PackageNames.Composer:
+                    return "Composer Dependency Manager";
                 default:
                     return packageName;
             }

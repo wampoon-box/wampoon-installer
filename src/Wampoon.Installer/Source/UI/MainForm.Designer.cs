@@ -31,6 +31,9 @@ namespace Wampoon.Installer.UI
         private GroupBox _componentsGroup;
         private GroupBox _pathGroup;
         private GroupBox _logGroup;
+        private GroupBox _packageSourceGroup;
+        private ComboBox _packageSourceComboBox;
+        private Label _packageSourceDescriptionLabel;
         private Panel _bannerPanel;
         private Label _bannerTitle;
         private Label _bannerSubtitle;
@@ -64,6 +67,9 @@ namespace Wampoon.Installer.UI
             this._phpCheckBox = new System.Windows.Forms.CheckBox();
             this._phpmyadminCheckBox = new System.Windows.Forms.CheckBox();
             this._xdebugCheckBox = new System.Windows.Forms.CheckBox();
+            this._packageSourceGroup = new System.Windows.Forms.GroupBox();
+            this._packageSourceComboBox = new System.Windows.Forms.ComboBox();
+            this._packageSourceDescriptionLabel = new System.Windows.Forms.Label();
             this._pathGroup = new System.Windows.Forms.GroupBox();
             this._installPathTextBox = new System.Windows.Forms.TextBox();
             this._browseButton = new System.Windows.Forms.Button();
@@ -83,6 +89,7 @@ namespace Wampoon.Installer.UI
             this._bannerTitle = new System.Windows.Forms.Label();
             this._bannerSubtitle = new System.Windows.Forms.Label();
             this._componentsGroup.SuspendLayout();
+            this._packageSourceGroup.SuspendLayout();
             this._pathGroup.SuspendLayout();
             this._logGroup.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -103,10 +110,10 @@ namespace Wampoon.Installer.UI
             this._componentsGroup.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this._componentsGroup.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
             this._componentsGroup.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(71)))), ((int)(((byte)(85)))), ((int)(((byte)(105)))));
-            this._componentsGroup.Location = new System.Drawing.Point(20, 100);
+            this._componentsGroup.Location = new System.Drawing.Point(20, 191);
             this._componentsGroup.Name = "_componentsGroup";
             this._componentsGroup.Padding = new System.Windows.Forms.Padding(20);
-            this._componentsGroup.Size = new System.Drawing.Size(839, 190);
+            this._componentsGroup.Size = new System.Drawing.Size(810, 190);
             this._componentsGroup.TabIndex = 0;
             this._componentsGroup.TabStop = false;
             this._componentsGroup.Text = "📦 Select Components to Install";
@@ -189,6 +196,51 @@ namespace Wampoon.Installer.UI
             this._xdebugCheckBox.Text = "🐛 Xdebug PHP Extension";
             this._xdebugCheckBox.UseVisualStyleBackColor = false;
             // 
+            // _packageSourceGroup
+            // 
+            this._packageSourceGroup.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this._packageSourceGroup.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
+            this._packageSourceGroup.Controls.Add(this._packageSourceComboBox);
+            this._packageSourceGroup.Controls.Add(this._packageSourceDescriptionLabel);
+            this._packageSourceGroup.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this._packageSourceGroup.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
+            this._packageSourceGroup.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(71)))), ((int)(((byte)(85)))), ((int)(((byte)(105)))));
+            this._packageSourceGroup.Location = new System.Drawing.Point(20, 90);
+            this._packageSourceGroup.Name = "_packageSourceGroup";
+            this._packageSourceGroup.Padding = new System.Windows.Forms.Padding(15);
+            this._packageSourceGroup.Size = new System.Drawing.Size(810, 90);
+            this._packageSourceGroup.TabIndex = 1;
+            this._packageSourceGroup.TabStop = false;
+            this._packageSourceGroup.Text = "📦 Package Source Selection";
+            // 
+            // _packageSourceComboBox
+            // 
+            this._packageSourceComboBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this._packageSourceComboBox.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(249)))), ((int)(((byte)(250)))), ((int)(((byte)(251)))));
+            this._packageSourceComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this._packageSourceComboBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this._packageSourceComboBox.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this._packageSourceComboBox.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(55)))), ((int)(((byte)(65)))), ((int)(((byte)(81)))));
+            this._packageSourceComboBox.Location = new System.Drawing.Point(18, 25);
+            this._packageSourceComboBox.Name = "_packageSourceComboBox";
+            this._packageSourceComboBox.Size = new System.Drawing.Size(371, 23);
+            this._packageSourceComboBox.TabIndex = 0;
+            this._packageSourceComboBox.SelectedIndexChanged += new System.EventHandler(this.PackageSourceComboBox_SelectedIndexChanged);
+            // 
+            // _packageSourceDescriptionLabel
+            // 
+            this._packageSourceDescriptionLabel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this._packageSourceDescriptionLabel.Font = new System.Drawing.Font("Segoe UI", 8F);
+            this._packageSourceDescriptionLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(107)))), ((int)(((byte)(114)))), ((int)(((byte)(128)))));
+            this._packageSourceDescriptionLabel.Location = new System.Drawing.Point(18, 52);
+            this._packageSourceDescriptionLabel.Name = "_packageSourceDescriptionLabel";
+            this._packageSourceDescriptionLabel.Size = new System.Drawing.Size(774, 30);
+            this._packageSourceDescriptionLabel.TabIndex = 1;
+            this._packageSourceDescriptionLabel.Text = "Select how package information should be loaded.";
+            // 
             // _pathGroup
             // 
             this._pathGroup.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
@@ -199,10 +251,10 @@ namespace Wampoon.Installer.UI
             this._pathGroup.Controls.Add(this._openFolderButton);
             this._pathGroup.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Bold);
             this._pathGroup.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(71)))), ((int)(((byte)(85)))), ((int)(((byte)(105)))));
-            this._pathGroup.Location = new System.Drawing.Point(20, 296);
+            this._pathGroup.Location = new System.Drawing.Point(20, 392);
             this._pathGroup.Name = "_pathGroup";
             this._pathGroup.Padding = new System.Windows.Forms.Padding(15);
-            this._pathGroup.Size = new System.Drawing.Size(839, 60);
+            this._pathGroup.Size = new System.Drawing.Size(810, 60);
             this._pathGroup.TabIndex = 1;
             this._pathGroup.TabStop = false;
             this._pathGroup.Text = "📁 Installation Directory:";
@@ -217,7 +269,7 @@ namespace Wampoon.Installer.UI
             this._installPathTextBox.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(55)))), ((int)(((byte)(65)))), ((int)(((byte)(81)))));
             this._installPathTextBox.Location = new System.Drawing.Point(15, 25);
             this._installPathTextBox.Name = "_installPathTextBox";
-            this._installPathTextBox.Size = new System.Drawing.Size(483, 23);
+            this._installPathTextBox.Size = new System.Drawing.Size(454, 23);
             this._installPathTextBox.TabIndex = 0;
             this._installPathTextBox.Text = "C:\\Wampoon";
             // 
@@ -230,7 +282,7 @@ namespace Wampoon.Installer.UI
             this._browseButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this._browseButton.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
             this._browseButton.ForeColor = System.Drawing.Color.White;
-            this._browseButton.Location = new System.Drawing.Point(510, 19);
+            this._browseButton.Location = new System.Drawing.Point(481, 19);
             this._browseButton.Name = "_browseButton";
             this._browseButton.Size = new System.Drawing.Size(80, 34);
             this._browseButton.TabIndex = 1;
@@ -247,7 +299,7 @@ namespace Wampoon.Installer.UI
             this._openFolderButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this._openFolderButton.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
             this._openFolderButton.ForeColor = System.Drawing.Color.White;
-            this._openFolderButton.Location = new System.Drawing.Point(596, 19);
+            this._openFolderButton.Location = new System.Drawing.Point(567, 19);
             this._openFolderButton.Name = "_openFolderButton";
             this._openFolderButton.Size = new System.Drawing.Size(145, 34);
             this._openFolderButton.TabIndex = 2;
@@ -263,7 +315,7 @@ namespace Wampoon.Installer.UI
             this._installButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this._installButton.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
             this._installButton.ForeColor = System.Drawing.Color.White;
-            this._installButton.Location = new System.Drawing.Point(26, 371);
+            this._installButton.Location = new System.Drawing.Point(26, 463);
             this._installButton.Name = "_installButton";
             this._installButton.Size = new System.Drawing.Size(146, 34);
             this._installButton.TabIndex = 2;
@@ -280,7 +332,7 @@ namespace Wampoon.Installer.UI
             this._cancelButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this._cancelButton.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
             this._cancelButton.ForeColor = System.Drawing.Color.White;
-            this._cancelButton.Location = new System.Drawing.Point(182, 371);
+            this._cancelButton.Location = new System.Drawing.Point(182, 463);
             this._cancelButton.Name = "_cancelButton";
             this._cancelButton.Size = new System.Drawing.Size(80, 34);
             this._cancelButton.TabIndex = 3;
@@ -296,7 +348,7 @@ namespace Wampoon.Installer.UI
             this._exportLogButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this._exportLogButton.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
             this._exportLogButton.ForeColor = System.Drawing.Color.White;
-            this._exportLogButton.Location = new System.Drawing.Point(295, 371);
+            this._exportLogButton.Location = new System.Drawing.Point(295, 463);
             this._exportLogButton.Name = "_exportLogButton";
             this._exportLogButton.Size = new System.Drawing.Size(107, 34);
             this._exportLogButton.TabIndex = 4;
@@ -312,7 +364,7 @@ namespace Wampoon.Installer.UI
             this._quitButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this._quitButton.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
             this._quitButton.ForeColor = System.Drawing.Color.White;
-            this._quitButton.Location = new System.Drawing.Point(631, 371);
+            this._quitButton.Location = new System.Drawing.Point(631, 463);
             this._quitButton.Name = "_quitButton";
             this._quitButton.Size = new System.Drawing.Size(80, 34);
             this._quitButton.TabIndex = 6;
@@ -328,7 +380,7 @@ namespace Wampoon.Installer.UI
             this._aboutButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this._aboutButton.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
             this._aboutButton.ForeColor = System.Drawing.Color.White;
-            this._aboutButton.Location = new System.Drawing.Point(531, 371);
+            this._aboutButton.Location = new System.Drawing.Point(531, 463);
             this._aboutButton.Name = "_aboutButton";
             this._aboutButton.Size = new System.Drawing.Size(88, 34);
             this._aboutButton.TabIndex = 5;
@@ -342,9 +394,9 @@ namespace Wampoon.Installer.UI
             | System.Windows.Forms.AnchorStyles.Right)));
             this._progressLabel.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
             this._progressLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(75)))), ((int)(((byte)(85)))), ((int)(((byte)(99)))));
-            this._progressLabel.Location = new System.Drawing.Point(27, 416);
+            this._progressLabel.Location = new System.Drawing.Point(27, 509);
             this._progressLabel.Name = "_progressLabel";
-            this._progressLabel.Size = new System.Drawing.Size(912, 20);
+            this._progressLabel.Size = new System.Drawing.Size(883, 20);
             this._progressLabel.TabIndex = 5;
             this._progressLabel.Text = "Ready to install";
             // 
@@ -354,9 +406,9 @@ namespace Wampoon.Installer.UI
             | System.Windows.Forms.AnchorStyles.Right)));
             this._progressBar.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(229)))), ((int)(((byte)(231)))), ((int)(((byte)(235)))));
             this._progressBar.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(37)))), ((int)(((byte)(99)))), ((int)(((byte)(235)))));
-            this._progressBar.Location = new System.Drawing.Point(27, 436);
+            this._progressBar.Location = new System.Drawing.Point(27, 529);
             this._progressBar.Name = "_progressBar";
-            this._progressBar.Size = new System.Drawing.Size(912, 25);
+            this._progressBar.Size = new System.Drawing.Size(883, 25);
             this._progressBar.Style = System.Windows.Forms.ProgressBarStyle.Continuous;
             this._progressBar.TabIndex = 6;
             // 
@@ -369,10 +421,10 @@ namespace Wampoon.Installer.UI
             this._logGroup.Controls.Add(this._logTextBox);
             this._logGroup.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
             this._logGroup.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(71)))), ((int)(((byte)(85)))), ((int)(((byte)(105)))));
-            this._logGroup.Location = new System.Drawing.Point(7, 3);
+            this._logGroup.Location = new System.Drawing.Point(7, -4);
             this._logGroup.Name = "_logGroup";
             this._logGroup.Padding = new System.Windows.Forms.Padding(15);
-            this._logGroup.Size = new System.Drawing.Size(929, 191);
+            this._logGroup.Size = new System.Drawing.Size(900, 191);
             this._logGroup.TabIndex = 7;
             this._logGroup.TabStop = false;
             this._logGroup.Text = "📜 Installation Log:";
@@ -388,7 +440,7 @@ namespace Wampoon.Installer.UI
             this._logTextBox.Location = new System.Drawing.Point(20, 25);
             this._logTextBox.Name = "_logTextBox";
             this._logTextBox.ReadOnly = true;
-            this._logTextBox.Size = new System.Drawing.Size(889, 151);
+            this._logTextBox.Size = new System.Drawing.Size(860, 151);
             this._logTextBox.TabIndex = 0;
             this._logTextBox.Text = "";
             // 
@@ -399,9 +451,9 @@ namespace Wampoon.Installer.UI
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(242)))), ((int)(((byte)(247)))));
             this.panel1.Controls.Add(this._logGroup);
-            this.panel1.Location = new System.Drawing.Point(20, 471);
+            this.panel1.Location = new System.Drawing.Point(20, 571);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(919, 201);
+            this.panel1.Size = new System.Drawing.Size(890, 201);
             this.panel1.TabIndex = 7;
             // 
             // _bannerPanel
@@ -414,7 +466,7 @@ namespace Wampoon.Installer.UI
             this._bannerPanel.Controls.Add(this._bannerSubtitle);
             this._bannerPanel.Location = new System.Drawing.Point(0, 0);
             this._bannerPanel.Name = "_bannerPanel";
-            this._bannerPanel.Size = new System.Drawing.Size(963, 80);
+            this._bannerPanel.Size = new System.Drawing.Size(934, 80);
             this._bannerPanel.TabIndex = 8;
             // 
             // _bannerIcon
@@ -454,10 +506,11 @@ namespace Wampoon.Installer.UI
             // MainForm
             // 
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(242)))), ((int)(((byte)(247)))));
-            this.ClientSize = new System.Drawing.Size(963, 697);
+            this.ClientSize = new System.Drawing.Size(934, 797);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this._bannerPanel);
             this.Controls.Add(this._componentsGroup);
+            this.Controls.Add(this._packageSourceGroup);
             this.Controls.Add(this._pathGroup);
             this.Controls.Add(this._installButton);
             this.Controls.Add(this._cancelButton);
@@ -468,12 +521,13 @@ namespace Wampoon.Installer.UI
             this.Controls.Add(this._progressBar);
             this.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.MinimumSize = new System.Drawing.Size(840, 736);
+            this.MinimumSize = new System.Drawing.Size(840, 836);
             this.Name = "MainForm";
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Show;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "WAMPoon Installer";
             this._componentsGroup.ResumeLayout(false);
+            this._packageSourceGroup.ResumeLayout(false);
             this._pathGroup.ResumeLayout(false);
             this._pathGroup.PerformLayout();
             this._logGroup.ResumeLayout(false);

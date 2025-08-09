@@ -29,6 +29,12 @@ namespace Wampoon.Installer.Core
             {
                 return await HandleDllPackageAsync(package, archivePath, extractPath, cancellationToken);
             }
+            
+            // Handle .phar files (like Composer) specially - just copy them
+            if (package.ArchiveFormat?.ToLower() == "phar" || archivePath.EndsWith(".phar", StringComparison.OrdinalIgnoreCase))
+            {
+                return await HandlePharPackageAsync(package, archivePath, extractPath, cancellationToken);
+            }
 
             // Validate ZIP file integrity before attempting extraction.
             try
@@ -283,6 +289,83 @@ namespace Wampoon.Installer.Core
                 }
 
                 throw new InvalidOperationException($"Failed to install DLL {package.Name}: {ex.Message}", ex);
+            }
+        }
+
+        private async Task<string> HandlePharPackageAsync(InstallablePackage package, string pharPath, string extractPath, CancellationToken cancellationToken)
+        {
+            try
+            {
+                OnProgressReported(new InstallationProgressEventArgs
+                {
+                    PackageName = package.Name,
+                    CurrentOperation = "Preparing .phar file installation...",
+                    Stage = InstallationStage.Extracting,
+                    PercentComplete = 10
+                });
+
+                // Create the extract directory if it doesn't exist
+                if (Directory.Exists(extractPath))
+                {
+                    Directory.Delete(extractPath, true);
+                }
+                Directory.CreateDirectory(extractPath);
+
+                OnProgressReported(new InstallationProgressEventArgs
+                {
+                    PackageName = package.Name,
+                    CurrentOperation = "Copying .phar file...",
+                    Stage = InstallationStage.Extracting,
+                    PercentComplete = 50
+                });
+
+                // Copy the .phar file to the extract path
+                var fileName = Path.GetFileName(pharPath);
+                var destinationPath = Path.Combine(extractPath, fileName);
+                
+                await Task.Run(() => File.Copy(pharPath, destinationPath, overwrite: true), cancellationToken);
+
+                OnProgressReported(new InstallationProgressEventArgs
+                {
+                    PackageName = package.Name,
+                    CurrentOperation = "Validating .phar file...",
+                    Stage = InstallationStage.Validating,
+                    PercentComplete = 90
+                });
+
+                // Validate the copied file
+                if (!File.Exists(destinationPath))
+                {
+                    throw new InvalidOperationException("Failed to copy .phar file to destination");
+                }
+
+                OnProgressReported(new InstallationProgressEventArgs
+                {
+                    PackageName = package.Name,
+                    CurrentOperation = ".phar file installation completed",
+                    Stage = InstallationStage.Completed,
+                    PercentComplete = 100
+                });
+
+                return extractPath;
+            }
+            catch (Exception ex)
+            {
+                ErrorLogHelper.LogExceptionInfo(ex);
+                OnProgressReported(new InstallationProgressEventArgs
+                {
+                    PackageName = package.Name,
+                    CurrentOperation = $".phar file installation failed: {ex.Message}",
+                    Stage = InstallationStage.Failed,
+                    PercentComplete = 0
+                });
+
+                if (Directory.Exists(extractPath))
+                {
+                    try { Directory.Delete(extractPath, true); } catch { }
+                }
+
+                throw new InvalidOperationException($"Failed to install .phar file {package.Name}: {ex.Message}", ex);
             }
         }
 
