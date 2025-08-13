@@ -94,6 +94,9 @@ namespace Wampoon.Installer.Core
                 // Copy LICENSE.md to installation directory.
                 await CopyLicenseFileAsync(options.InstallPath);
 
+                // Copy scripts folder to installation directory.
+                await CopyScriptsFolderAsync(options.InstallPath);
+
                 // Final validation.
                 var isValid = await _installationValidator.ValidateCompleteInstallationAsync(options);
                 if (!isValid)
@@ -355,6 +358,44 @@ namespace Wampoon.Installer.Core
                 {
                     ErrorLogHelper.LogExceptionInfo(ex);
                     ReportProgress($"Warning: Could not copy LICENSE.md file: {ex.Message}", GetProgressPercentage(), "License Setup");
+                }
+            });
+        }
+
+        private async Task CopyScriptsFolderAsync(string installPath)
+        {
+            await Task.Run(() =>
+            {
+                try
+                {
+                    ReportProgress("Copying CLI scripts...", GetProgressPercentage(), "Scripts Setup");
+                    
+                    var sourceScriptsPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "scripts");
+                    
+                    if (Directory.Exists(sourceScriptsPath))
+                    {
+                        var scriptFiles = Directory.GetFiles(sourceScriptsPath, "*.bat", SearchOption.TopDirectoryOnly);
+                        
+                        foreach (var scriptFile in scriptFiles)
+                        {
+                            var fileName = Path.GetFileName(scriptFile);
+                            var destinationPath = Path.Combine(installPath, fileName);
+                            
+                            // Copy the script file to the installation root
+                            File.Copy(scriptFile, destinationPath, true);
+                        }
+                        
+                        ReportProgress($"CLI scripts copied successfully ({scriptFiles.Length} files)", GetProgressPercentage(), "Scripts Setup");
+                    }
+                    else
+                    {
+                        ReportProgress("Warning: Scripts folder not found", GetProgressPercentage(), "Scripts Setup");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    ErrorLogHelper.LogExceptionInfo(ex);
+                    ReportProgress($"Warning: Could not copy scripts: {ex.Message}", GetProgressPercentage(), "Scripts Setup");
                 }
             });
         }
