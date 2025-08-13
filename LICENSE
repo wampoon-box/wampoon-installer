@@ -32,7 +32,7 @@ This software distribution includes the following third-party components, each w
 1. Apache HTTP Server
 ----------------------
 License: Apache License 2.0  
-License File: apache/LICENSE  
+License URL: https://www.apache.org/licenses/LICENSE-2.0  
 Project Site: https://httpd.apache.org/
 
 ---
@@ -40,7 +40,7 @@ Project Site: https://httpd.apache.org/
 2. MariaDB
 ----------
 License: GNU General Public License v2.0  
-Full License: THIRD_PARTY_LICENSES/mariadb-GPL-2.0.txt  
+License URL: https://www.gnu.org/licenses/old-licenses/gpl-2.0.html  
 Project Site: https://mariadb.org/
 
 ---
@@ -48,7 +48,7 @@ Project Site: https://mariadb.org/
 3. PHP
 ------
 License: PHP License v3.01  
-License File: php/LICENSE  
+License URL: https://www.php.net/license/3_01.txt  
 Project Site: https://www.php.net/
 
 ---
@@ -56,7 +56,7 @@ Project Site: https://www.php.net/
 4. phpMyAdmin
 -------------
 License: GNU General Public License v2.0  
-Full License: THIRD_PARTY_LICENSES/phpmyadmin-GPL-2.0.txt  
+License URL: https://www.gnu.org/licenses/old-licenses/gpl-2.0.html  
 Project Site: https://www.phpmyadmin.net/
 
 ---
@@ -64,7 +64,7 @@ Project Site: https://www.phpmyadmin.net/
 5. Browscap (Browser Capabilities Project)
 -------------------------------------------
 License: GNU General Public License v2.0  
-Full License: THIRD_PARTY_LICENSES/browscap-GPL-2.0.txt  
+License URL: https://www.gnu.org/licenses/old-licenses/gpl-2.0.html  
 Project Site: https://browscap.org/
 
 ---
@@ -72,7 +72,7 @@ Project Site: https://browscap.org/
 6. Xdebug
 ---------
 License: Xdebug License (based on the PHP License v3.01)  
-Full License: THIRD_PARTY_LICENSES/xdebug-license.txt  
+License URL: https://xdebug.org/license  
 Project Site: https://xdebug.org/
 
 ---
@@ -80,7 +80,7 @@ Project Site: https://xdebug.org/
 7. cURL
 -------
 License: curl License (MIT/X derivate)  
-Full License: THIRD_PARTY_LICENSES/curl-license.txt  
+License URL: https://curl.se/docs/copyright.html  
 Project Site: https://curl.se/
 
 ---
@@ -88,9 +88,9 @@ Project Site: https://curl.se/
 8. Composer
 -----------
 License: MIT License  
-Full License: THIRD_PARTY_LICENSES/composer-MIT.txt  
+License URL: https://opensource.org/licenses/MIT  
 Project Site: https://getcomposer.org/
 
 ---
 
-For full license texts, refer to the files noted above or visit the respective official websites.
+For full license texts and notices, see the respective official license URLs above.
