@@ -61,7 +61,8 @@ namespace Wampoon.Installer.Models
         WampoonDashboard = 6,
         WampoonControlPanel = 7,
         Xdebug = 8,
-        Composer = 9
+        Composer = 9,
+        VCRuntime = 10
     }
 
     /// <summary>

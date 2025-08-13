@@ -52,6 +52,8 @@ namespace Wampoon.Installer.Core.PackageDiscovery
                     return PackageType.Xdebug;
                 case AppSettings.PackageNames.Composer:
                     return PackageType.Composer;
+                case AppSettings.PackageNames.VCRuntime:
+                    return PackageType.VCRuntime;
                 default:
                     return null;
             }
@@ -80,6 +82,7 @@ namespace Wampoon.Installer.Core.PackageDiscovery
                 case AppSettings.PackageNames.ControlPanel:
                 case AppSettings.PackageNames.Xdebug:
                 case AppSettings.PackageNames.Composer:
+                case AppSettings.PackageNames.VCRuntime:
                     return true;
                 default:
                     return false;
@@ -113,6 +116,8 @@ namespace Wampoon.Installer.Core.PackageDiscovery
                     return "xdebug";
                 case AppSettings.PackageNames.Composer:
                     return "composer";
+                case AppSettings.PackageNames.VCRuntime:
+                    return "vcruntime";
                 default:
                     return packageName.ToLower();
             }

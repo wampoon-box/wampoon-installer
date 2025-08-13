@@ -49,8 +49,7 @@ namespace Wampoon.Installer.Core
                     _packages = LoadPackagesFromLocalFile();
                     if (_packages == null || !_packages.Any())
                     {
-                        _logger.LogWarning("Local packages file not available. Using fallback packages.");
-                        _packages = GetFallbackPackages();
+                        throw new InvalidOperationException("Unable to load packages from local file. Please ensure the packagesInfo.json file exists and contains valid package data, or switch to web-based package source.");
                     }
                     break;
 
@@ -60,35 +59,39 @@ namespace Wampoon.Installer.Core
                         _packages = await LoadPackagesFromManifestAsync();
                         if (_packages == null || !_packages.Any())
                         {
-                            _logger.LogWarning("Web manifest not available. Using fallback packages.");
-                            _packages = GetFallbackPackages();
+                            throw new InvalidOperationException("Unable to load packages from web manifest. Please check your internet connection and try again.");
                         }
                     }
-                    catch
+                    catch (Exception ex)
                     {
-                        _logger.LogError("Failed to load web manifest. Using fallback packages.");
-                        _packages = GetFallbackPackages();
+                        throw new InvalidOperationException("Failed to load web manifest. Please check your internet connection and try again.", ex);
                     }
                     break;
 
 
                 case PackageSource.Auto:
                 default:
-                    // Try local file first for faster startup.
-                    _packages = LoadPackagesFromLocalFile();
+                    // Try remote manifest first for latest packages.
+                    try
+                    {
+                        _packages = await LoadPackagesFromManifestAsync();
+                        
+                        // If remote failed or returned empty, try local file as backup.
+                        if (_packages == null || !_packages.Any())
+                        {
+                            _packages = LoadPackagesFromLocalFile();
+                        }
+                    }
+                    catch
+                    {
+                        // If remote fails, try local file as backup.
+                        _packages = LoadPackagesFromLocalFile();
+                    }
                     
-                    // If local file didn't have valid packages, try remote manifest.
+                    // If both failed, notify the user instead of using outdated embedded packages.
                     if (_packages == null || !_packages.Any())
                     {
-                        try
-                        {
-                            _packages = await LoadPackagesFromManifestAsync();
-                        }
-                        catch
-                        {
-                            // If both fail, use fallback.
-                            _packages = GetFallbackPackages();
-                        }
+                        throw new InvalidOperationException("Unable to load packages from both web manifest and local file. Please check your internet connection or ensure the local packagesInfo.json file exists and contains valid package data.");
                     }
                     break;
             }
@@ -109,11 +112,11 @@ namespace Wampoon.Installer.Core
             {
                 var json = await _httpClient.GetStringAsync(manifestUrl);
                 var packages = JsonConvert.DeserializeObject<List<InstallablePackage>>(json);
-                return packages != null ? MergeWithMetadata(packages) : LoadPackagesFromLocalFile();
+                return packages != null ? MergeWithMetadata(packages) : null;
             }
             catch
             {
-                return LoadPackagesFromLocalFile();
+                return null;
             }
         }
 
@@ -150,11 +153,11 @@ namespace Wampoon.Installer.Core
 
         private List<InstallablePackage> LoadPackagesFromLocalFile()
         {
+            var appDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) ?? Environment.CurrentDirectory;
+            var packagesPath = Path.Combine(appDir, "Data", InstallerConstants.PackagesFileName);
+            
             try
             {
-                var appDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) ?? Environment.CurrentDirectory;
-                var packagesPath = Path.Combine(appDir, "Data", InstallerConstants.PackagesFileName);
-                
                 if (File.Exists(packagesPath))
                 {
                     var json = File.ReadAllText(packagesPath);
@@ -165,21 +168,20 @@ namespace Wampoon.Installer.Core
                     }
                     else
                     {
-                        _logger.LogWarning("Local packages file is empty or contains invalid data. Falling back to embedded package information.");
+                        _logger.LogWarning("Local packages file is empty or contains invalid data.");
                     }
                 }
                 else
                 {
-                    _logger.LogWarning("Local packages file not found. Ensure that the packagesInfo.json file exists in Data/ folder. Falling back to embedded package information.");
+                    _logger.LogWarning("Local packages file not found. Ensure that the packagesInfo.json file exists in Data/ folder.");
                 }
             }
             catch (Exception ex)
             {
-                _logger.LogError("Error loading packages from local file. Falling back to embedded package information.", ex);
+                _logger.LogError($"Error loading packages from local file. Path: {packagesPath}. Error: {ex.Message}", ex);
             }
 
-            // Fallback to minimal package list if JSON loading fails.
-            return GetFallbackPackages();
+            return null;
         }
 
 
@@ -326,6 +328,20 @@ namespace Wampoon.Installer.Core
                     InstallPath = "apps/composer",
                     ArchiveFormat = "phar",
                     Dependencies = new List<PackageType> { PackageType.PHP }
+                },
+                new InstallablePackage
+                {
+                    PackageID = PackageType.VCRuntime,
+                    Name = "Microsoft Visual C++ Runtime",
+                    Version = new Version(14, 0, 0),
+                    DownloadUrl = new Uri("https://github.com/wampoon-box/wampoon-packages/raw/refs/heads/main/vc_runtime.zip"),
+                    Type = PackageType.VCRuntime,
+                    ServerName = "VC++ Runtime",
+                    EstimatedSize = 10 * 1024 * 1024,
+                    Description = "Microsoft Visual C++ Runtime redistributables for PHP, Apache, and MariaDB.",
+                    InstallPath = "temp/vcruntime",
+                    ArchiveFormat = "zip",
+                    Dependencies = new List<PackageType>()
                 }
             };
         }

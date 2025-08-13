@@ -91,6 +91,18 @@ namespace Wampoon.Installer.Core
                     ArchiveFormat = "dll",
                     Dependencies = new List<PackageType> { PackageType.PHP }
                 }
+            },
+            {
+                PackageType.VCRuntime, new PackageMetadataInfo
+                {
+                    Type = PackageType.VCRuntime,
+                    ServerName = "VC++ Runtime",
+                    EstimatedSize = 10485760,
+                    Description = "Microsoft Visual C++ Runtime redistributables for PHP, Apache, and MariaDB.",
+                    InstallPath = "temp/vcruntime",
+                    ArchiveFormat = "zip",
+                    Dependencies = new List<PackageType>()
+                }
             }
         };
 

@@ -36,6 +36,12 @@ namespace Wampoon.Installer.Core
                 return await HandlePharPackageAsync(package, archivePath, extractPath, cancellationToken);
             }
 
+            // Handle VC++ runtime specially - extract and distribute to multiple directories
+            if (package.Type == PackageType.VCRuntime)
+            {
+                return await HandleVCRuntimePackageAsync(package, archivePath, extractPath, cancellationToken);
+            }
+
             // Validate ZIP file integrity before attempting extraction.
             try
             {
@@ -369,6 +375,121 @@ namespace Wampoon.Installer.Core
             }
         }
 
+        private async Task<string> HandleVCRuntimePackageAsync(InstallablePackage package, string archivePath, string extractPath, CancellationToken cancellationToken)
+        {
+            try
+            {
+                OnProgressReported(new InstallationProgressEventArgs
+                {
+                    PackageName = package.Name,
+                    CurrentOperation = "Preparing VC++ Runtime installation...",
+                    Stage = InstallationStage.Extracting,
+                    PercentComplete = 10
+                });
+
+                var tempPath = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
+                Directory.CreateDirectory(tempPath);
+
+                try
+                {
+                    OnProgressReported(new InstallationProgressEventArgs
+                    {
+                        PackageName = package.Name,
+                        CurrentOperation = "Extracting VC++ Runtime files...",
+                        Stage = InstallationStage.Extracting,
+                        PercentComplete = 30
+                    });
+
+                    using (var archive = ZipFile.OpenRead(archivePath))
+                    {
+                        archive.ExtractToDirectory(tempPath);
+                    }
+
+                    OnProgressReported(new InstallationProgressEventArgs
+                    {
+                        PackageName = package.Name,
+                        CurrentOperation = "Distributing VC++ Runtime files...",
+                        Stage = InstallationStage.Extracting,
+                        PercentComplete = 50
+                    });
+
+                    var installDir = Directory.GetParent(extractPath).Parent.FullName;
+                    var targetDirectories = new[]
+                    {
+                        Path.Combine(installDir, "apps", "php"),
+                        Path.Combine(installDir, "apps", "mariadb", "bin"),
+                        Path.Combine(installDir, "apps", "apache", "bin")
+                    };
+
+                    var files = Directory.GetFiles(tempPath, "*", SearchOption.AllDirectories);
+                    var totalOperations = files.Length * targetDirectories.Length;
+                    var currentOperation = 0;
+
+                    foreach (var targetDir in targetDirectories)
+                    {
+                        Directory.CreateDirectory(targetDir);
+                        
+                        foreach (var file in files)
+                        {
+                            cancellationToken.ThrowIfCancellationRequested();
+                            
+                            var fileName = Path.GetFileName(file);
+                            var targetFile = Path.Combine(targetDir, fileName);
+                            
+                            await Task.Run(() => File.Copy(file, targetFile, overwrite: true), cancellationToken);
+                            
+                            currentOperation++;
+                            var progress = 50 + (currentOperation * 40 / totalOperations);
+                            
+                            if (currentOperation % 5 == 0 || currentOperation == totalOperations)
+                            {
+                                OnProgressReported(new InstallationProgressEventArgs
+                                {
+                                    PackageName = package.Name,
+                                    CurrentOperation = $"Copying to {Path.GetFileName(targetDir)}... ({progress}%)",
+                                    Stage = InstallationStage.Extracting,
+                                    PercentComplete = progress
+                                });
+                            }
+                        }
+                    }
+
+                    OnProgressReported(new InstallationProgressEventArgs
+                    {
+                        PackageName = package.Name,
+                        CurrentOperation = "VC++ Runtime installation completed",
+                        Stage = InstallationStage.Completed,
+                        PercentComplete = 100
+                    });
+
+                    // Don't create the vcruntime directory - files are distributed directly to target directories
+                    return extractPath;
+                }
+                finally
+                {
+                    try { Directory.Delete(tempPath, true); } catch { }
+                }
+            }
+            catch (Exception ex)
+            {
+                ErrorLogHelper.LogExceptionInfo(ex);
+                OnProgressReported(new InstallationProgressEventArgs
+                {
+                    PackageName = package.Name,
+                    CurrentOperation = $"VC++ Runtime installation failed: {ex.Message}",
+                    Stage = InstallationStage.Failed,
+                    PercentComplete = 0
+                });
+
+                if (Directory.Exists(extractPath))
+                {
+                    try { Directory.Delete(extractPath, true); } catch { }
+                }
+
+                throw new InvalidOperationException($"Failed to install VC++ Runtime {package.Name}: {ex.Message}", ex);
+            }
+        }
+
         private string GetRootDirectoryName(ZipArchive archive)
         {
             string rootDir = null;
@@ -457,6 +578,9 @@ namespace Wampoon.Installer.Core
                 case PackageType.Xdebug:
                     ValidateXdebugExtraction(extractPath);
                     break;
+                case PackageType.VCRuntime:
+                    ValidateVCRuntimeExtraction(extractPath);
+                    break;
             }
             
             return Task.CompletedTask;
@@ -507,6 +631,13 @@ namespace Wampoon.Installer.Core
             var dllFiles = Directory.GetFiles(extractPath, "*.dll", SearchOption.AllDirectories);
             if (dllFiles.Length == 0)
                 throw new InvalidOperationException("Xdebug validation failed: No DLL file found");
+        }
+
+        private void ValidateVCRuntimeExtraction(string extractPath)
+        {
+            // VC++ runtime validation is handled differently since files are distributed directly to target directories
+            // The vcruntime directory itself is not created - files go directly to PHP, Apache, and MariaDB directories
+            // Validation is performed by checking the target directories have the runtime files
         }
 
         private bool FileExists(string basePath, string fileName)

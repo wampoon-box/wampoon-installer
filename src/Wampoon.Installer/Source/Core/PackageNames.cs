@@ -50,12 +50,17 @@ namespace Wampoon.Installer.Core
             public const string Composer = "composer";
 
             /// <summary>
+            /// Microsoft Visual C++ Runtime package identifier.
+            /// </summary>
+            public const string VCRuntime = "vcruntime";
+
+            /// <summary>
             /// Gets all available package names.
             /// </summary>
             /// <returns>Array of all package names</returns>
             public static string[] GetAllPackageNames()
             {
-                return new[] { Apache, MariaDB, PHP, PhpMyAdmin, Dashboard, ControlPanel, Xdebug, Composer };
+                return new[] { Apache, MariaDB, PHP, PhpMyAdmin, Dashboard, ControlPanel, Xdebug, Composer, VCRuntime };
             }
 
             /// <summary>
@@ -75,6 +80,7 @@ namespace Wampoon.Installer.Core
                     case ControlPanel:
                     case Xdebug:
                     case Composer:
+                    case VCRuntime:
                         return true;
                     default:
                         return false;

@@ -236,8 +236,8 @@ namespace Wampoon.Installer.UI
             // 
             this._packageSourceDescriptionLabel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this._packageSourceDescriptionLabel.Font = new System.Drawing.Font("Segoe UI", 8F);
-            this._packageSourceDescriptionLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(107)))), ((int)(((byte)(114)))), ((int)(((byte)(128)))));
+            this._packageSourceDescriptionLabel.Font = new System.Drawing.Font("Segoe UI", 8.5F);
+            this._packageSourceDescriptionLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
             this._packageSourceDescriptionLabel.Location = new System.Drawing.Point(20, 52);
             this._packageSourceDescriptionLabel.Name = "_packageSourceDescriptionLabel";
             this._packageSourceDescriptionLabel.Size = new System.Drawing.Size(774, 30);
