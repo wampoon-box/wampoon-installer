@@ -1859,7 +1859,7 @@ openssl.cafile = "${WAMPOON_ROOT_DIR}/apps/php/extras/ssl/curl-ca-bundle.crt"
 
 ; Xdebug Configuration
 [xdebug]
-zend_extension=php_xdebug.dll
-xdebug.mode=debug,develop
-xdebug.start_with_request=yes
-xdebug.client_port=9003
+;zend_extension=php_xdebug.dll
+;xdebug.mode=debug,develop
+;xdebug.start_with_request=yes
+;xdebug.client_port=9003
