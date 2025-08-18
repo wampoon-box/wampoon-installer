@@ -45,7 +45,7 @@ namespace Wampoon.Installer.Helpers
                 await DownloadBrowscapFileAsync(pathResolver, logger);
                 
                 // Update php.ini with correct extension_dir path.
-                await UpdatePhpIniExtensionDirAsync(pathResolver, logger);
+                //await UpdatePhpIniExtensionDirAsync(pathResolver, logger);
                 
                 // Download curl certificate bundle.
                 await DownloadCurlCertificateAsync(pathResolver, logger);
@@ -94,65 +94,7 @@ namespace Wampoon.Installer.Helpers
                     throw;
                 }
             }
-
-            private async Task UpdatePhpIniExtensionDirAsync(IPathResolver pathResolver, IProgress<string> logger)
-            {
-                try
-                {
-                    logger?.Report("Updating php.ini extension_dir setting...");
-                    
-                    // Get the php.ini file path.
-                    var phpIniPath = pathResolver.GetConfigPath(AppSettings.PackageNames.PHP, AppSettings.PHPFiles.PhpIni);
-                    
-                    // Get the PHP ext directory path.
-                    var phpExtDir = pathResolver.GetSubdirectoryPath(AppSettings.PackageNames.PHP, "ext");
-                    
-                    // Ensure the ext directory exists.
-                    await FileHelper.CreateDirectoryIfNotExistsAsync(phpExtDir);
-                    
-                    // Read the current php.ini content.
-                    var phpIniContent = File.ReadAllText(phpIniPath);
-                    
-                    // Update the extension_dir setting.
-                    // Look for existing extension_dir lines and replace them.
-                    var lines = phpIniContent.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
-                    bool extensionDirUpdated = false;
-                    
-                    for (int i = 0; i < lines.Length; i++)
-                    {
-                        var line = lines[i].Trim();
-                        
-                        // Check if this line contains extension_dir setting (commented or uncommented).
-                        if (line.StartsWith("extension_dir", StringComparison.OrdinalIgnoreCase) || 
-                            line.StartsWith(";extension_dir", StringComparison.OrdinalIgnoreCase))
-                        {
-                            lines[i] = $"extension_dir = \"{phpExtDir}\"";
-                            extensionDirUpdated = true;
-                            break;
-                        }
-                    }
-                    
-                    // If no extension_dir line was found, add one.
-                    if (!extensionDirUpdated)
-                    {
-                        var updatedContent = phpIniContent + Environment.NewLine + $"extension_dir = \"{phpExtDir}\"";
-                        File.WriteAllText(phpIniPath, updatedContent);
-                    }
-                    else
-                    {
-                        var updatedContent = string.Join(Environment.NewLine, lines);
-                        File.WriteAllText(phpIniPath, updatedContent);
-                    }
-                    
-                    logger?.Report($"✓ Updated php.ini extension_dir to: {phpExtDir}");
-                }
-                catch (Exception ex)
-                {
-                    ErrorLogHelper.LogExceptionInfo(ex);
-                    logger?.Report($"✗ Failed to update php.ini extension_dir: {ex.Message}");
-                    throw;
-                }
-            }
+          
 
             protected override string GetTemplateFilePattern()
             {
