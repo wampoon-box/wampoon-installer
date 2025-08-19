@@ -42,7 +42,7 @@ namespace Wampoon.Installer.UI
             
             InitializeBanner();
             InitializePackageSourceSelection();
-            InitializeInstallManager();
+            InitializeUI();
         }
 
 
@@ -108,16 +108,8 @@ namespace Wampoon.Installer.UI
             _packageSourceDescriptionLabel.Text = preferredSource.GetDescription();
         }
 
-        private void InitializeInstallManager()
+        private void InitializeUI()
         {
-            _installManager = new InstallManager();
-            _installManager.ProgressChanged += InstallManager_ProgressChanged;
-            _installManager.ErrorOccurred += InstallManager_ErrorOccurred;
-            _installManager.InstallationCompleted += InstallManager_InstallationCompleted;
-            
-            _packageRepository = new PackageRepository();
-            _packageDiscoveryService = new PackageDiscoveryService(_packageRepository);
-            
             // Subscribe to logger events to display messages to users
             var logger = LoggerFactory.Default as EventBasedLogger;
             if (logger != null)
@@ -125,14 +117,43 @@ namespace Wampoon.Installer.UI
                 logger.LogMessage += Logger_LogMessage;
             }
             
-            // This should now be fast since it loads from local file first.
-            UpdateComponentVersions();
-            
             // Update form title with version
             var version = UiHelper.GetFormattedInstallerVersion();
             Text = !string.IsNullOrEmpty(version) 
                 ? $"{AppConstants.APP_FULL_NAME} {version}" 
                 : AppConstants.APP_FULL_NAME;
+                
+            // Set default component text immediately (non-blocking)
+            SetDefaultComponentText();
+        }
+
+        private void InitializePackageDiscovery()
+        {
+            if (_packageRepository == null)
+            {
+                _packageRepository = new PackageRepository();
+                _packageDiscoveryService = new PackageDiscoveryService(_packageRepository);
+            }
+        }
+
+        private void InitializeInstallManager()
+        {
+            if (_installManager == null)
+            {
+                _installManager = new InstallManager();
+                _installManager.ProgressChanged += InstallManager_ProgressChanged;
+                _installManager.ErrorOccurred += InstallManager_ErrorOccurred;
+                _installManager.InstallationCompleted += InstallManager_InstallationCompleted;
+            }
+        }
+
+        protected override void OnLoad(EventArgs e)
+        {
+            base.OnLoad(e);
+            
+            // Initialize package discovery and start loading versions in background after form is visible
+            InitializePackageDiscovery();
+            UpdateComponentVersions();
         }
 
         private void BrowseButton_Click(object sender, EventArgs e)
@@ -210,6 +231,9 @@ namespace Wampoon.Installer.UI
                     InstallPhpMyAdmin = _phpmyadminCheckBox.Checked,
                     InstallXdebug = _xdebugCheckBox.Checked
                 };
+
+                // Initialize InstallManager lazily right before installation
+                InitializeInstallManager();
 
                 // Start installation.
                 await _installManager.InstallAsync(options, _cancellationTokenSource.Token);

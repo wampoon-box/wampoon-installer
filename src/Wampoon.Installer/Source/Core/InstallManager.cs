@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Wampoon.Installer.Core.Events;
@@ -83,10 +84,10 @@ namespace Wampoon.Installer.Core
                 // Track selected packages for configuration.
                 TrackSelectedPackages(options);
 
-                // Phase 2: Configure all installed packages.
+                // Phase 2: Configure all successfully installed packages.
                 var configProgress = new Progress<string>(message => 
                     ReportProgress(message, GetProgressPercentage(), "Package Configuration"));
-                await installationCoordinator.ExecuteConfigurationAsync(_selectedPackages.ToArray(), configProgress, cancellationToken);
+                await installationCoordinator.ExecuteConfigurationAsync(installationCoordinator.SuccessfullyInstalledPackages.ToArray(), configProgress, cancellationToken);
 
                 // Clean up downloads folder.
                 await CleanupDownloadsFolderAsync(options.InstallPath);
@@ -381,7 +382,7 @@ namespace Wampoon.Installer.Core
                             var fileName = Path.GetFileName(scriptFile);
                             var destinationPath = Path.Combine(installPath, fileName);
                             
-                            // Copy the script file to the installation root
+                            // Copy the script file to the installation root for easy PATH access
                             File.Copy(scriptFile, destinationPath, true);
                         }
                         

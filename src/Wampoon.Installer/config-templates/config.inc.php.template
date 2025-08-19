@@ -43,6 +43,11 @@ $cfg['Servers'][$i]['socket'] = '';
 $cfg['Servers'][$i]['connect_type'] = 'tcp';
 $cfg['Servers'][$i]['extension'] = 'mysqli';
 
+/* hide database from phpmyadmin */
+//$cfg['Servers'][$i]['hide_db'] = '^(information_schema|mysql|sys|phpmyadmin|performance_schema)$';
+$cfg['TempDir'] = getenv('WAMPOON_ROOT_DIR').'/apps/temp/pma_tmp/';
+$cfg['Console']['DarkTheme'] = true;
+
 
 /**
  * phpMyAdmin configuration storage settings.

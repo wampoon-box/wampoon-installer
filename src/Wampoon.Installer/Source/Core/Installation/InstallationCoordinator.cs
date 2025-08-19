@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Wampoon.Installer.Core.Paths;
@@ -10,11 +11,15 @@ namespace Wampoon.Installer.Core.Installation
     {
         private readonly IPackageInstaller _packageInstaller;
         private readonly IPathResolver _pathResolver;
+        private readonly List<string> _successfullyInstalledPackages;
+
+        public IReadOnlyList<string> SuccessfullyInstalledPackages => _successfullyInstalledPackages.AsReadOnly();
 
         public InstallationCoordinator(IPackageInstaller packageInstaller, IPathResolver pathResolver)
         {
             _packageInstaller = packageInstaller ?? throw new ArgumentNullException(nameof(packageInstaller));
             _pathResolver = pathResolver ?? throw new ArgumentNullException(nameof(pathResolver));
+            _successfullyInstalledPackages = new List<string>();
         }
 
         public async Task ExecuteInstallationAsync(InstallOptions options, IProgress<string> progress, CancellationToken cancellationToken)
@@ -53,7 +58,7 @@ namespace Wampoon.Installer.Core.Installation
 
             if (options.InstallXdebug)
             {
-                await InstallPackageAsync(AppSettings.PackageNames.Xdebug, options.InstallPath, progress, cancellationToken);
+                await InstallOptionalPackageAsync(AppSettings.PackageNames.Xdebug, options.InstallPath, progress, cancellationToken);
             }
 
             if (options.InstallComposer)
@@ -103,6 +108,27 @@ namespace Wampoon.Installer.Core.Installation
         {
             cancellationToken.ThrowIfCancellationRequested();
             await _packageInstaller.InstallAsync(packageName, installPath, progress, cancellationToken);
+            _successfullyInstalledPackages.Add(packageName);
+        }
+
+        private async Task InstallOptionalPackageAsync(string packageName, string installPath, IProgress<string> progress, CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            
+            try
+            {
+                await _packageInstaller.InstallAsync(packageName, installPath, progress, cancellationToken);
+                _successfullyInstalledPackages.Add(packageName);
+                progress?.Report($"✓ {packageName} installed successfully");
+            }
+            catch (Exception ex)
+            {
+                progress?.Report($"⚠ Warning: Failed to install {packageName}: {ex.Message}");
+                progress?.Report($"⚠ Continuing installation without {packageName}...");
+                
+                // Log the error but don't throw - continue with installation
+                Helpers.ErrorLogHelper.LogExceptionInfo(ex);
+            }
         }
     }
 }

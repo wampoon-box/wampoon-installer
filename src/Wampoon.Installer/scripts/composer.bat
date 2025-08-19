@@ -3,7 +3,7 @@ REM Wampoon Composer Command Line Wrapper
 REM This script sets up the environment and runs Composer with proper PHP path
 
 REM Set WAMPOON_ROOT_DIR to the parent directory (one level up from scripts folder)
-set "WAMPOON_ROOT_DIR=%~dp0.."
+set "WAMPOON_ROOT_DIR=%~dp0"
 
 REM Define paths to Wampoon components
 set "WAMPOON_PHP_DIR=%WAMPOON_ROOT_DIR%\apps\php"

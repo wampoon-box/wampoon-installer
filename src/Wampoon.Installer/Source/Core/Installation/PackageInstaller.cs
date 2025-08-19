@@ -63,6 +63,14 @@ namespace Wampoon.Installer.Core.Installation
                 case AppSettings.PackageNames.Xdebug:
                     await XdebugConfigHelper.ConfigureXdebugAsync(pathResolver, progress);
                     break;
+                case AppSettings.PackageNames.Dashboard:
+                    // Wampoon Dashboard doesn't require configuration - it's ready to use after installation
+                    progress?.Report("Wampoon Dashboard configuration completed (no configuration needed)");
+                    break;
+                case AppSettings.PackageNames.ControlPanel:
+                    // Wampoon Control Panel doesn't require configuration - it's ready to use after installation
+                    progress?.Report("Wampoon Control Panel configuration completed (no configuration needed)");
+                    break;
                 case AppSettings.PackageNames.Composer:
                     // Composer doesn't require configuration - it's ready to use after installation
                     progress?.Report("Composer configuration completed (no configuration needed)");
