@@ -63,6 +63,22 @@ namespace Wampoon.Installer.Core.Installation
                 case AppSettings.PackageNames.Xdebug:
                     await XdebugConfigHelper.ConfigureXdebugAsync(pathResolver, progress);
                     break;
+                case AppSettings.PackageNames.Dashboard:
+                    // Wampoon Dashboard doesn't require configuration - it's ready to use after installation
+                    progress?.Report("Wampoon Dashboard configuration completed (no configuration needed)");
+                    break;
+                case AppSettings.PackageNames.ControlPanel:
+                    // Wampoon Control Panel doesn't require configuration - it's ready to use after installation
+                    progress?.Report("Wampoon Control Panel configuration completed (no configuration needed)");
+                    break;
+                case AppSettings.PackageNames.Composer:
+                    // Composer doesn't require configuration - it's ready to use after installation
+                    progress?.Report("Composer configuration completed (no configuration needed)");
+                    break;
+                case AppSettings.PackageNames.VCRuntime:
+                    // VC++ Runtime doesn't require configuration - it's ready to use after installation
+                    progress?.Report("VC++ Runtime configuration completed (no configuration needed)");
+                    break;
                 default:
                     throw new ArgumentException($"Configuration not supported for package '{packageName}'");
             }
@@ -87,6 +103,8 @@ namespace Wampoon.Installer.Core.Installation
                 case AppSettings.PackageNames.Dashboard:
                 case AppSettings.PackageNames.ControlPanel:
                 case AppSettings.PackageNames.Xdebug:
+                case AppSettings.PackageNames.Composer:
+                case AppSettings.PackageNames.VCRuntime:
                     return true;
                 default:
                     return false;
@@ -155,6 +173,10 @@ namespace Wampoon.Installer.Core.Installation
                     return "Wampoon Control Panel";
                 case AppSettings.PackageNames.Xdebug:
                     return "Xdebug PHP Extension";
+                case AppSettings.PackageNames.Composer:
+                    return "Composer Dependency Manager";
+                case AppSettings.PackageNames.VCRuntime:
+                    return "Microsoft Visual C++ Runtime";
                 default:
                     return packageName;
             }

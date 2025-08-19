@@ -60,7 +60,9 @@ namespace Wampoon.Installer.Models
         PhpMyAdmin = 5,
         WampoonDashboard = 6,
         WampoonControlPanel = 7,
-        Xdebug = 8
+        Xdebug = 8,
+        Composer = 9,
+        VCRuntime = 10
     }
 
     /// <summary>

@@ -27,33 +27,76 @@ namespace Wampoon.Installer.Core
             _logger = LoggerFactory.Default;
         }
 
-        public Task<List<InstallablePackage>> GetAvailablePackagesAsync()
+        public async Task<List<InstallablePackage>> GetAvailablePackagesAsync()
         {
-            if (_packages != null)
-                return Task.FromResult(_packages);
+            return await GetAvailablePackagesAsync(PackageSource.Auto);
+        }
 
-            // Try local file first for faster startup.
-            _packages = LoadPackagesFromLocalFile();
-            
-            // If local file didn't have valid packages, try remote manifest.
-            if (_packages == null || !_packages.Any())
+        public async Task<List<InstallablePackage>> GetAvailablePackagesAsync(PackageSource source)
+        {
+            // Reset packages if we're changing sources
+            if (_packages != null && source != PackageSource.Auto)
             {
-                // TODO: Re-enable remote manifest loading when web server is ready
-                // try
-                // {
-                //     _packages = await LoadPackagesFromManifestAsync();
-                // }
-                // catch
-                // {
-                //     // If both fail, use fallback.
-                //     _packages = GetFallbackPackages();
-                // }
-                
-                // Temporarily use fallback packages directly
-                _packages = GetFallbackPackages();
+                _packages = null;
             }
 
-            return Task.FromResult(_packages);
+            if (_packages != null)
+                return _packages;
+
+            switch (source)
+            {
+                case PackageSource.LocalOnly:
+                    _packages = LoadPackagesFromLocalFile();
+                    if (_packages == null || !_packages.Any())
+                    {
+                        throw new InvalidOperationException("Unable to load packages from local file. Please ensure the packagesInfo.json file exists and contains valid package data, or switch to web-based package source.");
+                    }
+                    break;
+
+                case PackageSource.WebOnly:
+                    try
+                    {
+                        _packages = await LoadPackagesFromManifestAsync();
+                        if (_packages == null || !_packages.Any())
+                        {
+                            throw new InvalidOperationException("Unable to load packages from web manifest. Please check your internet connection and try again.");
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        throw new InvalidOperationException("Failed to load web manifest. Please check your internet connection and try again.", ex);
+                    }
+                    break;
+
+
+                case PackageSource.Auto:
+                default:
+                    // Try remote manifest first for latest packages.
+                    try
+                    {
+                        _packages = await LoadPackagesFromManifestAsync();
+                        
+                        // If remote failed or returned empty, try local file as backup.
+                        if (_packages == null || !_packages.Any())
+                        {
+                            _packages = LoadPackagesFromLocalFile();
+                        }
+                    }
+                    catch
+                    {
+                        // If remote fails, try local file as backup.
+                        _packages = LoadPackagesFromLocalFile();
+                    }
+                    
+                    // If both failed, notify the user instead of using outdated embedded packages.
+                    if (_packages == null || !_packages.Any())
+                    {
+                        throw new InvalidOperationException("Unable to load packages from both web manifest and local file. Please check your internet connection or ensure the local packagesInfo.json file exists and contains valid package data.");
+                    }
+                    break;
+            }
+
+            return _packages;
         }
 
         private async Task<List<InstallablePackage>> LoadPackagesFromManifestAsync()
@@ -69,11 +112,11 @@ namespace Wampoon.Installer.Core
             {
                 var json = await _httpClient.GetStringAsync(manifestUrl);
                 var packages = JsonConvert.DeserializeObject<List<InstallablePackage>>(json);
-                return packages != null ? MergeWithMetadata(packages) : LoadPackagesFromLocalFile();
+                return packages != null ? MergeWithMetadata(packages) : null;
             }
             catch
             {
-                return LoadPackagesFromLocalFile();
+                return null;
             }
         }
 
@@ -94,7 +137,7 @@ namespace Wampoon.Installer.Core
                 // Ignore config errors and use default.
             }
             
-            return "https://raw.githubusercontent.com/your-org/pwamp-packages/main/packages.json";
+            return "https://raw.githubusercontent.com/wampoon-box/wampoon-packages/refs/heads/main/packagesInfo.json";
         }
 
         private bool IsUrlAllowed(string url)
@@ -110,11 +153,11 @@ namespace Wampoon.Installer.Core
 
         private List<InstallablePackage> LoadPackagesFromLocalFile()
         {
+            var appDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) ?? Environment.CurrentDirectory;
+            var packagesPath = Path.Combine(appDir, "Data", InstallerConstants.PackagesFileName);
+            
             try
             {
-                var appDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) ?? Environment.CurrentDirectory;
-                var packagesPath = Path.Combine(appDir, "Data", InstallerConstants.PackagesFileName);
-                
                 if (File.Exists(packagesPath))
                 {
                     var json = File.ReadAllText(packagesPath);
@@ -125,21 +168,20 @@ namespace Wampoon.Installer.Core
                     }
                     else
                     {
-                        _logger.LogWarning("Local packages file is empty or contains invalid data. Falling back to embedded package information.");
+                        _logger.LogWarning("Local packages file is empty or contains invalid data.");
                     }
                 }
                 else
                 {
-                    _logger.LogWarning("Local packages file not found. Ensure that the packagesInfo.json file exists in Data/ folder. Falling back to embedded package information.");
+                    _logger.LogWarning("Local packages file not found. Ensure that the packagesInfo.json file exists in Data/ folder.");
                 }
             }
             catch (Exception ex)
             {
-                _logger.LogError("Error loading packages from local file. Falling back to embedded package information.", ex);
+                _logger.LogError($"Error loading packages from local file. Path: {packagesPath}. Error: {ex.Message}", ex);
             }
 
-            // Fallback to minimal package list if JSON loading fails.
-            return GetFallbackPackages();
+            return null;
         }
 
 
@@ -256,6 +298,48 @@ namespace Wampoon.Installer.Core
                     EstimatedSize = 3 * 1024 * 1024,
                     Description = "Wampoon Control Panel - Desktop control panel for managing Wampoon services.",
                     InstallPath = "wampoon-control-panel",
+                    ArchiveFormat = "zip",
+                    Dependencies = new List<PackageType>()
+                },
+                new InstallablePackage
+                {
+                    PackageID = PackageType.Xdebug,
+                    Name = "Xdebug",
+                    Version = new Version(3, 4, 5),
+                    DownloadUrl = new Uri("https://xdebug.org/files/php_xdebug-3.4.5-8.4-ts-vs17-x86_64.dll"),
+                    Type = PackageType.Xdebug,
+                    ServerName = "Xdebug",
+                    EstimatedSize = 1 * 1024 * 1024,
+                    Description = "Xdebug - PHP debugging and profiling extension.",
+                    InstallPath = "temp/xdebug",
+                    ArchiveFormat = "dll",
+                    Dependencies = new List<PackageType> { PackageType.PHP }
+                },
+                new InstallablePackage
+                {
+                    PackageID = PackageType.Composer,
+                    Name = "Composer",
+                    Version = new Version(2, 8, 10),
+                    DownloadUrl = new Uri("https://getcomposer.org/download/2.8.10/composer.phar"),
+                    Type = PackageType.Composer,
+                    ServerName = "Composer",
+                    EstimatedSize = 2 * 1024 * 1024,
+                    Description = "Composer - PHP dependency manager.",
+                    InstallPath = "apps/composer",
+                    ArchiveFormat = "phar",
+                    Dependencies = new List<PackageType> { PackageType.PHP }
+                },
+                new InstallablePackage
+                {
+                    PackageID = PackageType.VCRuntime,
+                    Name = "Microsoft Visual C++ Runtime",
+                    Version = new Version(14, 0, 0),
+                    DownloadUrl = new Uri("https://github.com/wampoon-box/wampoon-packages/raw/refs/heads/main/vc_runtime.zip"),
+                    Type = PackageType.VCRuntime,
+                    ServerName = "VC++ Runtime",
+                    EstimatedSize = 10 * 1024 * 1024,
+                    Description = "Microsoft Visual C++ Runtime redistributables for PHP, Apache, and MariaDB.",
+                    InstallPath = "temp/vcruntime",
                     ArchiveFormat = "zip",
                     Dependencies = new List<PackageType>()
                 }

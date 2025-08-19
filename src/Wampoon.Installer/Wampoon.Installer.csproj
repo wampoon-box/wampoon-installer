@@ -56,6 +56,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Source\Core\ArchiveExtractor.cs" />
+    <Compile Include="Source\Core\PackageSource.cs" />
+    <Compile Include="Source\Core\UserSettings.cs" />
     <Compile Include="Source\Enums\InstallerEnums.cs" />
     <Compile Include="Source\Events\ExistingPackagesEventArgs.cs" />
     <Compile Include="Source\Events\InstallErrorEventArgs.cs" />
@@ -153,6 +155,9 @@
     <None Include="config-templates\httpd-wampoon-vhosts.conf.template">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="config-templates\LICENSE.md">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -162,6 +167,15 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <None Include="scripts\composer.bat">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="scripts\mysql.bat">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="scripts\php.bat">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

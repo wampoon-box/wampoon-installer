@@ -2,52 +2,66 @@
   {
     "PackageID": 1,
     "Name": "Apache HTTP Server",
-    "Version": "2.4.65",
+    "Version": "2.4.65.0",
     "DownloadUrl": "https://www.apachelounge.com/download/VS17/binaries/httpd-2.4.65-250724-Win64-VS17.zip",
     "Checksum": ""
   },
   {
     "PackageID": 2,
     "Name": "MariaDB Server",
-    "Version": "11.8.2",
-    "DownloadUrl": "https://mirror.us.mirhosting.net/mariadb/mariadb-11.8.2/winx64-packages/mariadb-11.8.2-winx64.zip",
+    "Version": "11.8.3.0",
+    "DownloadUrl": "https://mirrors.accretive-networks.net/mariadb/mariadb-11.8.3/winx64-packages/mariadb-11.8.3-winx64.zip",
     "Checksum": ""
   },
   {
     "PackageID": 4,
     "Name": "PHP Runtime",
-    "Version": "8.4.10",
-    "DownloadUrl": "https://windows.php.net/downloads/releases/php-8.4.10-Win32-vs17-x64.zip",
+    "Version": "8.4.10.0",
+    "DownloadUrl": "https://windows.php.net/downloads/releases/archives/php-8.4.10-Win32-vs17-x64.zip",
     "Checksum": ""
   },
   {
     "PackageID": 5,
     "Name": "phpMyAdmin",
-    "Version": "5.2.2",
+    "Version": "5.2.2.0",
     "DownloadUrl": "https://files.phpmyadmin.net/snapshots/phpMyAdmin-5.2+snapshot-all-languages.zip",
     "Checksum": ""
   },
   {
     "PackageID": 6,
     "Name": "wampoon-dashboard",
-    "Version": "0.1.1",
+    "Version": "0.1.1.0",
     "DownloadUrl": "https://github.com/wampoon-box/wampoon-dashboard/releases/latest/download/wampoon-dashboard.zip",
     "Checksum": ""
-  }
-  ,
+  },
   {
     "PackageID": 7,
     "Name": "Wampoon Control Panel",
-    "Version": "0.1.0",
+    "Version": "0.1.0.0",
     "DownloadUrl": "https://github.com/wampoon-box/wampoon-control/releases/latest/download/wampoon-control.zip",
     "Checksum": ""
   },
   {
     "PackageID": 8,
     "Name": "Xdebug",
-    "Version": "3.4.5",
+    "Version": "3.4.5.0",
     "DownloadUrl": "https://xdebug.org/files/php_xdebug-3.4.5-8.4-ts-vs17-x86_64.dll",
     "Checksum": ""
   },
-  
-] 
+  {
+    "PackageID": 9,
+    "Name": "Composer",
+    "Version": "2.8.10.0",
+    "DownloadUrl": "https://getcomposer.org/download/2.8.10/composer.phar",
+    "ArchiveFormat": "phar",
+    "Checksum": ""
+  },
+  {
+    "PackageID": 10,
+    "Name": "Microsoft Visual C++ Runtime",
+    "Version": "14.0.0.0",
+    "DownloadUrl": "https://github.com/wampoon-box/wampoon-packages/raw/refs/heads/main/vc_runtime.zip",
+    "ArchiveFormat": "zip",
+    "Checksum": ""
+  }
+]

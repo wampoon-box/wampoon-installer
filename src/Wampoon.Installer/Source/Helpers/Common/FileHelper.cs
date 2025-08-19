@@ -57,6 +57,8 @@ namespace Wampoon.Installer.Helpers.Common
                     return ValidateFileExists(Path.Combine(installPath, "apps", "php", "php.exe"), "PHP binary");
                 case "phpmyadmin":
                     return ValidateFileExists(Path.Combine(installPath, "apps", "phpmyadmin", "index.php"), "phpMyAdmin");
+                case "vcruntime":
+                    return ValidateVCRuntimePrerequisites(installPath);
                 default:
                     return true; // Unknown packages are considered valid for extensibility
             }
@@ -74,9 +76,41 @@ namespace Wampoon.Installer.Helpers.Common
                     return ValidateFileExists(Path.Combine(installPath, "apps", "php", "php.ini"), "PHP configuration");
                 case "phpmyadmin":
                     return ValidateFileExists(Path.Combine(installPath, "apps", "phpmyadmin", "config.inc.php"), "phpMyAdmin configuration");
+                case "vcruntime":
+                    return ValidateVCRuntimeConfiguration(installPath);
                 default:
                     return true; // Unknown packages are considered valid for extensibility
             }
+        }
+
+        private static bool ValidateVCRuntimePrerequisites(string installPath)
+        {
+            var targetDirectories = new[]
+            {
+                Path.Combine(installPath, "apps", "php"),
+                Path.Combine(installPath, "apps", "mariadb", "bin"),
+                Path.Combine(installPath, "apps", "apache", "bin")
+            };
+
+            var commonRuntimeFiles = new[] { "vcruntime140.dll", "msvcp140.dll" };
+
+            foreach (var targetDir in targetDirectories)
+            {
+                foreach (var file in commonRuntimeFiles)
+                {
+                    if (ValidateFileExists(Path.Combine(targetDir, file), $"VC++ Runtime {file} in {Path.GetFileName(targetDir)}"))
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
+        }
+
+        private static bool ValidateVCRuntimeConfiguration(string installPath)
+        {
+            return ValidateVCRuntimePrerequisites(installPath);
         }
 
         public static async Task MoveDirectoryContentsAsync(string sourceDirectory, string targetDirectory)

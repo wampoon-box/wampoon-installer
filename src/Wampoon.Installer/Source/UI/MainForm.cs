@@ -41,7 +41,8 @@ namespace Wampoon.Installer.UI
             }
             
             InitializeBanner();
-            InitializeInstallManager();
+            InitializePackageSourceSelection();
+            InitializeUI();
         }
 
 
@@ -75,16 +76,40 @@ namespace Wampoon.Installer.UI
             }
         }
 
-        private void InitializeInstallManager()
+        private void InitializePackageSourceSelection()
         {
-            _installManager = new InstallManager();
-            _installManager.ProgressChanged += InstallManager_ProgressChanged;
-            _installManager.ErrorOccurred += InstallManager_ErrorOccurred;
-            _installManager.InstallationCompleted += InstallManager_InstallationCompleted;
+            // Populate the combo box with package source options
+            _packageSourceComboBox.Items.Clear();
+            _packageSourceComboBox.Items.Add(new PackageSourceItem(PackageSource.Auto));
+            _packageSourceComboBox.Items.Add(new PackageSourceItem(PackageSource.LocalOnly));
+            _packageSourceComboBox.Items.Add(new PackageSourceItem(PackageSource.WebOnly));
+
+            // Load user's preferred package source
+            var userSettings = UserSettings.Instance;
+            var preferredSource = userSettings.PackageSource;
             
-            _packageRepository = new PackageRepository();
-            _packageDiscoveryService = new PackageDiscoveryService(_packageRepository);
+            // Find and select the preferred source
+            for (int i = 0; i < _packageSourceComboBox.Items.Count; i++)
+            {
+                var item = _packageSourceComboBox.Items[i] as PackageSourceItem;
+                if (item?.Source == preferredSource)
+                {
+                    _packageSourceComboBox.SelectedIndex = i;
+                    break;
+                }
+            }
             
+            // Fallback to Auto if not found
+            if (_packageSourceComboBox.SelectedIndex == -1)
+            {
+                _packageSourceComboBox.SelectedIndex = 0;
+            }
+            
+            _packageSourceDescriptionLabel.Text = preferredSource.GetDescription();
+        }
+
+        private void InitializeUI()
+        {
             // Subscribe to logger events to display messages to users
             var logger = LoggerFactory.Default as EventBasedLogger;
             if (logger != null)
@@ -92,14 +117,43 @@ namespace Wampoon.Installer.UI
                 logger.LogMessage += Logger_LogMessage;
             }
             
-            // This should now be fast since it loads from local file first.
-            UpdateComponentVersions();
-            
             // Update form title with version
             var version = UiHelper.GetFormattedInstallerVersion();
             Text = !string.IsNullOrEmpty(version) 
                 ? $"{AppConstants.APP_FULL_NAME} {version}" 
                 : AppConstants.APP_FULL_NAME;
+                
+            // Set default component text immediately (non-blocking)
+            SetDefaultComponentText();
+        }
+
+        private void InitializePackageDiscovery()
+        {
+            if (_packageRepository == null)
+            {
+                _packageRepository = new PackageRepository();
+                _packageDiscoveryService = new PackageDiscoveryService(_packageRepository);
+            }
+        }
+
+        private void InitializeInstallManager()
+        {
+            if (_installManager == null)
+            {
+                _installManager = new InstallManager();
+                _installManager.ProgressChanged += InstallManager_ProgressChanged;
+                _installManager.ErrorOccurred += InstallManager_ErrorOccurred;
+                _installManager.InstallationCompleted += InstallManager_InstallationCompleted;
+            }
+        }
+
+        protected override void OnLoad(EventArgs e)
+        {
+            base.OnLoad(e);
+            
+            // Initialize package discovery and start loading versions in background after form is visible
+            InitializePackageDiscovery();
+            UpdateComponentVersions();
         }
 
         private void BrowseButton_Click(object sender, EventArgs e)
@@ -177,6 +231,9 @@ namespace Wampoon.Installer.UI
                     InstallPhpMyAdmin = _phpmyadminCheckBox.Checked,
                     InstallXdebug = _xdebugCheckBox.Checked
                 };
+
+                // Initialize InstallManager lazily right before installation
+                InitializeInstallManager();
 
                 // Start installation.
                 await _installManager.InstallAsync(options, _cancellationTokenSource.Token);
@@ -552,6 +609,63 @@ namespace Wampoon.Installer.UI
                 
             if (xdebugPackage != null)
                 _xdebugCheckBox.Text = $"🐛 Xdebug PHP Extension (v{xdebugPackage.Version})";
+        }
+
+        private void PackageSourceComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            var selectedItem = _packageSourceComboBox.SelectedItem as PackageSourceItem;
+            if (selectedItem != null)
+            {
+                _packageSourceDescriptionLabel.Text = selectedItem.Source.GetDescription();
+                
+                // Save user preference
+                var userSettings = UserSettings.Instance;
+                userSettings.PackageSource = selectedItem.Source;
+                
+                // Reload packages when source changes
+                _ = Task.Run(async () =>
+                {
+                    try
+                    {
+                        await _packageRepository.GetAvailablePackagesAsync(selectedItem.Source);
+                        
+                        // Update UI on main thread
+                        if (!this.IsDisposed && this.IsHandleCreated)
+                        {
+                            this.Invoke((MethodInvoker)(() =>
+                            {
+                                UpdateComponentVersions();
+                            }));
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        // Log error but don't crash UI
+                        if (!this.IsDisposed && this.IsHandleCreated)
+                        {
+                            this.Invoke((MethodInvoker)(() =>
+                            {
+                                _packageSourceDescriptionLabel.Text = $"Error loading packages: {ex.Message}";
+                            }));
+                        }
+                    }
+                });
+            }
+        }
+
+        private class PackageSourceItem
+        {
+            public PackageSource Source { get; }
+
+            public PackageSourceItem(PackageSource source)
+            {
+                Source = source;
+            }
+
+            public override string ToString()
+            {
+                return Source.GetDisplayName();
+            }
         }
     }
 }

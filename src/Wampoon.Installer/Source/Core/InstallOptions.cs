@@ -12,6 +12,8 @@ namespace Wampoon.Installer.Core
         public bool InstallDashboard { get; set; }
         public bool InstallControlPanel { get; set; }
         public bool InstallXdebug { get; set; }
+        public bool InstallComposer { get; set; }
+        public bool InstallVCRuntime { get; set; }
 
         public InstallOptions()
         {
@@ -23,6 +25,8 @@ namespace Wampoon.Installer.Core
             InstallDashboard = true;
             InstallControlPanel = true;
             InstallXdebug = false;
+            InstallComposer = true;
+            InstallVCRuntime = true;
         }
 
         public string[] GetSelectedPackages()
@@ -36,6 +40,8 @@ namespace Wampoon.Installer.Core
             if (InstallDashboard) packages.Add(AppSettings.PackageNames.Dashboard);
             if (InstallControlPanel) packages.Add(AppSettings.PackageNames.ControlPanel);
             if (InstallXdebug) packages.Add(AppSettings.PackageNames.Xdebug);
+            if (InstallComposer) packages.Add(AppSettings.PackageNames.Composer);
+            if (InstallVCRuntime) packages.Add(AppSettings.PackageNames.VCRuntime);
             
             return packages.ToArray();
         }

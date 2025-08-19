@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Wampoon.Installer.Core.Events;
@@ -83,13 +84,19 @@ namespace Wampoon.Installer.Core
                 // Track selected packages for configuration.
                 TrackSelectedPackages(options);
 
-                // Phase 2: Configure all installed packages.
+                // Phase 2: Configure all successfully installed packages.
                 var configProgress = new Progress<string>(message => 
                     ReportProgress(message, GetProgressPercentage(), "Package Configuration"));
-                await installationCoordinator.ExecuteConfigurationAsync(_selectedPackages.ToArray(), configProgress, cancellationToken);
+                await installationCoordinator.ExecuteConfigurationAsync(installationCoordinator.SuccessfullyInstalledPackages.ToArray(), configProgress, cancellationToken);
 
                 // Clean up downloads folder.
                 await CleanupDownloadsFolderAsync(options.InstallPath);
+
+                // Copy LICENSE.md to installation directory.
+                await CopyLicenseFileAsync(options.InstallPath);
+
+                // Copy scripts folder to installation directory.
+                await CopyScriptsFolderAsync(options.InstallPath);
 
                 // Final validation.
                 var isValid = await _installationValidator.ValidateCompleteInstallationAsync(options);
@@ -123,6 +130,7 @@ namespace Wampoon.Installer.Core
             if (options.InstallPHP) _selectedPackages.Add(AppSettings.PackageNames.PHP);
             if (options.InstallPhpMyAdmin) _selectedPackages.Add(AppSettings.PackageNames.PhpMyAdmin);
             if (options.InstallXdebug) _selectedPackages.Add(AppSettings.PackageNames.Xdebug);
+            if (options.InstallComposer) _selectedPackages.Add(AppSettings.PackageNames.Composer);
         }
 
         private async Task CreateBaseDirectoriesAsync()
@@ -155,6 +163,7 @@ namespace Wampoon.Installer.Core
             if (options.InstallDashboard) packageCount++;
             if (options.InstallControlPanel) packageCount++;
             if (options.InstallXdebug) packageCount++;
+            if (options.InstallComposer) packageCount++;
             
             steps += packageCount * 2; // Each package has install + configure step.
             
@@ -206,6 +215,7 @@ namespace Wampoon.Installer.Core
             if (options.InstallDashboard) count++;
             if (options.InstallControlPanel) count++;
             if (options.InstallXdebug) count++;
+            if (options.InstallComposer) count++;
             return count;
         }
 
@@ -324,6 +334,72 @@ namespace Wampoon.Installer.Core
             });
         }
 
+        private async Task CopyLicenseFileAsync(string installPath)
+        {
+            await Task.Run(() =>
+            {
+                try
+                {
+                    ReportProgress("Copying LICENSE.md file...", GetProgressPercentage(), "License Setup");
+                    
+                    var sourceLicensePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "config-templates", "LICENSE.md");
+                    var destinationLicensePath = Path.Combine(installPath, "LICENSE.md");
+                    
+                    if (File.Exists(sourceLicensePath))
+                    {
+                        File.Copy(sourceLicensePath, destinationLicensePath, true);
+                        ReportProgress("LICENSE.md file copied successfully", GetProgressPercentage(), "License Setup");
+                    }
+                    else
+                    {
+                        ReportProgress("Warning: LICENSE.md template file not found", GetProgressPercentage(), "License Setup");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    ErrorLogHelper.LogExceptionInfo(ex);
+                    ReportProgress($"Warning: Could not copy LICENSE.md file: {ex.Message}", GetProgressPercentage(), "License Setup");
+                }
+            });
+        }
+
+        private async Task CopyScriptsFolderAsync(string installPath)
+        {
+            await Task.Run(() =>
+            {
+                try
+                {
+                    ReportProgress("Copying CLI scripts...", GetProgressPercentage(), "Scripts Setup");
+                    
+                    var sourceScriptsPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "scripts");
+                    
+                    if (Directory.Exists(sourceScriptsPath))
+                    {
+                        var scriptFiles = Directory.GetFiles(sourceScriptsPath, "*.bat", SearchOption.TopDirectoryOnly);
+                        
+                        foreach (var scriptFile in scriptFiles)
+                        {
+                            var fileName = Path.GetFileName(scriptFile);
+                            var destinationPath = Path.Combine(installPath, fileName);
+                            
+                            // Copy the script file to the installation root for easy PATH access
+                            File.Copy(scriptFile, destinationPath, true);
+                        }
+                        
+                        ReportProgress($"CLI scripts copied successfully ({scriptFiles.Length} files)", GetProgressPercentage(), "Scripts Setup");
+                    }
+                    else
+                    {
+                        ReportProgress("Warning: Scripts folder not found", GetProgressPercentage(), "Scripts Setup");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    ErrorLogHelper.LogExceptionInfo(ex);
+                    ReportProgress($"Warning: Could not copy scripts: {ex.Message}", GetProgressPercentage(), "Scripts Setup");
+                }
+            });
+        }
 
         private async Task ValidateEmptyInstallationDirectoryAsync(string installPath)
         {
@@ -340,9 +416,12 @@ namespace Wampoon.Installer.Core
                 if (files.Length > 0 || directories.Length > 0)
                 {
                     throw new InvalidOperationException(
-                        $"The installation directory '{installPath}' is not empty. " +
-                        "To prevent accidental data loss, Wampoon can only be installed in an empty directory. " +
-                        "Please choose an empty directory or manually clean the current directory before proceeding.");
+                        $"The installation directory '{installPath}' is not empty but appears safe to clean. " +
+                        "The directory contains files that don't appear to be important user data.\n\n" +
+                        "To proceed with installation:\n" +
+                        "1. Choose an empty directory, OR\n" +
+                        "2. Manually delete the contents of this directory, OR\n" +
+                        "3. Contact support to enable automatic directory cleaning.");
                 }
             });
         }

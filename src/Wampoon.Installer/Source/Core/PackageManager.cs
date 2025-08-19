@@ -86,28 +86,45 @@ namespace Wampoon.Installer.Core
             // Download package.
             var downloadedPath = await DownloadPackageAsync(packageName, downloadDir, logger, cancellationToken);
 
-            // Extract to appropriate folder based on package type.
-            var extractPath = GetPackageExtractionPath(packageName, installPath);
-            var extractedPath = await ExtractPackageAsync(packageName, downloadedPath, extractPath, logger, cancellationToken);
+            string extractedPath;
             
-            // Special handling for control panel - move files from temp to install directory
-            if (packageName.Equals(AppSettings.PackageNames.ControlPanel, StringComparison.OrdinalIgnoreCase))
+            // Special handling for Composer - move .phar file directly from downloads to apps/composer
+            if (packageName.Equals(AppSettings.PackageNames.Composer, StringComparison.OrdinalIgnoreCase))
             {
-                await MoveControlPanelFilesToInstallDirectoryAsync(extractedPath, installPath, logger);
-                extractedPath = installPath;
+                await MoveComposerPharFromDownloadsAsync(downloadedPath, installPath, logger);
+                extractedPath = Path.Combine(installPath, "apps", "composer");
+            }
+            else
+            {
+                // Extract to appropriate folder based on package type.
+                var extractPath = GetPackageExtractionPath(packageName, installPath);
+                extractedPath = await ExtractPackageAsync(packageName, downloadedPath, extractPath, logger, cancellationToken);
+                
+                // Special handling for control panel - move files from temp to install directory
+                if (packageName.Equals(AppSettings.PackageNames.ControlPanel, StringComparison.OrdinalIgnoreCase))
+                {
+                    await MoveControlPanelFilesToInstallDirectoryAsync(extractedPath, installPath, logger);
+                    extractedPath = installPath;
+                }
             }
 
             // Clean up downloaded archive to save space (but keep DLL files for Xdebug)
+            // Note: Composer .phar files are already moved to apps/composer, so no cleanup needed
             try
             {
-                if (!packageName.Equals(AppSettings.PackageNames.Xdebug, StringComparison.OrdinalIgnoreCase))
+                if (!packageName.Equals(AppSettings.PackageNames.Xdebug, StringComparison.OrdinalIgnoreCase) &&
+                    !packageName.Equals(AppSettings.PackageNames.Composer, StringComparison.OrdinalIgnoreCase))
                 {
                     File.Delete(downloadedPath);
                     logger?.Report($"Cleaned up download file: {Path.GetFileName(downloadedPath)}");
                 }
-                else
+                else if (packageName.Equals(AppSettings.PackageNames.Xdebug, StringComparison.OrdinalIgnoreCase))
                 {
                     logger?.Report($"Keeping Xdebug DLL file: {Path.GetFileName(downloadedPath)}");
+                }
+                else if (packageName.Equals(AppSettings.PackageNames.Composer, StringComparison.OrdinalIgnoreCase))
+                {
+                    logger?.Report($"Composer .phar file already moved to apps/composer directory");
                 }
             }
             catch
@@ -137,6 +154,12 @@ namespace Wampoon.Installer.Core
             
             // Xdebug extracts to temp folder for processing by config helper
             if (packageName.Equals(AppSettings.PackageNames.Xdebug, StringComparison.OrdinalIgnoreCase))
+            {
+                return Path.Combine(installPath, "temp", _packageDiscoveryService.GetPackageDirectoryName(packageName));
+            }
+            
+            // Composer .phar file doesn't need extraction - it's moved directly to apps/composer
+            if (packageName.Equals(AppSettings.PackageNames.Composer, StringComparison.OrdinalIgnoreCase))
             {
                 return Path.Combine(installPath, "temp", _packageDiscoveryService.GetPackageDirectoryName(packageName));
             }
@@ -197,6 +220,42 @@ namespace Wampoon.Installer.Core
             {
                 ErrorLogHelper.LogExceptionInfo(ex);
                     logger?.Report($"Warning: Could not move all control panel files: {ex.Message}");
+                }
+            });
+        }
+
+        private async Task MoveComposerPharFromDownloadsAsync(string downloadedFilePath, string installPath, IProgress<string> logger)
+        {
+            await Task.Run(() =>
+            {
+                try
+                {
+                    logger?.Report("Moving Composer .phar file to apps directory...");
+                    
+                    // Create apps/composer directory
+                    var composerAppsPath = Path.Combine(installPath, "apps", "composer");
+                    if (!Directory.Exists(composerAppsPath))
+                    {
+                        Directory.CreateDirectory(composerAppsPath);
+                        logger?.Report("Created apps/composer directory");
+                    }
+                    
+                    var fileName = Path.GetFileName(downloadedFilePath);
+                    var destinationPath = Path.Combine(composerAppsPath, fileName);
+                    
+                    if (File.Exists(destinationPath))
+                    {
+                        File.Delete(destinationPath);
+                    }
+                    
+                    // Move the .phar file from downloads to apps/composer/
+                    File.Move(downloadedFilePath, destinationPath);
+                    logger?.Report($"Moved {fileName} to apps/composer/ directory");
+                }
+                catch (Exception ex)
+                {
+                    ErrorLogHelper.LogExceptionInfo(ex);
+                    logger?.Report($"Warning: Could not move Composer .phar file: {ex.Message}");
                 }
             });
         }
