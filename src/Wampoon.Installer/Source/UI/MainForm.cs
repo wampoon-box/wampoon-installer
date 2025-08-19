@@ -627,6 +627,12 @@ namespace Wampoon.Installer.UI
                 {
                     try
                     {
+                        // Ensure package repository is initialized before using it
+                        if (_packageRepository == null)
+                        {
+                            return;
+                        }
+                        
                         await _packageRepository.GetAvailablePackagesAsync(selectedItem.Source);
                         
                         // Update UI on main thread
