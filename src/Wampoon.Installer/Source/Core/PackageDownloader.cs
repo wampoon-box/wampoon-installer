@@ -21,14 +21,12 @@ namespace Wampoon.Installer.Core
         public PackageDownloader()
         {
             // Configure global TLS/SSL settings for .NET 4.8 compatibility
+            // TLS 1.2 (3072) | TLS 1.1 (768) | TLS 1.0 (192)
             ServicePointManager.SecurityProtocol = (SecurityProtocolType)3072 | (SecurityProtocolType)768 | (SecurityProtocolType)192;
-            ServicePointManager.CheckCertificateRevocationList = false;
-            ServicePointManager.ServerCertificateValidationCallback = (sender, certificate, chain, sslPolicyErrors) => true;
-            
+
             // Create HttpClientHandler with TLS configuration
             var handler = new HttpClientHandler()
             {
-                ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true,
                 SslProtocols = SslProtocols.Tls12 | SslProtocols.Tls11 | SslProtocols.Tls
             };
             
@@ -430,38 +428,32 @@ namespace Wampoon.Installer.Core
                 });
 
                 // Download with progress tracking
-                await Task.Run(() =>
+                var tcs = new TaskCompletionSource<bool>();
+
+                webClient.DownloadProgressChanged += (sender, e) =>
                 {
-                    webClient.DownloadProgressChanged += (sender, e) =>
+                    if (!cancellationToken.IsCancellationRequested)
                     {
-                        if (!cancellationToken.IsCancellationRequested)
-                        {
-                            ((IProgress<int>)progress).Report(e.ProgressPercentage);
-                        }
-                    };
-
-                    webClient.DownloadFileCompleted += (sender, e) =>
-                    {
-                        if (e.Error != null)
-                            throw e.Error;
-                    };
-
-                    var downloadTask = webClient.DownloadFileTaskAsync(package.DownloadUrl, filePath);
-                    
-                    // Wait for download or cancellation
-                    while (!downloadTask.IsCompleted && !cancellationToken.IsCancellationRequested)
-                    {
-                        Thread.Sleep(100);
+                        ((IProgress<int>)progress).Report(e.ProgressPercentage);
                     }
+                };
 
-                    if (cancellationToken.IsCancellationRequested)
-                    {
-                        webClient.CancelAsync();
-                        throw new OperationCanceledException();
-                    }
+                webClient.DownloadFileCompleted += (sender, e) =>
+                {
+                    if (e.Cancelled)
+                        tcs.TrySetCanceled();
+                    else if (e.Error != null)
+                        tcs.TrySetException(e.Error);
+                    else
+                        tcs.TrySetResult(true);
+                };
 
-                    downloadTask.Wait(); // This will throw if download failed
-                }, cancellationToken);
+                // Register cancellation
+                using (cancellationToken.Register(() => webClient.CancelAsync()))
+                {
+                    webClient.DownloadFileAsync(package.DownloadUrl, filePath);
+                    await tcs.Task; // Properly await instead of blocking with Wait()
+                }
             }
         }
 

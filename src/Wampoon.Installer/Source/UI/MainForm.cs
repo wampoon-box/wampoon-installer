@@ -24,6 +24,8 @@ namespace Wampoon.Installer.UI
         private PackageDiscoveryService _packageDiscoveryService;
         private PackageRepository _packageRepository;
         private System.Windows.Forms.Timer _progressBarTimer;
+        private readonly object _packageSourceLock = new object();
+        private CancellationTokenSource _packageSourceCts;
 
 
         public MainForm()
@@ -522,6 +524,10 @@ namespace Wampoon.Installer.UI
             // Dispose package repository.
             _packageRepository?.Dispose();
 
+            // Dispose package source cancellation token
+            _packageSourceCts?.Cancel();
+            _packageSourceCts?.Dispose();
+
             base.OnFormClosing(e);
         }
 
@@ -617,37 +623,61 @@ namespace Wampoon.Installer.UI
             if (selectedItem != null)
             {
                 _packageSourceDescriptionLabel.Text = selectedItem.Source.GetDescription();
-                
+
                 // Save user preference
                 var userSettings = UserSettings.Instance;
                 userSettings.PackageSource = selectedItem.Source;
-                
+
+                // Cancel any previous package source loading operation to prevent race conditions
+                lock (_packageSourceLock)
+                {
+                    _packageSourceCts?.Cancel();
+                    _packageSourceCts?.Dispose();
+                    _packageSourceCts = new CancellationTokenSource();
+                }
+
+                var cts = _packageSourceCts;
+                var source = selectedItem.Source;
+
                 // Reload packages when source changes
-                _ = Task.Run(async () =>
+                Task.Run(async () =>
                 {
                     try
                     {
                         // Ensure package repository is initialized before using it
-                        if (_packageRepository == null)
+                        if (_packageRepository == null || cts.Token.IsCancellationRequested)
                         {
                             return;
                         }
-                        
-                        await _packageRepository.GetAvailablePackagesAsync(selectedItem.Source);
-                        
+
+                        await _packageRepository.GetAvailablePackagesAsync(source);
+
+                        // Check cancellation before updating UI
+                        if (cts.Token.IsCancellationRequested)
+                        {
+                            return;
+                        }
+
                         // Update UI on main thread
                         if (!this.IsDisposed && this.IsHandleCreated)
                         {
                             this.Invoke((MethodInvoker)(() =>
                             {
-                                UpdateComponentVersions();
+                                if (!cts.Token.IsCancellationRequested)
+                                {
+                                    UpdateComponentVersions();
+                                }
                             }));
                         }
+                    }
+                    catch (OperationCanceledException)
+                    {
+                        // Expected when user changes source quickly - ignore
                     }
                     catch (Exception ex)
                     {
                         // Log error but don't crash UI
-                        if (!this.IsDisposed && this.IsHandleCreated)
+                        if (!cts.Token.IsCancellationRequested && !this.IsDisposed && this.IsHandleCreated)
                         {
                             this.Invoke((MethodInvoker)(() =>
                             {

@@ -17,6 +17,7 @@ namespace Wampoon.Installer.Core
         public event EventHandler<InstallationProgressEventArgs> ExtractionProgressReported;
         public event EventHandler<InstallationCompletedEventArgs> PackageInstallationCompleted;
 
+        private readonly PackageRepository _packageRepository;
         private readonly IPackageDiscoveryService _packageDiscoveryService;
         private readonly IPackageDownloadService _packageDownloadService;
         private readonly IPackageExtractionService _packageExtractionService;
@@ -24,11 +25,11 @@ namespace Wampoon.Installer.Core
 
         public PackageManager()
         {
-            var packageRepository = new PackageRepository();
+            _packageRepository = new PackageRepository();
             var packageDownloader = new PackageDownloader();
             var archiveExtractor = new ArchiveExtractor();
-            
-            _packageDiscoveryService = new PackageDiscoveryService(packageRepository);
+
+            _packageDiscoveryService = new PackageDiscoveryService(_packageRepository);
             _packageDownloadService = new PackageDownloadService(packageDownloader);
             _packageExtractionService = new PackageExtractionService(archiveExtractor);
 
@@ -264,6 +265,7 @@ namespace Wampoon.Installer.Core
         {
             if (!_disposed)
             {
+                _packageRepository?.Dispose();
                 _packageDownloadService?.Dispose();
                 _packageExtractionService?.Dispose();
                 _disposed = true;

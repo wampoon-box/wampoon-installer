@@ -4,7 +4,11 @@
 #
 
 Include conf/httpd-wampoon-variables.conf
+# IMPORTANT: the variables file must be loaded before.
+Define SRVROOT "${WAMPOON_ROOT_DIR}/apps/apache"
+#
 Include conf/extra/httpd-wampoon-vhosts.conf
+Include conf/extra/httpd-wampoon-ssl.conf
 
 #
 # This is the main Apache HTTP server configuration file.  It contains the
@@ -44,7 +48,6 @@ Include conf/extra/httpd-wampoon-vhosts.conf
 #
 #Define SRVROOT "c:/Apache24"
 
-Define SRVROOT "${WAMPOON_ROOT_DIR}/apps/apache"
 ServerRoot "${SRVROOT}"
 
 #
@@ -66,7 +69,8 @@ ServerRoot "${SRVROOT}"
 # prevent Apache from glomming onto all bound IP addresses.
 #
 #Listen 12.34.56.78:80
-Listen 127.0.0.1:${PORT_NUMBER}
+Listen ${PORT_NUMBER}
+Listen 443
 
 #
 # Dynamic Shared Object (DSO) Support
@@ -180,9 +184,9 @@ LoadModule setenvif_module modules/mod_setenvif.so
 #LoadModule socache_dbm_module modules/mod_socache_dbm.so
 #LoadModule socache_memcache_module modules/mod_socache_memcache.so
 #LoadModule socache_redis_module modules/mod_socache_redis.so
-#LoadModule socache_shmcb_module modules/mod_socache_shmcb.so
+LoadModule socache_shmcb_module modules/mod_socache_shmcb.so
 #LoadModule speling_module modules/mod_speling.so
-#LoadModule ssl_module modules/mod_ssl.so
+LoadModule ssl_module modules/mod_ssl.so
 LoadModule status_module modules/mod_status.so
 #LoadModule substitute_module modules/mod_substitute.so
 #LoadModule unique_id_module modules/mod_unique_id.so
@@ -535,7 +539,7 @@ Include conf/extra/proxy-html.conf
 </IfModule>
 
 # Secure (SSL/TLS) connections
-#Include conf/extra/httpd-ssl.conf
+#Include conf/extra/httpd-wampoon-ssl.conf
 #
 # Note: The following must must be present to support
 #       starting without SSL on platforms with no /dev/random equivalent
@@ -563,20 +567,27 @@ PidFile "${SRVROOT}/logs/httpd.pid"
 # PHP 8.x Configuration
 AddDefaultCharset UTF-8
 PHPIniDir "${WAMPOON_ROOT_DIR}/apps/php"
-LoadModule php_module "${WAMPOON_ROOT_DIR}/apps/php/php8apache2_4.dll"
-AddHandler application/x-httpd-php .php .html .htm
-AddType application/x-httpd-php .php
-DirectoryIndex index.php index.html index.htm
 
-# Sodium library.
+# Pre-load PHP dependency DLLs (must be before LoadModule php_module)
+# Note: Some DLLs may be in Apache bin or PHP dir depending on version
+# SSL/Crypto libraries
+LoadFile "${WAMPOON_ROOT_DIR}/apps/php/libcrypto-3-x64.dll"
+LoadFile "${WAMPOON_ROOT_DIR}/apps/php/libssl-3-x64.dll"
+# Curl dependencies (libcurl itself may be in Apache bin, loaded automatically)
+LoadFile "${WAMPOON_ROOT_DIR}/apps/php/libssh2.dll"
+# Sodium library
 LoadFile "${WAMPOON_ROOT_DIR}/apps/php/libsodium.dll"
 # PostgreSQL
-LoadFile "${WAMPOON_ROOT_DIR}/apps/php/libpq.dll"           
-# SQLite 
-LoadFile "${WAMPOON_ROOT_DIR}/apps/php/libsqlite3.dll"      
+LoadFile "${WAMPOON_ROOT_DIR}/apps/php/libpq.dll"
+# SQLite
+LoadFile "${WAMPOON_ROOT_DIR}/apps/php/libsqlite3.dll"
 # ICU: International Components for Unicode (https://icu.unicode.org/)
 LoadFile "${WAMPOON_ROOT_DIR}/apps/php/icudt75.dll"
 LoadFile "${WAMPOON_ROOT_DIR}/apps/php/icuin75.dll"
 LoadFile "${WAMPOON_ROOT_DIR}/apps/php/icuio75.dll"
 LoadFile "${WAMPOON_ROOT_DIR}/apps/php/icuuc75.dll"
 
+LoadModule php_module "${WAMPOON_ROOT_DIR}/apps/php/php8apache2_4.dll"
+AddHandler application/x-httpd-php .php .html .htm
+AddType application/x-httpd-php .php
+DirectoryIndex index.php index.html index.htm

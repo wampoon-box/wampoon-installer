@@ -90,10 +90,23 @@ namespace Wampoon.Installer.Helpers
                             throw new InvalidOperationException("Failed to start MariaDB data directory initialization process");
                         }
 
-                        var output = await process.StandardOutput.ReadToEndAsync();
-                        var error = await process.StandardError.ReadToEndAsync();
+                        // Read output streams asynchronously to avoid deadlocks
+                        var outputTask = process.StandardOutput.ReadToEndAsync();
+                        var errorTask = process.StandardError.ReadToEndAsync();
 
-                        process.WaitForExit();
+                        // Wait for process with timeout (5 minutes max)
+                        const int timeoutMs = 300000;
+                        var exited = process.WaitForExit(timeoutMs);
+
+                        if (!exited)
+                        {
+                            try { process.Kill(); } catch { }
+                            throw new TimeoutException($"MariaDB data directory initialization timed out after {timeoutMs / 1000} seconds");
+                        }
+
+                        // Now safely read the output after process has exited
+                        var output = await outputTask;
+                        var error = await errorTask;
 
                         if (process.ExitCode != 0)
                         {
@@ -101,7 +114,7 @@ namespace Wampoon.Installer.Helpers
                         }
 
                         logger?.Report("MariaDB data directory initialized successfully");
-                        
+
                         if (!string.IsNullOrWhiteSpace(output))
                         {
                             logger?.Report($"MariaDB Init Output: {output}");
