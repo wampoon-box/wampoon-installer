@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.IO.Compression;
+using System.Security;
 using System.Threading;
 using System.Threading.Tasks;
 using Wampoon.Installer.Events;
@@ -649,14 +650,32 @@ namespace Wampoon.Installer.Core
         {
             try
             {
+                // Normalize both paths to prevent path traversal attacks
                 var fullDestination = Path.GetFullPath(destinationPath);
                 var fullExtractPath = Path.GetFullPath(extractPath);
-                
-                // Ensure the destination is within the extract directory.
-                return fullDestination.StartsWith(fullExtractPath, StringComparison.OrdinalIgnoreCase);
+
+                // Ensure extract path ends with directory separator for proper prefix matching
+                if (!fullExtractPath.EndsWith(Path.DirectorySeparatorChar.ToString()))
+                {
+                    fullExtractPath += Path.DirectorySeparatorChar;
+                }
+
+                // Check if destination starts with extract path (case-insensitive on Windows)
+                var isSafe = fullDestination.StartsWith(fullExtractPath, StringComparison.OrdinalIgnoreCase);
+
+                if (!isSafe)
+                {
+                    // Log potential path traversal attempt as a security event
+                    System.Diagnostics.Debug.WriteLine($"SECURITY: Blocked path traversal attempt. Destination: {destinationPath}, Extract path: {extractPath}");
+                    ErrorLogHelper.LogExceptionInfo(new SecurityException($"Blocked path traversal attempt: {destinationPath}"));
+                }
+
+                return isSafe;
             }
-            catch
+            catch (Exception ex)
             {
+                // Log the error for debugging
+                System.Diagnostics.Debug.WriteLine($"SECURITY: Path validation failed for {destinationPath}: {ex.Message}");
                 return false;
             }
         }

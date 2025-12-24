@@ -21,6 +21,7 @@ namespace Wampoon.Installer.Core.Paths.Configurations
             AddConfigFile(AppSettings.ApacheFiles.HttpdConf, $"conf/{AppSettings.ApacheFiles.HttpdConf}");
             AddConfigFile(AppSettings.ApacheFiles.WampoonCustomPathConf, $"conf/{AppSettings.ApacheFiles.WampoonCustomPathConf}");
             AddConfigFile(AppSettings.ApacheFiles.WampoonVhostsConf, $"conf/extra/{AppSettings.ApacheFiles.WampoonVhostsConf}");
+            AddConfigFile(AppSettings.ApacheFiles.WampoonSslConf, $"conf/extra/{AppSettings.ApacheFiles.WampoonSslConf}");
             
             // Subdirectories.
             AddSubdirectory("conf", "conf");

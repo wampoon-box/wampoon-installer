@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Wampoon.Installer.Core;
 using Wampoon.Installer.Core.Paths;
@@ -166,15 +167,15 @@ namespace Wampoon.Installer.Helpers.Common
 
             TemplateHelper.CopyTemplateWithVersion(templatePath, targetPath);
 
-            await ConfigureAdditionalTemplatesAsync(pathResolver, progressReporter);
+            await ConfigureAdditionalTemplatesAsync(pathResolver, progressReporter, CancellationToken.None);
 
             progressReporter?.Report($"{DisplayName} configuration copied from template");
         }
 
-        protected virtual async Task ConfigureAdditionalTemplatesAsync(IPathResolver pathResolver, IProgress<string> progressReporter)
+        protected virtual Task ConfigureAdditionalTemplatesAsync(IPathResolver pathResolver, IProgress<string> progressReporter, CancellationToken cancellationToken = default)
         {
             // Default implementation - can be overridden by derived classes for additional templates.
-            await Task.CompletedTask;
+            return Task.CompletedTask;
         }
 
         protected virtual Task<bool> ValidateConfigurationAsync(IPathResolver pathResolver, IProgress<string> progressReporter)

@@ -299,12 +299,13 @@ namespace Wampoon.Installer.Core
                         {
                             File.Delete(file);
                         }
-                        catch
+                        catch (Exception ex)
                         {
-                            // Ignore individual file deletion errors.
+                            // Log but don't fail - file may be locked or in use
+                            System.Diagnostics.Debug.WriteLine($"Could not delete file {file}: {ex.Message}");
                         }
                     }
-                    
+
                     // Delete all directories (in reverse order to handle nested directories).
                     Array.Reverse(directories);
                     foreach (var directory in directories)
@@ -313,9 +314,10 @@ namespace Wampoon.Installer.Core
                         {
                             Directory.Delete(directory, false);
                         }
-                        catch
+                        catch (Exception ex)
                         {
-                            // Ignore individual directory deletion errors.
+                            // Log but don't fail - directory may not be empty or may be in use
+                            System.Diagnostics.Debug.WriteLine($"Could not delete directory {directory}: {ex.Message}");
                         }
                     }
                     
@@ -370,23 +372,35 @@ namespace Wampoon.Installer.Core
                 try
                 {
                     ReportProgress("Copying CLI scripts...", GetProgressPercentage(), "Scripts Setup");
-                    
+
                     var sourceScriptsPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "scripts");
-                    
+
                     if (Directory.Exists(sourceScriptsPath))
                     {
                         var scriptFiles = Directory.GetFiles(sourceScriptsPath, "*.bat", SearchOption.TopDirectoryOnly);
-                        
+                        int copiedCount = 0;
+
                         foreach (var scriptFile in scriptFiles)
                         {
                             var fileName = Path.GetFileName(scriptFile);
-                            var destinationPath = Path.Combine(installPath, fileName);
-                            
-                            // Copy the script file to the installation root for easy PATH access
-                            File.Copy(scriptFile, destinationPath, true);
+
+                            // htdocs-composer.bat goes to htdocs directory as composer.bat
+                            if (fileName.Equals("htdocs-composer.bat", StringComparison.OrdinalIgnoreCase))
+                            {
+                                var htdocsPath = Path.Combine(installPath, "htdocs");
+                                var destinationPath = Path.Combine(htdocsPath, "composer.bat");
+                                File.Copy(scriptFile, destinationPath, true);
+                            }
+                            else
+                            {
+                                // Copy other scripts to the installation root for easy PATH access
+                                var destinationPath = Path.Combine(installPath, fileName);
+                                File.Copy(scriptFile, destinationPath, true);
+                            }
+                            copiedCount++;
                         }
-                        
-                        ReportProgress($"CLI scripts copied successfully ({scriptFiles.Length} files)", GetProgressPercentage(), "Scripts Setup");
+
+                        ReportProgress($"CLI scripts copied successfully ({copiedCount} files)", GetProgressPercentage(), "Scripts Setup");
                     }
                     else
                     {

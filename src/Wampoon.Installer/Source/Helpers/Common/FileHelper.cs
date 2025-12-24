@@ -6,13 +6,25 @@ namespace Wampoon.Installer.Helpers.Common
 {
     public static class FileHelper
     {
-        public static async Task CreateDirectoryIfNotExistsAsync(string directoryPath)
+        /// <summary>
+        /// Creates a directory if it doesn't exist. This is a synchronous operation.
+        /// </summary>
+        public static void CreateDirectoryIfNotExists(string directoryPath)
         {
             if (!Directory.Exists(directoryPath))
             {
                 Directory.CreateDirectory(directoryPath);
-                await Task.Delay(10); // Small delay to ensure directory creation.
             }
+        }
+
+        /// <summary>
+        /// Creates a directory if it doesn't exist. Returns a completed task for async compatibility.
+        /// Note: Directory creation is inherently synchronous in .NET Framework.
+        /// </summary>
+        public static Task CreateDirectoryIfNotExistsAsync(string directoryPath)
+        {
+            CreateDirectoryIfNotExists(directoryPath);
+            return Task.CompletedTask;
         }
 
         public static bool ValidateFileExists(string filePath, string description = "")
