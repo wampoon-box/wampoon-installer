@@ -6,10 +6,12 @@ using System.Threading;
 using System.Threading.Tasks;
 using Wampoon.Installer.Core.Events;
 using Wampoon.Installer.Core.Installation;
+using Wampoon.Installer.Core.PackageOperations;
 using Wampoon.Installer.Core.Paths;
 using Wampoon.Installer.Helpers.Common;
 using Wampoon.Installer.Events;
 using Wampoon.Installer.Helpers;
+using Wampoon.Installer.Models;
 
 namespace Wampoon.Installer.Core
 {
@@ -18,8 +20,10 @@ namespace Wampoon.Installer.Core
         public event EventHandler<InstallProgressEventArgs> ProgressChanged;
         public event EventHandler<InstallErrorEventArgs> ErrorOccurred;
         public event EventHandler<EventArgs> InstallationCompleted;
+        public event EventHandler<UrlValidationProgressEventArgs> UrlValidationProgress;
 
         private readonly PackageManager _packageManager;
+        private readonly UrlValidationService _urlValidationService;
         private readonly IInstallationValidator _installationValidator;
         private readonly List<string> _selectedPackages;
         private int _totalSteps;
@@ -39,9 +43,19 @@ namespace Wampoon.Installer.Core
             _packageManager = new PackageManager();
             _selectedPackages = new List<string>();
             _installationValidator = new InstallationValidator();
-            
+            _urlValidationService = new UrlValidationService();
+
+            // Subscribe to URL validation progress events.
+            _urlValidationService.ValidationProgressReported += OnUrlValidationProgress;
+
             // Subscribe to package manager progress events.
             SubscribeToPackageManagerEvents();
+        }
+
+        private void OnUrlValidationProgress(object sender, UrlValidationProgressEventArgs e)
+        {
+            UrlValidationProgress?.Invoke(this, e);
+            ReportProgress($"Validating {e.PackageName}: {e.Status}", GetProgressPercentage(), "URL Validation");
         }
 
         public async Task InstallAsync(InstallOptions options, CancellationToken cancellationToken = default)
@@ -72,6 +86,31 @@ namespace Wampoon.Installer.Core
                 await ValidateEmptyInstallationDirectoryAsync(options.InstallPath);
                 ReportProgress("Installation directory verified as empty", GetProgressPercentage(), "Validation");
 
+                // Validate package download URLs before starting installation.
+                ReportProgress("Validating package download URLs...", GetProgressPercentage(), "URL Validation");
+                var packagesToValidate = await GetSelectedPackagesAsync(options);
+                var validationResult = await _urlValidationService.ValidatePackageUrlsAsync(packagesToValidate, cancellationToken);
+
+                if (!validationResult.AllUrlsValid)
+                {
+                    var failureList = string.Join("\n\n",
+                        validationResult.Failures.Select(f =>
+                        {
+                            var website = !string.IsNullOrEmpty(f.PackageWebsite)
+                                ? $"\n    Official website: {f.PackageWebsite}"
+                                : "";
+                            return $"  - {f.PackageName}: {f.Reason}{website}";
+                        }));
+
+                    throw new InvalidOperationException(
+                        $"Some package download URLs are not accessible:\n\n{failureList}\n\n" +
+                        "To fix this issue:\n" +
+                        "1. Visit the official website listed above to get a valid download URL\n" +
+                        "2. Update the URL in your local Data/packagesInfo.json file\n" +
+                        "3. Or switch to 'Auto' or 'Web Only' package source to use the latest online manifest");
+                }
+
+                ReportProgress("All package URLs validated successfully", GetProgressPercentage(), "URL Validation");
 
                 // Create base directories.
                 await CreateBaseDirectoriesAsync();
@@ -133,6 +172,30 @@ namespace Wampoon.Installer.Core
             if (options.InstallComposer) _selectedPackages.Add(AppSettings.PackageNames.Composer);
         }
 
+        private async Task<List<InstallablePackage>> GetSelectedPackagesAsync(InstallOptions options)
+        {
+            var packages = new List<InstallablePackage>();
+            var packageNames = new List<string>();
+
+            if (options.InstallApache) packageNames.Add(AppSettings.PackageNames.Apache);
+            if (options.InstallMariaDB) packageNames.Add(AppSettings.PackageNames.MariaDB);
+            if (options.InstallPHP) packageNames.Add(AppSettings.PackageNames.PHP);
+            if (options.InstallPhpMyAdmin) packageNames.Add(AppSettings.PackageNames.PhpMyAdmin);
+            if (options.InstallXdebug) packageNames.Add(AppSettings.PackageNames.Xdebug);
+            if (options.InstallComposer) packageNames.Add(AppSettings.PackageNames.Composer);
+
+            foreach (var name in packageNames)
+            {
+                var package = await _packageManager.GetPackageByNameAsync(name);
+                if (package != null)
+                {
+                    packages.Add(package);
+                }
+            }
+
+            return packages;
+        }
+
         private async Task CreateBaseDirectoriesAsync()
         {
             ReportProgress("Creating base directories...", GetProgressPercentage(), "Directory Creation");
@@ -153,7 +216,7 @@ namespace Wampoon.Installer.Core
 
         private int CalculateTotalSteps(InstallOptions options)
         {
-            int steps = 4; // Base setup + installation phase + configuration phase + validation.
+            int steps = 5; // Base setup + URL validation + installation phase + configuration phase + validation.
             
             int packageCount = 0;
             if (options.InstallApache) packageCount++;
@@ -172,11 +235,15 @@ namespace Wampoon.Installer.Core
 
         private int GetProgressPercentage()
         {
+            if (_totalSteps <= 0) return 0;
             return (_currentStep * 100) / _totalSteps;
         }
 
         private int GetDetailedProgressPercentage()
         {
+            // Guard against division by zero (can happen if callback fires after reset).
+            if (_totalSteps <= 0) return 0;
+
             // Base progress from completed steps.
             int baseProgress = (_currentStep * 100) / _totalSteps;
             
@@ -461,8 +528,15 @@ namespace Wampoon.Installer.Core
                             _packageManager.ExtractionProgressReported -= _extractionProgressHandler;
                         if (_packageCompletionHandler != null)
                             _packageManager.PackageInstallationCompleted -= _packageCompletionHandler;
-                        
+
                         _packageManager.Dispose();
+                    }
+
+                    // Dispose URL validation service.
+                    if (_urlValidationService != null)
+                    {
+                        _urlValidationService.ValidationProgressReported -= OnUrlValidationProgress;
+                        _urlValidationService.Dispose();
                     }
                 }
                 _disposed = true;
