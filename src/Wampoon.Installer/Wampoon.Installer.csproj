@@ -62,6 +62,7 @@
     <Compile Include="Source\Events\ExistingPackagesEventArgs.cs" />
     <Compile Include="Source\Events\InstallErrorEventArgs.cs" />
     <Compile Include="Source\Events\InstallProgressEventArgs.cs" />
+    <Compile Include="Source\Events\UrlValidationProgressEventArgs.cs" />
     <Compile Include="Source\Core\Installation\IInstallationCoordinator.cs" />
     <Compile Include="Source\Core\Installation\InstallationCoordinator.cs" />
     <Compile Include="Source\Core\Installation\IInstallationValidator.cs" />
@@ -81,6 +82,8 @@
     <Compile Include="Source\Core\PackageOperations\PackageDownloadService.cs" />
     <Compile Include="Source\Core\PackageOperations\IPackageExtractionService.cs" />
     <Compile Include="Source\Core\PackageOperations\PackageExtractionService.cs" />
+    <Compile Include="Source\Core\PackageOperations\UrlValidationResult.cs" />
+    <Compile Include="Source\Core\PackageOperations\UrlValidationService.cs" />
     <Compile Include="Source\Core\PackageRepository.cs" />
     <Compile Include="Source\Core\Paths\Configurations\ApachePathConfiguration.cs" />
     <Compile Include="Source\Core\Paths\Configurations\MariaDBPathConfiguration.cs" />

@@ -17,6 +17,7 @@ namespace Wampoon.Installer.Core
         private readonly HttpClient _httpClient;
         private readonly ILogger _logger;
         private List<InstallablePackage> _packages;
+        private PackageSource? _cachedSource;
         private bool _disposed = false;
 
         public PackageRepository()
@@ -29,15 +30,18 @@ namespace Wampoon.Installer.Core
 
         public async Task<List<InstallablePackage>> GetAvailablePackagesAsync()
         {
-            return await GetAvailablePackagesAsync(PackageSource.Auto);
+            // Use the user's selected package source instead of defaulting to Auto.
+            var selectedSource = UserSettings.Instance.PackageSource;
+            return await GetAvailablePackagesAsync(selectedSource);
         }
 
         public async Task<List<InstallablePackage>> GetAvailablePackagesAsync(PackageSource source)
         {
-            // Reset packages if we're changing sources
-            if (_packages != null && source != PackageSource.Auto)
+            // Clear cache if the source changed.
+            if (_packages != null && _cachedSource != source)
             {
                 _packages = null;
+                _cachedSource = null;
             }
 
             if (_packages != null)
@@ -96,6 +100,8 @@ namespace Wampoon.Installer.Core
                     break;
             }
 
+            // Track which source was used to populate the cache.
+            _cachedSource = source;
             return _packages;
         }
 

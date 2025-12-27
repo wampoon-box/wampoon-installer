@@ -19,6 +19,11 @@ namespace Wampoon.Installer.Models
         public string ArchiveFormat { get; set; }
         public string InstallPath { get; set; }
         public string ChecksumUrl { get; set; }
+
+        /// <summary>
+        /// Official website where users can find download URLs for this package.
+        /// </summary>
+        public string PackageWebsite { get; set; }
         public long EstimatedSize { get; set; }
         public List<PackageType> Dependencies { get; set; }
         public string Description { get; set; }

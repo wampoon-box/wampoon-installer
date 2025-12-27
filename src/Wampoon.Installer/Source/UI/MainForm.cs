@@ -9,6 +9,7 @@ using System.Windows.Forms;
 using Wampoon.Installer.Core;
 using Wampoon.Installer.Core.Events;
 using Wampoon.Installer.Core.PackageDiscovery;
+using Wampoon.Installer.Events;
 using Wampoon.Installer.Models;
 using Wampoon.Installer.UI;
 using Wampoon.Installer.Helpers;
@@ -146,6 +147,7 @@ namespace Wampoon.Installer.UI
                 _installManager.ProgressChanged += InstallManager_ProgressChanged;
                 _installManager.ErrorOccurred += InstallManager_ErrorOccurred;
                 _installManager.InstallationCompleted += InstallManager_InstallationCompleted;
+                _installManager.UrlValidationProgress += InstallManager_UrlValidationProgress;
             }
         }
 
@@ -383,6 +385,22 @@ namespace Wampoon.Installer.UI
             LogMessage(e.ErrorMessage, Color.Red);
         }
 
+        private void InstallManager_UrlValidationProgress(object sender, UrlValidationProgressEventArgs e)
+        {
+            if (InvokeRequired)
+            {
+                Invoke(new Action(() => InstallManager_UrlValidationProgress(sender, e)));
+                return;
+            }
+
+            _progressLabel.Text = $"Validating URLs ({e.CurrentIndex}/{e.TotalCount})...";
+
+            // Color based on validation result.
+            Color messageColor = e.IsValid ? Color.Green :
+                                 e.Status.StartsWith("Failed") ? Color.Red : Color.White;
+            LogMessage($"[{e.PackageName}] {e.Status}", messageColor);
+        }
+
         private void InstallManager_InstallationCompleted(object sender, EventArgs e)
         {
             if (InvokeRequired)
@@ -514,6 +532,7 @@ namespace Wampoon.Installer.UI
                 _installManager.ProgressChanged -= InstallManager_ProgressChanged;
                 _installManager.ErrorOccurred -= InstallManager_ErrorOccurred;
                 _installManager.InstallationCompleted -= InstallManager_InstallationCompleted;
+                _installManager.UrlValidationProgress -= InstallManager_UrlValidationProgress;
                 _installManager.Dispose();
             }
             
