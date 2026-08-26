@@ -13,6 +13,7 @@ datadir=data
 [mysqld]
 # Basic settings
 port=3306
+bind-address = 127.0.0.1
 socket=mysql.sock
 datadir=data
 pid-file=mysqld.pid
@@ -27,7 +28,7 @@ innodb_flush_log_at_trx_commit = 2
 character_set_server = utf8mb4
 collation_server = utf8mb4_unicode_ci 
 init_connect = 'SET NAMES utf8mb4 COLLATE utf8mb4_unicode_ci' 
-innodb_buffer_pool_size=2084M
+innodb_buffer_pool_size=512M
 
 # SQL Mode (adjust as needed)
 sql_mode =STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION 
@@ -45,7 +46,6 @@ long_query_time = 1
 
 # Security and networking
 skip-name-resolve
-#bind-address=127.0.0.1
 max_connections=100
 
 # Performance tuning (adjust based on your needs)
